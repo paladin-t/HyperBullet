@@ -8,7 +8,7 @@ Homepage: https://paladin-t.github.io/bitty/
 
 require 'object'
 
-Gun = class({
+Melee = class({
 	--[[ Variables. ]]
 
 	group = 'weapon',
@@ -16,10 +16,8 @@ Gun = class({
 	_owner = nil,
 
 	_name = nil,
-	_bullet = nil,
 
-	_recoil = nil,
-	_interval = 0.25, _timestamp = nil,
+	_interval = 0.15, _timestamp = nil,
 
 	--[[ Constructor. ]]
 
@@ -28,14 +26,13 @@ Gun = class({
 
 		local cfg = Weapons[options.type]
 		self._name = cfg['name']
-		self._bullet = Bullets[options.type]
 		self._interval = cfg['interval']
 	end,
 
 	--[[ Meta methods. ]]
 
 	__tostring = function (self)
-		return 'Gun'
+		return 'Melee'
 	end,
 
 	--[[ Methods. ]]
@@ -54,15 +51,6 @@ Gun = class({
 		return self._name
 	end,
 
-	recoil = function (self)
-		return self._recoil
-	end,
-	setRecoil = function (self, recoil)
-		self._recoil = recoil
-
-		return self
-	end,
-
 	emit = function (self, dir)
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
@@ -74,23 +62,7 @@ Gun = class({
 		end
 		self._timestamp = now
 
-		local owner = self._owner
-		local bullet = Bullet.new(
-			self._bullet['resource'],
-			owner._isBlocked,
-			{
-				co = owner._co,
-				context = owner._context,
-				direction = dir or self._facing,
-				atk = self._bullet['atk'],
-				box = self._bullet['box'],
-				moveSpeed = self._bullet['move_speed'],
-				lifetime = self._bullet['lifetime']
-			}
-		)
-		bullet.x, bullet.y = self.x, self.y
-		bullet:setOwner(self)
-		table.insert(owner._context.objects, bullet)
+		-- TODO
 
 		return self._recoil
 	end,

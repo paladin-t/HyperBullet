@@ -6,7 +6,7 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-Guns = {
+Weapons = {
 	['pistol'] = {
 		['name'] = 'Pistol',
 		['interval'] = 0.25
