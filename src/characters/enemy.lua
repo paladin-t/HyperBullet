@@ -41,9 +41,9 @@ Enemy = class({
 
 		-- Walk through way points.
 		::again::
-		local goal = self._goals[1]
+		local goal = (self._goals ~= nil and #self._goals > 0) and self._goals[1] or nil
 		local dst = nil
-		if goal == 'hero' then
+		if goal == nil then
 			dst = Vec2.new(hero.x, hero.y)
 		else
 			dst = goal
@@ -52,11 +52,11 @@ Enemy = class({
 		local diff = dst - src
 		local l = diff.length
 		local epsilon = 4
-		if goal ~= 'hero' and l <= epsilon then
+		if goal ~= nil and l <= epsilon then
 			table.remove(self._goals, 1)
 
 			goto again
-		elseif goal == 'hero' and l <= epsilon * 4 then
+		elseif goal == nil and l <= epsilon * 4 then
 			-- Do nothing.
 		else
 			if l >= epsilon * 2 then
@@ -79,7 +79,7 @@ Enemy = class({
 		self:lookAt(hero.x, hero.y)
 
 		-- Attack.
-		self:attack()
+		self:attack(delta)
 
 		-- Interact with objects.
 		for _, v in ipairs(self._context.objects) do

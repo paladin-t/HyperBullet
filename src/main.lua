@@ -7,7 +7,7 @@ Homepage: https://paladin-t.github.io/bitty/
 ]]
 
 -- Usage:
---   press W, A, S, D on keyboard to move
+--   press W, A, S, D on keyboard to move;
 --   move mouse to look around, LMB to attack.
 
 require 'co'
@@ -107,6 +107,7 @@ local function start(toGame, pos)
 			type = 'pistol'
 		}
 	)
+	weapon:setRecoil(8)
 	weapon.x, weapon.y = 130, 130
 	table.insert(context.objects, weapon)
 
@@ -177,7 +178,7 @@ function setup()
 
 	bgm = Resources.load('bgm.ogg', Music)
 	volume(1, 0.5)
-	play(bgm, true, 2)
+	--play(bgm, true, 2)
 
 	bank = Resources.load('bank.png')
 	heroSpr = Resources.load('hero.spr')
@@ -208,7 +209,7 @@ function update(delta)
 		local x, y, lmb = mouse()
 		hero:lookAt(x, y)
 		if lmb then
-			hero:attack()
+			hero:attack(delta)
 		end
 	end
 

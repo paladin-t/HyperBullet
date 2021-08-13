@@ -19,8 +19,9 @@ Character = class({
 	_weapon = nil,
 	_bullets = nil,
 
+	_weight = 1,
 	_moveSpeed = 0,
-	_moving = nil,
+	_moving = nil, _movingByRecoil = nil,
 	_facing = nil,
 
 	_walker = nil,
@@ -98,23 +99,32 @@ Character = class({
 		return self
 	end,
 
+	weight = function (self)
+		return self._weight
+	end,
+	setWeight = function (self, weight)
+		self._weight = weight
+
+		return self
+	end,
+
 	moveLeft = function (self, delta)
-		self._moving.x = -delta * self._moveSpeed
+		self._moving.x = -delta * self._moveSpeed / self._weight
 
 		return self
 	end,
 	moveRight = function (self, delta)
-		self._moving.x = delta * self._moveSpeed
+		self._moving.x = delta * self._moveSpeed / self._weight
 
 		return self
 	end,
 	moveUp = function (self, delta)
-		self._moving.y = -delta * self._moveSpeed
+		self._moving.y = -delta * self._moveSpeed / self._weight
 
 		return self
 	end,
 	moveDown = function (self, delta)
-		self._moving.y = delta * self._moveSpeed
+		self._moving.y = delta * self._moveSpeed / self._weight
 
 		return self
 	end,
@@ -128,11 +138,14 @@ Character = class({
 
 		return self
 	end,
-	attack = function (self)
+	attack = function (self, delta)
 		if self._weapon == nil then
 			return self
 		end
-		self._weapon:emit(self._facing)
+		local recoil = self._weapon:emit(self._facing)
+		if recoil ~= nil and recoil > 0 then
+			self._movingByRecoil = -self._facing * (delta * self._moveSpeed / self._weight * recoil)
+		end
 
 		return self
 	end,
@@ -154,10 +167,17 @@ Character = class({
 	end,
 
 	update = function (self, delta)
+		if self._movingByRecoil ~= nil then
+			local m = self:_move(self._movingByRecoil.x, self._movingByRecoil.y)
+			self.x = self.x + m.x
+			self.y = self.y + m.y
+			self._movingByRecoil = nil
+		end
 		local l = self._moving.length
 		if l ~= 0 then
-			if l > delta * self._moveSpeed then
-				self._moving = self._moving * (delta * self._moveSpeed / l)
+			local speed = delta * self._moveSpeed / self._weight
+			if l > speed then
+				self._moving = self._moving * (speed / l)
 			end
 			local m = self:_move(self._moving.x, self._moving.y)
 			self.x = self.x + m.x

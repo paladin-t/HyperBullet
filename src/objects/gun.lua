@@ -18,6 +18,7 @@ Gun = class({
 	_name = nil,
 	_bullet = nil,
 
+	_recoil = nil,
 	_interval = 0.25, _timestamp = nil,
 
 	--[[ Constructor. ]]
@@ -53,13 +54,22 @@ Gun = class({
 		return self._name
 	end,
 
+	recoil = function (self)
+		return self._recoil
+	end,
+	setRecoil = function (self, recoil)
+		self._recoil = recoil
+
+		return self
+	end,
+
 	emit = function (self, dir)
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
 			local diff = now - self._timestamp
 			diff = DateTime.toSeconds(diff)
 			if diff < self._interval then
-				return self
+				return nil
 			end
 		end
 		self._timestamp = now
@@ -82,7 +92,7 @@ Gun = class({
 		bullet:setOwner(self)
 		table.insert(owner._context.objects, bullet)
 
-		return self
+		return self._recoil
 	end,
 
 	behave = function (self, delta, _1)

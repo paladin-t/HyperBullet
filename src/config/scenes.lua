@@ -16,23 +16,19 @@ Scenes = {
 			local goals = {
 				{
 					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32),
-					'hero'
+					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32)
 				},
 				{
 					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240),
-					'hero'
+					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240)
 				},
 				{
 					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240),
-					'hero'
+					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240)
 				},
 				{
 					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32),
-					'hero'
+					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32)
 				}
 			}
 			local n = 1
