@@ -17,21 +17,17 @@ Character = class({
 	_context = nil,
 
 	_weapon = nil,
-	_bullets = nil,
 
 	_weight = 1,
 	_moveSpeed = 0,
 	_moving = nil, _movingByRecoil = nil,
+	_picking = false, _throwing = false,
 	_facing = nil,
-
-	_walker = nil,
-	_isBlocked = nil,
-	_slidable = 5,
 
 	--[[ Constructor. ]]
 
 	ctor = function (self, sprite, box, isBlocked, options)
-		Object.ctor(self, sprite, box)
+		Object.ctor(self, sprite, box, isBlocked)
 
 		self.vacuum = options.vacuum
 
@@ -46,19 +42,9 @@ Character = class({
 		self._co = options.co
 		self._context = options.context
 
-		self._bullets = { }
-
 		self._moveSpeed = options.moveSpeed
 		self._moving = Vec2.new(0, 0)
 		self._facing = Vec2.new(1, 0)
-
-		if isBlocked then
-			self._walker = Walker.new()
-			self._walker.objectSize = Vec2.new(self.box:width(), self.box:height())
-			self._walker.tileSize = Vec2.new(16, 16)
-			self._walker.offset = Vec2.new(self.box:width() * 0.5, self.box:height())
-			self._isBlocked = isBlocked
-		end
 	end,
 
 	--[[ Meta methods. ]]
@@ -79,22 +65,18 @@ Character = class({
 
 		return inter
 	end,
-	intersectsWithBullet = function (self, other)
-		for _, v in ipairs(self._bullets) do
-			if Math.intersects(v._aabb, other._aabb) then
-				return true, v
-			end
-		end
-
-		return false, nil
-	end,
 
 	weapon = function (self)
 		return self._weapon
 	end,
 	setWeapon = function (self, weapon)
+		if self._weapon ~= nil then
+			self._weapon:setOwner(nil)
+		end
+		if weapon ~= nil then
+			weapon:setOwner(self)
+		end
 		self._weapon = weapon
-		self._weapon:setOwner(self)
 
 		return self
 	end,
@@ -138,32 +120,41 @@ Character = class({
 
 		return self
 	end,
-	attack = function (self, delta)
-		if self._weapon == nil then
+	pick = function (self)
+		self._picking = true
+
+		return self
+	end,
+	throw = function (self)
+		self._throwing = true
+
+		return self
+	end,
+	attack = function (self, consumption)
+		local weapon = self:weapon()
+		if weapon == nil then
 			return self
 		end
-		local recoil = self._weapon:emit(self._facing)
-		if recoil ~= nil and recoil > 0 then
-			self._movingByRecoil = -self._facing * (delta * self._moveSpeed / self._weight * recoil)
+		local success, empty, recoil = weapon:attack(self._facing, consumption)
+		if success then
+			if recoil ~= nil and recoil > 0 then
+				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
+			end
 		end
 
 		return self
 	end,
 	reset = function (self)
-		self._bullets = { }
+		return self
 	end,
 
 	behave = function (self, delta, _1)
-		if self._weapon then
-			self._weapon:behave()
+		local weapon = self:weapon()
+		if weapon ~= nil then
+			weapon:behave()
 		end
 
-		if #self._bullets > 0 then
-			for _, v in ipairs(self._bullets) do
-				v:behave(delta, _1)
-			end
-			self._bullets = filter(self._bullets, function (obj) return obj.hp > 0 end)
-		end
+		return self
 	end,
 
 	update = function (self, delta)
@@ -185,20 +176,6 @@ Character = class({
 			self._moving = Vec2.new(0, 0)
 		end
 
-		Object.update(self, delta, true)
-
-		for _, v in ipairs(self._bullets) do
-			v:update(delta)
-		end
-	end,
-
-	_move = function (self, dx, dy)
-		local newDir = self._walker:solve(
-			Vec2.new(self.x, self.y), Vec2.new(dx, dy),
-			self._isBlocked,
-			self._slidable
-		)
-
-		return newDir
+		Object.update(self, delta)
 	end
 }, Object)

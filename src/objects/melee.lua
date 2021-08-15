@@ -18,11 +18,12 @@ Melee = class({
 	_name = nil,
 
 	_interval = 0.15, _timestamp = nil,
+	_throwing = nil,
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, options)
-		Object.ctor(self, sprite, box)
+	ctor = function (self, sprite, box, isBlocked, options)
+		Object.ctor(self, sprite, box, isBlocked)
 
 		local cfg = Weapons[options.type]
 		self._name = cfg['name']
@@ -43,6 +44,7 @@ Melee = class({
 	setOwner = function (self, owner)
 		self._owner = owner
 		self._timestamp = nil
+		self._throwing = nil
 
 		return self
 	end,
@@ -51,20 +53,34 @@ Melee = class({
 		return self._name
 	end,
 
-	emit = function (self, dir)
+	throwing = function (self)
+		return self._throwing
+	end,
+	throw = function (self, dir)
+		self._throwing = dir
+
+		return self
+	end,
+
+	-- Attacks with this melee itself.
+	-- returns success, out of bullet (always false), recoil.
+	attack = function (self, dir, _)
+		-- Check for cooldown interval.
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
 			local diff = now - self._timestamp
 			diff = DateTime.toSeconds(diff)
 			if diff < self._interval then
-				return nil
+				return false, false, nil
 			end
 		end
 		self._timestamp = now
 
+		-- Hurt.
 		-- TODO
 
-		return self._recoil
+		-- Finish.
+		return true, false, nil
 	end,
 
 	behave = function (self, delta, _1)
@@ -73,10 +89,23 @@ Melee = class({
 			self.x, self.y = owner.x, owner.y
 			self._facing = owner._facing
 		end
+
+		return self
 	end,
 
 	update = function (self, delta)
-		Object.update(self, delta, true)
+		if self._throwing ~= nil then
+			local step = self._throwing * delta * 150
+			local forward = self:_move(step.x, step.y)
+			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Hits something.
+				self._throwing = nil
+			else
+				self.x = self.x + forward.x
+				self.y = self.y + forward.y
+			end
+		end
+
+		Object.update(self, delta)
 
 		font(NORMAL_FONT)
 		local txt = self._name

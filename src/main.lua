@@ -8,7 +8,8 @@ Homepage: https://paladin-t.github.io/bitty/
 
 -- Usage:
 --   press W, A, S, D on keyboard to move;
---   move mouse to look around, LMB to attack.
+--   press R or MMB to pick up a weapon, F or RMB to throw;
+--   move mouse to look around, LMB to attack (with weapon equipped).
 
 require 'co'
 require 'keycode'
@@ -37,6 +38,8 @@ NORMAL_FONT = Font.new('ascii 8x8.png', Vec2.new(8, 8))
 local WALKABLE_CEL = 97
 local BORDER_CEL = -1
 
+local SAVE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet.txt')
+
 --[[
 Variables.
 ]]
@@ -53,16 +56,72 @@ local context = {
 	objects = nil,
 	enemyCount = 0,
 	score = 0,
+	highscore = 0,
+	newHighscore = false,
 	gameover = false,
 
-	addScore = function (self, val)
-		self.score = self.score + val
+	-- Loads highscore from file.
+	loadHighscore = function (self)
+		local file = File.new()
+		if file:open(SAVE_FILE, Stream.Read) then
+			local score = file:readLine()
+			self.highscore = tonumber(score)
+			file:close()
+		end
+	end,
+	-- Saves highscore to file.
+	saveHighscore = function (self)
+		local file = File.new()
+		if file:open(SAVE_FILE, Stream.Write) then
+			file:writeLine(tostring(self.highscore))
+			file:close()
+		end
+	end,
+	-- Adds a number of score.
+	addScore = function (self, num)
+		self.score = self.score + num
+		if self.score > self.highscore then
+			self.highscore = self.score
+			self.newHighscore = true
+		end
 	end
 }
 
 --[[
 Functions.
 ]]
+
+-- Removes all dead ones from the objects collection.
+local function removeDeadObjects()
+	local weaponCount, firstWeapon = 0, nil
+	local dead = nil
+	for i = #context.objects, 1, -1 do
+		local obj = context.objects[i]
+		if obj:dead() then
+			if dead == nil then
+				dead = { }
+			end
+			table.insert(dead, i)
+
+			print(tostring(obj) .. ' removed.')
+		elseif obj.group == 'weapon' then
+			weaponCount = weaponCount + 1
+			if firstWeapon == nil then
+				firstWeapon = obj
+			end
+		end
+	end
+
+	if weaponCount > 2 and firstWeapon ~= nil then
+		firstWeapon:disappear()
+	end
+
+	if dead then
+		for _, idx in ipairs(dead) do
+			table.remove(context.objects, idx)
+		end
+	end
+end
 
 -- Checks whether it's blocked on map at a specific position.
 local function isBlocked(pos)
@@ -104,11 +163,13 @@ local function start(toGame, pos)
 	local weapon = Gun.new(
 		Resources.load('gun.spr'),
 		Recti.byXYWH(0, 0, 16, 16),
+		isBlocked,
 		{
-			type = 'pistol'
+			type = 'pistol',
+			co = co,
+			context = context,
 		}
 	)
-	weapon:setRecoil(8)
 	weapon.x, weapon.y = 130, 130
 	table.insert(context.objects, weapon)
 
@@ -116,6 +177,8 @@ local function start(toGame, pos)
 	if context.gameover then
 		context.enemyCount = 0
 		context.score = 0
+		context.highscore = 0
+		context.newHighscore = false
 		context.gameover = false
 	end
 
@@ -140,13 +203,21 @@ local function hud(delta)
 		text(txt, 70, 300, Color.new(200, 220, 210))
 	else
 		txt = hero:weapon():name()
+		local cap = hero:weapon():capacity()
+		if cap ~= nil then
+			txt = txt .. ' [' .. tostring(cap) .. ']'
+		end
 		text(txt, 70, 300, Color.new(200, 220, 210))
 	end
 
+	txt = 'HIGHSCORE'
+	text(txt, 344, 295, Color.new(200, 220, 210))
+	txt = context.highscore
+	text(txt, 430, 295, context.newHighscore and Color.new(255, 100, 100) or Color.new(200, 220, 210))
 	txt = 'SCORE'
-	text(txt, 380, 300, Color.new(200, 220, 210))
+	text(txt, 380, 308, Color.new(200, 220, 210))
 	txt = context.score
-	text(txt, 430, 300, Color.new(200, 220, 210))
+	text(txt, 430, 308, Color.new(200, 220, 210))
 
 	font(nil)
 
@@ -169,9 +240,14 @@ local function hud(delta)
 		font(nil)
 
 		if keyp(KeyCode.Return) then -- Return/Enter key.
+			context:saveHighscore()
 			start(true, Vec2.new(canvasWidth * 0.5, canvasHeight * 0.5))
 		end
 	end
+end
+
+function quit()
+	context:saveHighscore()
 end
 
 function setup()
@@ -183,6 +259,8 @@ function setup()
 
 	bank = Resources.load('bank.png')
 	heroSpr = Resources.load('hero.spr')
+
+	context:loadHighscore()
 
 	local canvasWidth, canvasHeight = Canvas.main:size()
 	start(false, Vec2.new(canvasWidth * 0.5, canvasHeight * 0.5))
@@ -207,33 +285,27 @@ function update(delta)
 		elseif key(KeyCode.D) then
 			hero:moveRight(delta)
 		end
-		local x, y, lmb = mouse()
+		local x, y, lmb, rmb, mmb = mouse()
 		hero:lookAt(x, y)
 		if lmb then
-			hero:attack(delta)
+			hero:attack(1)
+		end
+		if mmb or keyp(KeyCode.R) then
+			hero:pick()
+		elseif rmb or keyp(KeyCode.F) then
+			hero:throw()
 		end
 	end
 
 	-- Update objects and draw everything.
-	local dead = nil
 	map(map_, 0, 0)
 	for i, v in ipairs(context.objects) do
 		v:behave(delta, hero)
-		if v:dead() then
-			if dead == nil then
-				dead = { }
-			end
-			table.insert(dead, i)
-		end
 	end
 	for _, v in ipairs(context.objects) do
 		v:update(delta)
 	end
-	if dead ~= nil then
-		for i = #dead, 1, -1 do
-			table.remove(context.objects, dead[i])
-		end
-	end
+	removeDeadObjects()
 
 	hud(delta)
 end

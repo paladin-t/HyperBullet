@@ -19,16 +19,21 @@ Gun = class({
 	_bullet = nil,
 
 	_recoil = nil,
+	_capacity = nil,
 	_interval = 0.25, _timestamp = nil,
+	_throwing = nil,
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, options)
-		Object.ctor(self, sprite, box)
+	ctor = function (self, sprite, box, isBlocked, options)
+		Object.ctor(self, sprite, box, isBlocked)
 
 		local cfg = Weapons[options.type]
 		self._name = cfg['name']
 		self._bullet = Bullets[options.type]
+
+		self._recoil = cfg['recoil']
+		self._capacity = cfg['capacity']
 		self._interval = cfg['interval']
 	end,
 
@@ -46,6 +51,7 @@ Gun = class({
 	setOwner = function (self, owner)
 		self._owner = owner
 		self._timestamp = nil
+		self._throwing = nil
 
 		return self
 	end,
@@ -54,26 +60,45 @@ Gun = class({
 		return self._name
 	end,
 
-	recoil = function (self)
-		return self._recoil
+	capacity = function (self)
+		return self._capacity
 	end,
-	setRecoil = function (self, recoil)
-		self._recoil = recoil
+
+	throwing = function (self)
+		return self._throwing
+	end,
+	throw = function (self, dir)
+		self._throwing = dir
 
 		return self
 	end,
 
-	emit = function (self, dir)
+	-- Emits bullet.
+	-- returns success, out of bullet, recoil.
+	attack = function (self, dir, consumption)
+		-- Check for cooldown interval.
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
 			local diff = now - self._timestamp
 			diff = DateTime.toSeconds(diff)
 			if diff < self._interval then
-				return nil
+				return false, false, nil
 			end
 		end
 		self._timestamp = now
 
+		-- Check for capacity.
+		if self._capacity ~= nil then
+			if self._capacity > 0 then
+				if consumption ~= nil then
+					self._capacity = self._capacity - consumption
+				end
+			else
+				return false, true, nil
+			end
+		end
+
+		-- Emit.
 		local owner = self._owner
 		local bullet = Bullet.new(
 			self._bullet['resource'],
@@ -89,10 +114,11 @@ Gun = class({
 			}
 		)
 		bullet.x, bullet.y = self.x, self.y
-		bullet:setOwner(self)
+		bullet:setOwnerGroup(owner.group)
 		table.insert(owner._context.objects, bullet)
 
-		return self._recoil
+		-- Finish.
+		return true, false, self._recoil
 	end,
 
 	behave = function (self, delta, _1)
@@ -101,10 +127,23 @@ Gun = class({
 			self.x, self.y = owner.x, owner.y
 			self._facing = owner._facing
 		end
+
+		return self
 	end,
 
 	update = function (self, delta)
-		Object.update(self, delta, true)
+		if self._throwing ~= nil then
+			local step = self._throwing * delta * 150
+			local forward = self:_move(step.x, step.y)
+			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Hits something.
+				self._throwing = nil
+			else
+				self.x = self.x + forward.x
+				self.y = self.y + forward.y
+			end
+		end
+
+		Object.update(self, delta)
 
 		font(NORMAL_FONT)
 		local txt = self._name

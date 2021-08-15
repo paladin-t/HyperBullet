@@ -13,7 +13,7 @@ Bullet = class({
 
 	group = 'bullet',
 
-	_owner = nil,
+	_ownerGroup = nil,
 
 	_direction = nil,
 
@@ -45,11 +45,11 @@ Bullet = class({
 
 	--[[ Methods. ]]
 
-	owner = function (self)
-		return self._owner
+	ownerGroup = function (self)
+		return self._ownerGroup
 	end,
-	setOwner = function (self, owner)
-		self._owner = owner
+	setOwnerGroup = function (self, ownerGroup)
+		self._ownerGroup = ownerGroup
 
 		return self
 	end,
@@ -59,16 +59,22 @@ Bullet = class({
 		if self._ticks >= self._lifetime then
 			self:kill()
 
-			return
+			return self
 		end
 
+		return self
+	end,
+
+	update = function (self, delta)
 		local step = self._direction * delta * self._moveSpeed
 		local forward = self:_move(step.x, step.y)
-		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then
+		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Hits something.
 			self:kill()
 		else
 			self._moving.x = self._moving.x + forward.x
 			self._moving.y = self._moving.y + forward.y
 		end
+
+		Character.update(self, delta)
 	end
 }, Character)

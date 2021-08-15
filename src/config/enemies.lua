@@ -10,7 +10,6 @@ Enemies = {
 	['enemy1'] = {
 		['resource'] = Resources.load('enemy1.spr'),
 		['hp'] = 1,
-		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['move_speed'] = 100
 	}

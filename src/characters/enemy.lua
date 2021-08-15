@@ -79,20 +79,45 @@ Enemy = class({
 		self:lookAt(hero.x, hero.y)
 
 		-- Attack.
-		self:attack(delta)
+		self:attack(nil)
 
 		-- Interact with objects.
 		for _, v in ipairs(self._context.objects) do
-			if v.group == 'weapon' then
-				-- TODO
+			if v.group == 'hero' then
+				-- Do nothing.
+			elseif v.group == 'enemy' then
+				-- Do nothing.
+			elseif v.group == 'weapon' then
+				if v:throwing() then
+					v:throw(nil)
+
+					self:kill()
+
+					local weapon = self:weapon()
+					if weapon ~= nil then
+						self:setWeapon(nil)
+						weapon:revive()
+						table.insert(self._context.objects, weapon)
+					end
+				end
 			elseif v.group == 'bullet' then
-				local emitter = v:owner():owner()
-				if emitter.group == 'hero' then
+				local ownerGroup = v:ownerGroup()
+				if ownerGroup == 'hero' then
 					if self:intersects(v) then
 						self:kill()
+
+						local weapon = self:weapon()
+						if weapon ~= nil then
+							self:setWeapon(nil)
+							weapon:revive()
+							table.insert(self._context.objects, weapon)
+						end
 					end
 				end
 			end
 		end
+
+		-- Finish.
+		return self
 	end
 }, Character)

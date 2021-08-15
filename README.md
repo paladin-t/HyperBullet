@@ -1,6 +1,6 @@
-# Prototype STG
+# Hyper Bullet
 
-This is a top-down shoot'em up prototype.
+Hyper Bullet is a top-down shoot'em up game.
 
 # Information
 

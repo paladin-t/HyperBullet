@@ -9,6 +9,8 @@ Homepage: https://paladin-t.github.io/bitty/
 Weapons = {
 	['pistol'] = {
 		['name'] = 'Pistol',
+		['recoil'] = 0.1,
+		['capacity'] = 120,
 		['interval'] = 0.25
 	}
 }

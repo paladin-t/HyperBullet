@@ -39,7 +39,7 @@ Scenes = {
 				Coroutine.waitFor(1.5)
 
 				-- Spawn.
-				if context.enemyCount < 10 then
+				if context.enemyCount < 4 then
 					-- Generate enemy.
 					local type_ = 'enemy1'
 					local cfg = Enemies[type_]
@@ -51,7 +51,6 @@ Scenes = {
 							co = co,
 							context = context,
 							hp = cfg['hp'],
-							atk = cfg['atk'],
 							moveSpeed = cfg['move_speed']
 						}
 					)
@@ -73,8 +72,11 @@ Scenes = {
 					local weapon = Gun.new(
 						Resources.load('gun.spr'),
 						Recti.byXYWH(0, 0, 16, 16),
+						isBlocked,
 						{
-							type = 'pistol'
+							type = 'pistol',
+							co = co,
+							context = context,
 						}
 					)
 					enemy:setWeapon(weapon)
