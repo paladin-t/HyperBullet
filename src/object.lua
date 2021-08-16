@@ -25,6 +25,7 @@ Object = class({
 	_spriteWidth = 0, _spriteHeight = 0,
 	_spriteAngle = 0,
 	_spriteUpdater = nil,
+	_color = Color.new(0, 255, 0),
 
 	_walker = nil,
 	_isBlocked = nil,
@@ -59,6 +60,14 @@ Object = class({
 
 	--[[ Methods. ]]
 
+	hurt = function (self, other)
+		self.hp = math.max(self.hp - other.atk, 0)
+		if self.hp == 0 then
+			self:kill()
+		end
+
+		return self
+	end,
 	dead = function (self)
 		return self._dead
 	end,
@@ -156,7 +165,7 @@ Object = class({
 				self._aabb:xMin(), self._aabb:yMin(),
 				self._aabb:xMax(), self._aabb:yMax(),
 				false,
-				Color.new(255, 0, 0)
+				self._color
 			)
 		end
 	end,

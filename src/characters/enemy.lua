@@ -84,33 +84,50 @@ Enemy = class({
 		-- Interact with objects.
 		for _, v in ipairs(self._context.objects) do
 			if v.group == 'hero' then
-				-- Do nothing.
+				local weapon = self:weapon()
+				if weapon ~= nil then
+					local affecting, shape = weapon:affecting()
+					if affecting then
+						if v:intersectsWithShape(shape) then
+							v:hurt(weapon)
+
+							local weapon = v:weapon()
+							if weapon ~= nil then
+								v:setWeapon(nil)
+								weapon:revive()
+								table.insert(self._context.pending, weapon)
+							end
+						end
+					end
+				end
 			elseif v.group == 'enemy' then
 				-- Do nothing.
 			elseif v.group == 'weapon' then
 				if v:throwing() then
-					v:throw(nil)
+					if v:ownerGroup() ~= 'enemy' and self:intersects(v) then
+						v:throw(nil)
 
-					self:kill()
+						self:hurt(v)
 
-					local weapon = self:weapon()
-					if weapon ~= nil then
-						self:setWeapon(nil)
-						weapon:revive()
-						table.insert(self._context.objects, weapon)
+						local weapon = self:weapon()
+						if weapon ~= nil then
+							self:setWeapon(nil)
+							weapon:revive()
+							table.insert(self._context.pending, weapon)
+						end
 					end
 				end
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup == 'hero' then
 					if self:intersects(v) then
-						self:kill()
+						self:hurt(v)
 
 						local weapon = self:weapon()
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.objects, weapon)
+							table.insert(self._context.pending, weapon)
 						end
 					end
 				end

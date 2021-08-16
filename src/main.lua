@@ -31,6 +31,7 @@ Constant.
 ]]
 
 DEBUG = true -- Enable to show collision boxes.
+IMMORTAL = false -- Enable to make the hero unkillable.
 
 TITLE_FONT = Font.new('college.ttf', 30)
 NORMAL_FONT = Font.new('ascii 8x8.png', Vec2.new(8, 8))
@@ -53,7 +54,7 @@ local heroSpr = nil
 local map_ = nil
 local hero = nil
 local context = {
-	objects = nil,
+	objects = nil, pending = nil,
 	enemyCount = 0,
 	score = 0,
 	highscore = 0,
@@ -102,8 +103,6 @@ local function removeDeadObjects()
 				dead = { }
 			end
 			table.insert(dead, i)
-
-			print(tostring(obj) .. ' removed.')
 		elseif obj.group == 'weapon' then
 			weaponCount = weaponCount + 1
 			if firstWeapon == nil then
@@ -123,6 +122,15 @@ local function removeDeadObjects()
 	end
 end
 
+-- Commits all pending objects to the objects collection.
+local function commitPendingObjects()
+	for i = 1, #context.pending do
+		local obj = context.pending[i]
+		table.insert(context.objects, obj)
+	end
+	clear(context.pending)
+end
+
 -- Checks whether it's blocked on map at a specific position.
 local function isBlocked(pos)
 	local cel = mget(map_, pos.x, pos.y)
@@ -137,6 +145,7 @@ local function start(toGame, pos)
 
 	-- Load hero.
 	context.objects = { }
+	context.pending = { }
 	hero = Hero.new(
 		heroSpr,
 		Recti.byXYWH(0, 0, 16, 16),
@@ -150,9 +159,6 @@ local function start(toGame, pos)
 	)
 	hero.x, hero.y = pos.x, pos.y
 	hero:reset()
-	if not context.objects then
-		context.objects = { }
-	end
 	table.insert(context.objects, hero)
 
 	hero:on('dead', function (sender)
@@ -171,6 +177,18 @@ local function start(toGame, pos)
 		}
 	)
 	weapon.x, weapon.y = 130, 130
+	table.insert(context.objects, weapon)
+	weapon = Melee.new(
+		Resources.load('knife.spr'),
+		Recti.byXYWH(0, 0, 16, 16),
+		isBlocked,
+		{
+			type = 'knife',
+			co = co,
+			context = context,
+		}
+	)
+	weapon.x, weapon.y = 350, 190
 	table.insert(context.objects, weapon)
 
 	-- Initial states.
@@ -198,12 +216,13 @@ local function hud(delta)
 
 	local txt = 'WEAPON'
 	text(txt, 10, 300, Color.new(200, 220, 210))
-	if hero:weapon() == nil then
+	local weapon = hero:weapon()
+	if weapon == nil then
 		txt = 'NONE'
 		text(txt, 70, 300, Color.new(200, 220, 210))
 	else
-		txt = hero:weapon():name()
-		local cap = hero:weapon():capacity()
+		txt = weapon:name()
+		local cap = weapon:capacity()
 		if cap ~= nil then
 			txt = txt .. ' [' .. tostring(cap) .. ']'
 		end
@@ -306,6 +325,7 @@ function update(delta)
 		v:update(delta)
 	end
 	removeDeadObjects()
+	commitPendingObjects()
 
 	hud(delta)
 end

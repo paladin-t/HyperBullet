@@ -6,27 +6,26 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'object'
+require 'objects/weapon'
 
 Melee = class({
 	--[[ Variables. ]]
 
-	group = 'weapon',
-
-	_owner = nil,
-
-	_name = nil,
-
-	_interval = 0.15, _timestamp = nil,
-	_throwing = nil,
+	_shape = nil, _affecting = false,
+	_preInterval = 0.05, _postInterval = 0.05,
 
 	--[[ Constructor. ]]
 
 	ctor = function (self, sprite, box, isBlocked, options)
-		Object.ctor(self, sprite, box, isBlocked)
+		Weapon.ctor(self, sprite, box, isBlocked, options)
+
+		self._color = Color.new(255, 0, 0)
 
 		local cfg = Weapons[options.type]
 		self._name = cfg['name']
+
+		self._shape = cfg['shape']
+		self._preInterval, self._postInterval = cfg['pre_interval'], cfg['post_interval']
 		self._interval = cfg['interval']
 	end,
 
@@ -38,28 +37,17 @@ Melee = class({
 
 	--[[ Methods. ]]
 
-	owner = function (self)
-		return self._owner
-	end,
-	setOwner = function (self, owner)
-		self._owner = owner
-		self._timestamp = nil
-		self._throwing = nil
+	affecting = function (self)
+		if not self._affecting then
+			return false, nil
+		end
 
-		return self
-	end,
+		local shape = nil
+		if self._shape['type'] == 'circle' then
+			shape = Vec3.new(self.x, self.y - self.box:height() * 0.5, self._shape['r'])
+		end
 
-	name = function (self)
-		return self._name
-	end,
-
-	throwing = function (self)
-		return self._throwing
-	end,
-	throw = function (self, dir)
-		self._throwing = dir
-
-		return self
+		return true, shape
 	end,
 
 	-- Attacks with this melee itself.
@@ -76,42 +64,45 @@ Melee = class({
 		end
 		self._timestamp = now
 
-		-- Hurt.
-		-- TODO
-
 		-- Finish.
 		return true, false, nil
 	end,
 
-	behave = function (self, delta, _1)
-		local owner = self._owner
-		if owner then
-			self.x, self.y = owner.x, owner.y
-			self._facing = owner._facing
+	behave = function (self, delta, hero)
+		if self._timestamp ~= nil then
+			local now = DateTime.ticks()
+			local diff = now - self._timestamp
+			diff = DateTime.toSeconds(diff)
+			if diff < self._preInterval then
+				self._affecting = false
+			elseif diff < self._interval - self._postInterval then
+				self._affecting = true
+			elseif diff < self._interval then
+				self._affecting = false
+			else
+				self._timestamp = nil
+			end
 		end
+
+		Weapon.behave(self, delta, hero)
 
 		return self
 	end,
 
 	update = function (self, delta)
-		if self._throwing ~= nil then
-			local step = self._throwing * delta * 150
-			local forward = self:_move(step.x, step.y)
-			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Hits something.
-				self._throwing = nil
-			else
-				self.x = self.x + forward.x
-				self.y = self.y + forward.y
+		Weapon.update(self, delta)
+
+		if DEBUG then
+			if self._affecting then
+				if self._shape['type'] == 'circle' then
+					circ(
+						self.x, self.y - self.box:height() * 0.5,
+						self._shape['r'],
+						false,
+						self._color
+					)
+				end
 			end
 		end
-
-		Object.update(self, delta)
-
-		font(NORMAL_FONT)
-		local txt = self._name
-		local textWidth, textHeight = measure(txt, NORMAL_FONT)
-		text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
-		text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, Color.new(200, 220, 210))
-		font(nil)
 	end
-}, Object)
+}, Weapon)

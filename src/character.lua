@@ -21,8 +21,8 @@ Character = class({
 	_weight = 1,
 	_moveSpeed = 0,
 	_moving = nil, _movingByRecoil = nil,
-	_picking = false, _throwing = false,
 	_facing = nil,
+	_picking = false, _throwing = false,
 
 	--[[ Constructor. ]]
 
@@ -60,10 +60,8 @@ Character = class({
 
 		return inter
 	end,
-	intersectsWithWeapon = function (self, other)
-		local inter = Math.intersects(self._aabbAttack, other._aabb)
-
-		return inter
+	intersectsWithShape = function (self, shape)
+		return Math.intersects(self._aabb, shape)
 	end,
 
 	weapon = function (self)
@@ -74,7 +72,9 @@ Character = class({
 			self._weapon:setOwner(nil)
 		end
 		if weapon ~= nil then
-			weapon:setOwner(self)
+			weapon
+				:setOwner(self)
+				:setOwnerGroup(self.group)
 		end
 		self._weapon = weapon
 
@@ -177,5 +177,10 @@ Character = class({
 		end
 
 		Object.update(self, delta)
+
+		local weapon = self:weapon()
+		if weapon ~= nil then
+			weapon:update(delta)
+		end
 	end
 }, Object)

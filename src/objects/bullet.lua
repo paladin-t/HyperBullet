@@ -6,7 +6,7 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'character'
+require 'object'
 
 Bullet = class({
 	--[[ Variables. ]]
@@ -16,22 +16,23 @@ Bullet = class({
 	_ownerGroup = nil,
 
 	_direction = nil,
-
+	_moveSpeed = 0,
 	_lifetime = 1,
 	_ticks = 0,
 
 	--[[ Constructor. ]]
 
 	ctor = function (self, sprite, isBlocked, options)
-		Character.ctor(
-			self,
-			sprite, options.box,
-			isBlocked,
-			options
-		)
+		Object.ctor(self, sprite, options.box, isBlocked)
+
+		self._color = Color.new(255, 0, 0)
+
+		if options.atk then
+			self.atk = options.atk
+		end
 
 		self._direction = options.direction
-
+		self._moveSpeed = options.moveSpeed
 		self._lifetime = options.lifetime or 1
 
 		self._slidable = 0
@@ -71,10 +72,10 @@ Bullet = class({
 		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Hits something.
 			self:kill()
 		else
-			self._moving.x = self._moving.x + forward.x
-			self._moving.y = self._moving.y + forward.y
+			self.x = self.x + forward.x
+			self.y = self.y + forward.y
 		end
 
-		Character.update(self, delta)
+		Object.update(self, delta)
 	end
-}, Character)
+}, Object)

@@ -34,21 +34,45 @@ Hero = class({
 		-- Interact with objects.
 		for _, v in ipairs(self._context.objects) do
 			if v.group == 'enemy' then
-				-- Do nothing.
+				local weapon = self:weapon()
+				if weapon ~= nil then
+					local affecting, shape = weapon:affecting()
+					if affecting then
+						if v:intersectsWithShape(shape) then
+							v:hurt(weapon)
+
+							local weapon = v:weapon()
+							if weapon ~= nil then
+								v:setWeapon(nil)
+								weapon:revive()
+								table.insert(self._context.pending, weapon)
+							end
+						end
+					end
+				end
 			elseif v.group == 'weapon' then
 				if v:throwing() then
-					v:throw(nil)
+					if v:ownerGroup() ~= 'hero' and self:intersects(v) then
+						v:throw(nil)
 
-					self:kill()
+						self:hurt(v)
 
-					local weapon = self:weapon()
-					if weapon ~= nil then
-						self:setWeapon(nil)
-						weapon:revive()
-						table.insert(self._context.objects, weapon)
+						local weapon = self:weapon()
+						if weapon ~= nil then
+							self:setWeapon(nil)
+							weapon:revive()
+							table.insert(self._context.pending, weapon)
+						end
 					end
-				elseif self._picking and self:weapon() == nil then
+				elseif self._picking then
 					if self:intersects(v) then
+						local weapon = self:weapon()
+						if weapon ~= nil then
+							self:setWeapon(nil)
+							weapon:revive()
+							table.insert(self._context.pending, weapon)
+						end
+
 						self:setWeapon(v)
 						v:kill()
 					end
@@ -56,14 +80,14 @@ Hero = class({
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup == 'enemy' then
-					if self:intersects(v) then
-						self:kill()
+					if not IMMORTAL and self:intersects(v) then
+						self:hurt(v)
 
 						local weapon = self:weapon()
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.objects, weapon)
+							table.insert(self._context.pending, weapon)
 						end
 					end
 				end
@@ -80,7 +104,7 @@ Hero = class({
 				self:setWeapon(nil)
 				weapon:revive()
 				weapon:throw(self._facing)
-				table.insert(self._context.objects, weapon)
+				table.insert(self._context.pending, weapon)
 			end
 
 			self._throwing = false
