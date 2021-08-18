@@ -1,0 +1,23 @@
+{
+	"application": {
+		"_window": {
+			"display_index": 0,
+			"fullscreen": false,
+			"maximized": false,
+			"size": [ 1280, 720 ]
+		},
+		"pause_on_focus_lost": false
+	},
+	"canvas": {
+		"state": 0,
+		"fix_ratio": true
+	},
+	"input": {
+		"onscreen_gamepad": {
+			"enabled": false,
+			"swap_ab": false,
+			"scale": 1.0,
+			"padding": [ 8.0, 12.0 ]
+		}
+	}
+}

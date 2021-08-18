@@ -26,8 +26,8 @@ Character = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, isBlocked, options)
-		Object.ctor(self, sprite, box, isBlocked)
+	ctor = function (self, resource, box, isBlocked, options)
+		Object.ctor(self, resource, box, isBlocked)
 
 		self.vacuum = options.vacuum
 
@@ -56,12 +56,12 @@ Character = class({
 	--[[ Methods. ]]
 
 	intersects = function (self, other)
-		local inter = Math.intersects(self._aabb, other._aabb)
+		local inter = Math.intersects(self._collider, other._collider)
 
 		return inter
 	end,
 	intersectsWithShape = function (self, shape)
-		return Math.intersects(self._aabb, shape)
+		return Math.intersects(self._collider, shape)
 	end,
 
 	weapon = function (self)

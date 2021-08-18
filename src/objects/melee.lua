@@ -16,8 +16,8 @@ Melee = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, isBlocked, options)
-		Weapon.ctor(self, sprite, box, isBlocked, options)
+	ctor = function (self, resource, box, isBlocked, options)
+		Weapon.ctor(self, resource, box, isBlocked, options)
 
 		self._color = Color.new(255, 0, 0)
 
@@ -44,14 +44,14 @@ Melee = class({
 
 		local shape = nil
 		if self._shape['type'] == 'circle' then
-			shape = Vec3.new(self.x, self.y - self.box:height() * 0.5, self._shape['r'])
+			shape = Vec3.new(self.x, self.y, self._shape['r'])
 		end
 
 		return true, shape
 	end,
 
 	-- Attacks with this melee itself.
-	-- returns success, out of bullet (always false), recoil.
+	-- returns success, out of bullet (always false), recoil (always nil).
 	attack = function (self, dir, _)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
@@ -96,7 +96,7 @@ Melee = class({
 			if self._affecting then
 				if self._shape['type'] == 'circle' then
 					circ(
-						self.x, self.y - self.box:height() * 0.5,
+						self.x, self.y,
 						self._shape['r'],
 						false,
 						self._color

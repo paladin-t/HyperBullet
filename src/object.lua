@@ -19,12 +19,15 @@ Object = class({
 
 	_dead = false,
 	_disappearing = nil, _disappearingTicks = 0,
-	_aabb = nil,
+	_collider = nil,
 
 	_sprite = nil,
 	_spriteWidth = 0, _spriteHeight = 0,
 	_spriteAngle = 0,
 	_spriteUpdater = nil,
+	_shapeLine = nil,
+	_shapeLines = nil,
+	_shapeHeadPosition = nil,
 	_color = Color.new(0, 255, 0),
 
 	_walker = nil,
@@ -33,21 +36,25 @@ Object = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, isBlocked)
+	ctor = function (self, resource, box, isBlocked)
 		self.box = box
 
-		if sprite then
-			self._sprite = sprite
+		if resource.__name == 'Sprite' then
+			self._sprite = resource
 			self._sprite:play('idle', false)
 			self._spriteWidth, self._spriteHeight =
 				self._sprite.width, self._sprite.height
+		elseif resource['type'] == 'line' then
+			self._shapeLine = resource
+		elseif resource['type'] == 'lines' then
+			self._shapeLines = resource
 		end
 
 		if isBlocked then
 			self._walker = Walker.new()
 			self._walker.objectSize = Vec2.new(self.box:width(), self.box:height())
 			self._walker.tileSize = Vec2.new(16, 16)
-			self._walker.offset = Vec2.new(self.box:width() * 0.5, self.box:height())
+			self._walker.offset = Vec2.new(self.box:width() * 0.5, self.box:height() * 0.5)
 			self._isBlocked = isBlocked
 		end
 	end,
@@ -124,50 +131,90 @@ Object = class({
 			self._spriteUpdater(delta)
 		end
 
-		local res = self._sprite
-		local dstX, dstY, dstW, dstH =
-			self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - self.box:yMax(),
-			self._spriteWidth, self._spriteHeight
+		local sprite, shapeLine, shapeLines =
+			self._sprite, self._shapeLine, self._shapeLines
+		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
 
-		self._aabb = Recti.new(
-			dstX + self.box:xMin(), dstY + self.box:yMin(),
-			dstX + self.box:xMax(), dstY + self.box:yMax()
-		)
-
-		if res then
-			local visible = true
-			if self._disappearing then
-				local INTERVAL = 0.3
-				self._disappearingTicks = self._disappearingTicks + delta
-				if self._disappearingTicks > INTERVAL then
-					self._disappearingTicks = self._disappearingTicks - INTERVAL
-					self._disappearing = self._disappearing - 1
-					if self._disappearing <= 0 then
-						self:kill()
-						self._disappearing, self._disappearingTicks = nil, 0
-					end
-				end
-				if self._disappearingTicks > INTERVAL * 0.5 then
-					visible = false
+		local visible = true
+		if self._disappearing then
+			local INTERVAL = 0.3
+			self._disappearingTicks = self._disappearingTicks + delta
+			if self._disappearingTicks > INTERVAL then
+				self._disappearingTicks = self._disappearingTicks - INTERVAL
+				self._disappearing = self._disappearing - 1
+				if self._disappearing <= 0 then
+					self:kill()
+					self._disappearing, self._disappearingTicks = nil, 0
 				end
 			end
-			if visible then
+			if self._disappearingTicks > INTERVAL * 0.5 then
+				visible = false
+			end
+		end
+		if visible then
+			if sprite ~= nil then
 				spr(
-					res,
-					self.x - self._spriteWidth * 0.5, dstY, dstW, dstH,
+					sprite,
+					dstX, dstY, dstW, dstH,
 					self._spriteAngle
 				)
+			elseif shapeLine ~= nil then
+				if self._shapeHeadPosition == nil then
+					self._shapeHeadPosition = Vec2.new(dstX, dstY)
+				end
+				line(
+					self._shapeHeadPosition.x, self._shapeHeadPosition.y,
+					dstX, dstY,
+					shapeLine['color']
+				)
+			elseif shapeLines ~= nil then
+				if self._shapeHeadPosition == nil then
+					self._shapeHeadPosition = Vec2.new(dstX, dstY)
+				end
+				local pos = Vec2.new(dstX, dstY)
+				local diff = pos - self._shapeHeadPosition
+				local n, a = shapeLines['count'], shapeLines['angle']
+				local c = shapeLines['color']
+				for i = 1, n do
+					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * a)
+					line(
+						self._shapeHeadPosition.x, self._shapeHeadPosition.y,
+						p.x, p.y,
+						c
+					)
+				end
 			end
 		end
 
 		if DEBUG then
-			rect(
-				self._aabb:xMin(), self._aabb:yMin(),
-				self._aabb:xMax(), self._aabb:yMax(),
-				false,
-				self._color
-			)
+			if self._collider.__name == 'Recti' then
+				rect(
+					self._collider:xMin(), self._collider:yMin(),
+					self._collider:xMax(), self._collider:yMax(),
+					false,
+					self._color
+				)
+			elseif self._collider.__name == 'Vec3' then
+				circ(
+					self._collider.x, self._collider.y,
+					self._collider.z,
+					false,
+					self._color
+				)
+			end
 		end
+	end,
+
+	_build = function (self, dstX, dstY, dstW, dstH)
+		local dstX, dstY, dstW, dstH =
+			self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - (self.box:yMin() + self.box:height() * 0.5),
+			self._spriteWidth, self._spriteHeight
+		self._collider = Recti.new(
+			dstX + self.box:xMin(), dstY + self.box:yMin(),
+			dstX + self.box:xMax(), dstY + self.box:yMax()
+		)
+
+		return dstX, dstY, dstW, dstH
 	end,
 
 	_move = function (self, dx, dy)

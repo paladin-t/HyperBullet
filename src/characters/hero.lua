@@ -15,8 +15,8 @@ Hero = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, isBlocked, options)
-		Character.ctor(self, sprite, box, isBlocked, options)
+	ctor = function (self, resource, box, isBlocked, options)
+		Character.ctor(self, resource, box, isBlocked, options)
 	end,
 
 	--[[ Meta methods. ]]
@@ -38,7 +38,7 @@ Hero = class({
 				if weapon ~= nil then
 					local affecting, shape = weapon:affecting()
 					if affecting then
-						if v:intersectsWithShape(shape) then
+						if v:intersectsWithShape(shape) then -- Enemy intersects with hero's melee.
 							v:hurt(weapon)
 
 							local weapon = v:weapon()
@@ -52,7 +52,7 @@ Hero = class({
 				end
 			elseif v.group == 'weapon' then
 				if v:throwing() then
-					if v:ownerGroup() ~= 'hero' and self:intersects(v) then
+					if v:ownerGroup() ~= 'hero' and self:intersects(v) then -- Hero intersects with a weapon which is being thrown.
 						v:throw(nil)
 
 						self:hurt(v)
@@ -65,7 +65,7 @@ Hero = class({
 						end
 					end
 				elseif self._picking then
-					if self:intersects(v) then
+					if self:intersects(v) then -- Hero intersects with weapon for picking.
 						local weapon = self:weapon()
 						if weapon ~= nil then
 							self:setWeapon(nil)
@@ -79,9 +79,12 @@ Hero = class({
 				end
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
-				if ownerGroup == 'enemy' then
-					if not IMMORTAL and self:intersects(v) then
+				if ownerGroup ~= 'hero' then
+					if not IMMORTAL and self:intersects(v) then -- Hero intersects with bullet.
 						self:hurt(v)
+						if not v:penetrable() then
+							v:kill()
+						end
 
 						local weapon = self:weapon()
 						if weapon ~= nil then

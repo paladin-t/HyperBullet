@@ -1,9 +1,12 @@
 {
   "id": 0,
-  "title": "Shooting",
+  "title": "Hyper Dungeon",
   "description": "",
   "author": "Tony",
-  "version": "1.0",
-  "genre": "TUTORIAL",
-  "url": ""
+  "version": "1.0.0",
+  "genre": "GAME",
+  "url": "https://paladin-t.github.io/games/hb/",
+  "strategies": [
+    "batch_map"
+  ]
 }

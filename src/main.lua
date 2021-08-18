@@ -15,9 +15,10 @@ require 'co'
 require 'keycode'
 
 require 'utils'
+require 'config/hero'
+require 'config/enemies'
 require 'config/weapons'
 require 'config/bullets'
-require 'config/enemies'
 require 'config/scenes'
 require 'characters/hero'
 require 'characters/enemy'
@@ -32,6 +33,7 @@ Constant.
 
 DEBUG = true -- Enable to show collision boxes.
 IMMORTAL = false -- Enable to make the hero unkillable.
+PAUSE_SPAWNING = false -- Enable to pause enemy spawning.
 
 TITLE_FONT = Font.new('college.ttf', 30)
 NORMAL_FONT = Font.new('ascii 8x8.png', Vec2.new(8, 8))
@@ -49,7 +51,6 @@ local co = nil
 
 local bgm = nil
 local bank = nil
-local heroSpr = nil
 
 local map_ = nil
 local hero = nil
@@ -146,15 +147,16 @@ local function start(toGame, pos)
 	-- Load hero.
 	context.objects = { }
 	context.pending = { }
+	local cfg = Heroes['hero']
 	hero = Hero.new(
-		heroSpr,
-		Recti.byXYWH(0, 0, 16, 16),
+		cfg['resource'],
+		cfg['box'],
 		isBlocked,
 		{
 			co = co,
 			context = context,
-			hp = 1,
-			moveSpeed = 100
+			hp = cfg['hp'],
+			moveSpeed = cfg['move_speed']
 		}
 	)
 	hero.x, hero.y = pos.x, pos.y
@@ -277,7 +279,6 @@ function setup()
 	--play(bgm, true, 2)
 
 	bank = Resources.load('bank.png')
-	heroSpr = Resources.load('hero.spr')
 
 	context:loadHighscore()
 

@@ -39,7 +39,7 @@ Scenes = {
 				Coroutine.waitFor(1.5)
 
 				-- Spawn.
-				if context.enemyCount < 4 then
+				if context.enemyCount < 4 and not PAUSE_SPAWNING then
 					-- Generate enemy.
 					local type_ = 'enemy1'
 					local cfg = Enemies[type_]

@@ -11,7 +11,39 @@ Bullets = {
 		['resource'] = Resources.load('bullet.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10),
+		['move_speed'] = 100,
+		['lifetime'] = 10,
+		['penetrable'] = false
+	},
+	['revolver'] = {
+	},
+	['shotgun'] = {
+		['resource'] = {
+			['type'] = 'lines',
+			['count'] = 5, ['angle'] = math.pi * 0.01,
+			['color'] = Color.new(0, 0, 0)
+		},
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10),
 		['move_speed'] = 200,
-		['lifetime'] = 10
+		['lifetime'] = 0.5,
+		['penetrable'] = true
+	},
+	['submachine_gun'] = {
+	},
+	['machine_gun'] = {
+	},
+	['rifle'] = {
+		['resource'] = {
+			['type'] = 'line',
+			['color'] = Color.new(0, 0, 0)
+		},
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10),
+		['move_speed'] = 200,
+		['lifetime'] = 10,
+		['penetrable'] = false
+	},
+	['laser'] = {
 	}
 }

@@ -11,6 +11,30 @@ Enemies = {
 		['resource'] = Resources.load('enemy1.spr'),
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['move_speed'] = 100
+		['move_speed'] = 80
+	},
+	['enemy2'] = {
+		['resource'] = Resources.load('enemy2.spr'),
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['move_speed'] = 80
+	},
+	['enemy3'] = {
+		['resource'] = Resources.load('enemy3.spr'),
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['move_speed'] = 80
+	},
+	['enemy4'] = {
+		['resource'] = Resources.load('enemy4.spr'),
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['move_speed'] = 80
+	},
+	['enemy5'] = {
+		['resource'] = Resources.load('enemy5.spr'),
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['move_speed'] = 80
 	}
 }

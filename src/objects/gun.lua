@@ -18,8 +18,8 @@ Gun = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, sprite, box, isBlocked, options)
-		Weapon.ctor(self, sprite, box, isBlocked, options)
+	ctor = function (self, resource, box, isBlocked, options)
+		Weapon.ctor(self, resource, box, isBlocked, options)
 
 		local cfg = Weapons[options.type]
 		self._bullet = Bullets[options.type]
@@ -77,10 +77,13 @@ Gun = class({
 				atk = self._bullet['atk'],
 				box = self._bullet['box'],
 				moveSpeed = self._bullet['move_speed'],
-				lifetime = self._bullet['lifetime']
+				lifetime = self._bullet['lifetime'],
+				penetrable = self._bullet['penetrable']
 			}
 		)
-		bullet.x, bullet.y = self.x, self.y
+		local pos = Vec2.new(owner.x, owner.y) + self._facing * self._offset * 1.5
+		bullet.x, bullet.y =
+			pos.x, pos.y
 		bullet:setOwnerGroup(owner.group)
 		table.insert(owner._context.pending, bullet)
 
