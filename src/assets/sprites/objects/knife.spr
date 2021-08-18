@@ -4,7 +4,7 @@
   "count": 1,
   "data": [
     {
-      "x": 32,
+      "x": 0,
       "y": 16,
       "width": 16,
       "height": 16,
@@ -12,5 +12,5 @@
       "key": "idle"
     }
   ],
-  "ref": "bank.png"
+  "ref": "assets/imgs/bank.png"
 }

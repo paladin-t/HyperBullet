@@ -35,8 +35,8 @@ DEBUG = true -- Enable to show collision boxes.
 IMMORTAL = false -- Enable to make the hero unkillable.
 PAUSE_SPAWNING = false -- Enable to pause enemy spawning.
 
-TITLE_FONT = Font.new('college.ttf', 30)
-NORMAL_FONT = Font.new('ascii 8x8.png', Vec2.new(8, 8))
+TITLE_FONT = Font.new('assets/fonts/college.ttf', 30)
+NORMAL_FONT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
 local WALKABLE_CEL = 97
 local BORDER_CEL = -1
@@ -50,16 +50,19 @@ Variables.
 local co = nil
 
 local bgm = nil
-local bank = nil
 
+local blank = Image.new()
+blank:resize(1, 1)
+blank:set(0, 0, Color.new(255, 255, 255, 0))
+local cursor = nil
 local map_ = nil
 local hero = nil
 local context = {
+	raycaster = nil,
 	objects = nil, pending = nil,
 	enemyCount = 0,
 	score = 0,
-	highscore = 0,
-	newHighscore = false,
+	highscore = 0, newHighscore = false,
 	gameover = false,
 
 	-- Loads highscore from file.
@@ -142,11 +145,15 @@ end
 -- Starts a new game.
 local function start(toGame, pos)
 	-- Load map.
-	map_ = Resources.load('map1.map')
+	map_ = Resources.load('assets/maps/map1.map')
 
-	-- Load hero.
+	-- Initialize objects.
+	context.raycaster = Raycaster.new()
+	context.raycaster.tileSize = Vec2.new(16, 16)
 	context.objects = { }
 	context.pending = { }
+
+	-- Load hero.
 	local cfg = Heroes['hero']
 	hero = Hero.new(
 		cfg['resource'],
@@ -169,8 +176,6 @@ local function start(toGame, pos)
 
 	-- Generate weapon.
 	local weapon = Gun.new(
-		Resources.load('gun.spr'),
-		Recti.byXYWH(0, 0, 16, 16),
 		isBlocked,
 		{
 			type = 'pistol',
@@ -181,8 +186,6 @@ local function start(toGame, pos)
 	weapon.x, weapon.y = 130, 130
 	table.insert(context.objects, weapon)
 	weapon = Melee.new(
-		Resources.load('knife.spr'),
-		Recti.byXYWH(0, 0, 16, 16),
 		isBlocked,
 		{
 			type = 'knife',
@@ -193,7 +196,7 @@ local function start(toGame, pos)
 	weapon.x, weapon.y = 350, 190
 	table.insert(context.objects, weapon)
 
-	-- Initial states.
+	-- Initialize states.
 	if context.gameover then
 		context.enemyCount = 0
 		context.score = 0
@@ -267,6 +270,28 @@ local function hud(delta)
 	end
 end
 
+local function frontSight(x, y)
+	local weapon = hero:weapon()
+	local target = nil
+	if context.gameover then
+		target = nil
+	else
+		if weapon == nil or weapon.cursor == nil then
+			target = nil
+		else
+			target = blank
+		end
+	end
+
+	if target ~= cursor then
+		cursor = target
+		Application.setCursor(cursor)
+	end
+	if cursor ~= nil then
+		spr(weapon.cursor, x - weapon.cursor.width * 0.5, y - weapon.cursor.height * 0.5)
+	end
+end
+
 function quit()
 	context:saveHighscore()
 end
@@ -274,11 +299,9 @@ end
 function setup()
 	co = Coroutine.new()
 
-	bgm = Resources.load('bgm.ogg', Music)
+	bgm = Resources.load('assets/bgms/bgm.ogg', Music)
 	volume(1, 0.5)
 	--play(bgm, true, 2)
-
-	bank = Resources.load('bank.png')
 
 	context:loadHighscore()
 
@@ -294,6 +317,7 @@ function update(delta)
 	co:update(delta)
 
 	-- Game logic.
+	local x, y, lmb, rmb, mmb = mouse()
 	if not context.gameover then
 		if key(KeyCode.W) then
 			hero:moveUp(delta)
@@ -305,7 +329,6 @@ function update(delta)
 		elseif key(KeyCode.D) then
 			hero:moveRight(delta)
 		end
-		local x, y, lmb, rmb, mmb = mouse()
 		hero:lookAt(x, y)
 		if lmb then
 			hero:attack(1)
@@ -325,6 +348,7 @@ function update(delta)
 	for _, v in ipairs(context.objects) do
 		v:update(delta)
 	end
+	frontSight(x, y)
 	removeDeadObjects()
 	commitPendingObjects()
 

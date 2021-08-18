@@ -16,8 +16,8 @@ Melee = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box, isBlocked, options)
-		Weapon.ctor(self, resource, box, isBlocked, options)
+	ctor = function (self, isBlocked, options)
+		Weapon.ctor(self, isBlocked, options)
 
 		self._color = Color.new(255, 0, 0)
 

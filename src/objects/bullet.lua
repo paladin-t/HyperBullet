@@ -74,7 +74,7 @@ Bullet = class({
 
 	update = function (self, delta)
 		local step = self._direction * delta * self._moveSpeed
-		local forward = self:_move(step.x, step.y)
+		local forward = self:_move(step)
 		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
 			self:kill()
 		else

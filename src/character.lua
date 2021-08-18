@@ -45,6 +45,8 @@ Character = class({
 		self._moveSpeed = options.moveSpeed
 		self._moving = Vec2.new(0, 0)
 		self._facing = Vec2.new(1, 0)
+
+		self._raycaster = self._context.raycaster
 	end,
 
 	--[[ Meta methods. ]]
@@ -159,7 +161,7 @@ Character = class({
 
 	update = function (self, delta)
 		if self._movingByRecoil ~= nil then
-			local m = self:_move(self._movingByRecoil.x, self._movingByRecoil.y)
+			local m = self:_move(self._movingByRecoil)
 			self.x = self.x + m.x
 			self.y = self.y + m.y
 			self._movingByRecoil = nil
@@ -170,7 +172,7 @@ Character = class({
 			if l > speed then
 				self._moving = self._moving * (speed / l)
 			end
-			local m = self:_move(self._moving.x, self._moving.y)
+			local m = self:_move(self._moving)
 			self.x = self.x + m.x
 			self.y = self.y + m.y
 			self._moving = Vec2.new(0, 0)

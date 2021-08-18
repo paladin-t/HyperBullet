@@ -8,7 +8,7 @@ Homepage: https://paladin-t.github.io/bitty/
 
 Bullets = {
 	['pistol'] = {
-		['resource'] = Resources.load('bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10),
 		['move_speed'] = 100,

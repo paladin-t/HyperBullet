@@ -31,6 +31,7 @@ Object = class({
 	_color = Color.new(0, 255, 0),
 
 	_walker = nil,
+	_raycaster = nil,
 	_isBlocked = nil,
 	_slidable = 5,
 
@@ -217,9 +218,15 @@ Object = class({
 		return dstX, dstY, dstW, dstH
 	end,
 
-	_move = function (self, dx, dy)
+	_raycast = function (self, pos, dir)
+		local pos, idx = self._raycaster:solve(pos, dir, self._isBlocked)
+
+		return pos, idx
+	end,
+
+	_move = function (self, step)
 		local newDir = self._walker:solve(
-			Vec2.new(self.x, self.y), Vec2.new(dx, dy),
+			Vec2.new(self.x, self.y), step,
 			self._isBlocked,
 			self._slidable
 		)

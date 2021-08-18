@@ -12,7 +12,7 @@ Vacuum = class({
 	--[[ Constructor. ]]
 
 	ctor = function (self, asset, box)
-		if not asset then asset = 'vacuum.spr' end
+		if not asset then asset = 'assets/sprites/vacuum.spr' end
 		local res = Resources.load(asset)
 		if not box then box = Recti.byXYWH(0, 0, 32, 32) end
 		Object.ctor(self, res, box)

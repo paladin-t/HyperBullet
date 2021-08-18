@@ -4,13 +4,13 @@
   "count": 1,
   "data": [
     {
-      "x": 16,
-      "y": 0,
+      "x": 0,
+      "y": 464,
       "width": 16,
       "height": 16,
       "interval": 0.25,
       "key": "idle"
     }
   ],
-  "ref": "bank.png"
+  "ref": "assets/imgs/bank.png"
 }

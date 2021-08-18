@@ -18,8 +18,8 @@ Gun = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box, isBlocked, options)
-		Weapon.ctor(self, resource, box, isBlocked, options)
+	ctor = function (self, isBlocked, options)
+		Weapon.ctor(self, isBlocked, options)
 
 		local cfg = Weapons[options.type]
 		self._bullet = Bullets[options.type]

@@ -39,7 +39,7 @@ Scenes = {
 				Coroutine.waitFor(1.5)
 
 				-- Spawn.
-				if context.enemyCount < 4 and not PAUSE_SPAWNING then
+				if context.enemyCount < 1 and not PAUSE_SPAWNING then
 					-- Generate enemy.
 					local type_ = 'enemy1'
 					local cfg = Enemies[type_]
@@ -70,8 +70,6 @@ Scenes = {
 
 					-- Equip with weapon.
 					local weapon = Gun.new(
-						Resources.load('gun.spr'),
-						Recti.byXYWH(0, 0, 16, 16),
 						isBlocked,
 						{
 							type = 'pistol',

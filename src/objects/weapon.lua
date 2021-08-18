@@ -13,6 +13,8 @@ Weapon = class({
 
 	group = 'weapon',
 
+	cursor = nil,
+
 	_owner = nil, _ownerGroup = nil,
 	_name = nil,
 
@@ -23,10 +25,14 @@ Weapon = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box, isBlocked, options)
+	ctor = function (self, isBlocked, options)
+		local cfg = Weapons[options.type]
+		local resource = Resources.load(cfg['entry'])
+		local box = cfg['box']
+		self.cursor = cfg['cursor']
+
 		Object.ctor(self, resource, box, isBlocked)
 
-		local cfg = Weapons[options.type]
 		self.atk = cfg['atk']
 		self._name = cfg['name']
 
@@ -112,7 +118,7 @@ Weapon = class({
 	update = function (self, delta)
 		if self._throwing ~= nil then
 			local step = self._throwing * delta * self._throwingSpeed
-			local forward = self:_move(step.x, step.y)
+			local forward = self:_move(step)
 			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
 				self._throwing = nil
 			else

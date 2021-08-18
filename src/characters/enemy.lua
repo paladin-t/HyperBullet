@@ -79,7 +79,18 @@ Enemy = class({
 		self:lookAt(hero.x, hero.y)
 
 		-- Attack.
-		self:attack(nil)
+		local pos, idx = self:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
+		if pos == nil then
+			self:attack(nil)
+		end
+
+		if DEBUG then
+			if pos then
+				line(src.x, src.y, pos.x, pos.y, Color.new(255, 255, 255, 128))
+			else
+				line(src.x, src.y, hero.x, hero.y, Color.new(255, 0, 0, 128))
+			end
+		end
 
 		-- Interact with objects.
 		for _, v in ipairs(self._context.objects) do
