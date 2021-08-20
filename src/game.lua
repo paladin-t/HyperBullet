@@ -21,6 +21,7 @@ Game = class({
 	objects = nil, pending = nil,
 	enemyCount = 0,
 
+	level = 1,
 	score = 0,
 	highscore = 0, newHighscore = false,
 	state = nil,
@@ -89,8 +90,11 @@ Game = class({
 
 	-- Starts a new game.
 	start = function (self, toGame)
+		-- Pick a room.
+		local room = Scenes['room1'](self, self.isBlocked)
+
 		-- Load map.
-		self.map = Resources.load('assets/maps/map1.map')
+		self.map = room['map']
 		self.sceneWidth, self.sceneHeight =
 			self.map.width * 16, self.map.height * 16
 
@@ -146,6 +150,7 @@ Game = class({
 		end
 
 		-- Initialize states.
+		self.level = 1
 		self.score = 0
 		if toGame then
 			self.state = States['playing']()
@@ -154,8 +159,8 @@ Game = class({
 
 		-- Start a wave.
 		if toGame then
-			local wave = coroutine.create(Scenes['wave1'](self, self.isBlocked))
-			self.co:start(wave)
+			local wave = coroutine.create(room['wave'])
+			self.co:start(wave, self.level)
 		end
 
 		-- Finish.
@@ -335,33 +340,29 @@ Game = class({
 		-- Information.
 		font(NORMAL_FONT)
 
-		local txt = 'WEAPON'
-		text(txt, 10, 12, Color.new(200, 220, 210))
+		text('LEVEL', 10, 7, Color.new(200, 220, 210))
+		text(self.level, 70, 7, Color.new(200, 220, 210))
+		text('WEAPON', 10, 20, Color.new(200, 220, 210))
 		if weapon == nil then
-			txt = 'NONE'
-			text(txt, 70, 12, Color.new(200, 220, 210))
+			text('NONE', 70, 20, Color.new(200, 220, 210))
 		else
-			txt = weapon:name()
+			local txt = weapon:name()
 			local cap = weapon:capacity()
 			if cap ~= nil then
 				txt = txt .. ' [' .. tostring(cap) .. ']'
 			end
-			text(txt, 70, 12, Color.new(200, 220, 210))
+			text(txt, 70, 20, Color.new(200, 220, 210))
 		end
 
 		local scoreWidth, _ = measure(self.score, NORMAL_FONT)
 		local highscoreWidth, _ = measure(self.highscore, NORMAL_FONT)
 		local maxScoreWidth = math.max(scoreWidth, highscoreWidth)
-		txt = 'HIGHSCORE'
-		local textWidth, _ = measure(txt, NORMAL_FONT)
-		text(txt, canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, Color.new(200, 220, 210))
-		txt = self.highscore
-		text(txt, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or Color.new(200, 220, 210))
-		txt = 'SCORE'
-		textWidth, _ = measure(txt, NORMAL_FONT)
-		text(txt, canvasWidth - textWidth - maxScoreWidth - 10 - 8, 20, Color.new(200, 220, 210))
-		txt = self.score
-		text(txt, canvasWidth - maxScoreWidth - 10, 20, Color.new(200, 220, 210))
+		local textWidth, _ = measure('HIGHSCORE', NORMAL_FONT)
+		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, Color.new(200, 220, 210))
+		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or Color.new(200, 220, 210))
+		textWidth, _ = measure('SCORE', NORMAL_FONT)
+		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 20, Color.new(200, 220, 210))
+		text(self.score, canvasWidth - maxScoreWidth - 10, 20, Color.new(200, 220, 210))
 
 		font(nil)
 
