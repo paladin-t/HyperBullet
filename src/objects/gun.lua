@@ -6,8 +6,6 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'objects/weapon'
-
 Gun = class({
 	--[[ Variables. ]]
 
@@ -71,11 +69,10 @@ Gun = class({
 			self._bullet['resource'],
 			owner._isBlocked,
 			{
-				co = owner._co,
-				context = owner._context,
+				game = owner._game,
 				direction = dir or self._facing,
 				atk = self._bullet['atk'],
-				box = self._bullet['box'],
+				box = self._bullet['box'], maxBox = self._bullet['max_box'],
 				moveSpeed = self._bullet['move_speed'],
 				lifetime = self._bullet['lifetime'],
 				penetrable = self._bullet['penetrable']
@@ -85,7 +82,7 @@ Gun = class({
 		bullet.x, bullet.y =
 			pos.x, pos.y
 		bullet:setOwnerGroup(owner.group)
-		table.insert(owner._context.pending, bullet)
+		table.insert(owner._game.pending, bullet)
 
 		-- Finish.
 		return true, false, self._recoil

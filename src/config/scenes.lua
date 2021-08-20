@@ -7,7 +7,7 @@ Homepage: https://paladin-t.github.io/bitty/
 ]]
 
 Scenes = {
-	['wave1'] = function (co, context, isBlocked)
+	['wave1'] = function (game, isBlocked)
 		return function ()
 			-- Prepare.
 			Coroutine.waitFor(1.5)
@@ -34,12 +34,12 @@ Scenes = {
 			local n = 1
 
 			-- Spawn enemies.
-			while not context.gameover do
+			while not game.gameover do
 				-- Delay.
 				Coroutine.waitFor(1.5)
 
 				-- Spawn.
-				if context.enemyCount < 1 and not PAUSE_SPAWNING then
+				if game.enemyCount < 1 and not PAUSE_SPAWNING then
 					-- Generate enemy.
 					local type_ = 'enemy1'
 					local cfg = Enemies[type_]
@@ -48,8 +48,7 @@ Scenes = {
 						cfg['box'],
 						isBlocked,
 						{
-							co = co,
-							context = context,
+							game = game,
 							hp = cfg['hp'],
 							moveSpeed = cfg['move_speed']
 						}
@@ -59,22 +58,21 @@ Scenes = {
 					enemy.x, enemy.y = pos.x, pos.y
 					enemy:setGoals(cdr(goal))
 					enemy:reset()
-					table.insert(context.objects, enemy)
+					table.insert(game.objects, enemy)
 
 					-- Setup event handler.
 					enemy:on('dead', function (sender)
-						context.enemyCount = context.enemyCount - 1
-						context:addScore(10)
+						game.enemyCount = game.enemyCount - 1
+						game:addScore(10)
 					end)
-					context.enemyCount = context.enemyCount + 1
+					game.enemyCount = game.enemyCount + 1
 
 					-- Equip with weapon.
 					local weapon = Gun.new(
 						isBlocked,
 						{
 							type = 'pistol',
-							co = co,
-							context = context,
+							game = game,
 						}
 					)
 					enemy:setWeapon(weapon)

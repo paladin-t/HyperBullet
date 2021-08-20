@@ -6,8 +6,6 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'character'
-
 Hero = class({
 	--[[ Variables. ]]
 
@@ -32,7 +30,7 @@ Hero = class({
 		Character.behave(self, delta, _1)
 
 		-- Interact with objects.
-		for _, v in ipairs(self._context.objects) do
+		for _, v in ipairs(self._game.objects) do
 			if v.group == 'enemy' then
 				local weapon = self:weapon()
 				if weapon ~= nil then
@@ -45,7 +43,7 @@ Hero = class({
 							if weapon ~= nil then
 								v:setWeapon(nil)
 								weapon:revive()
-								table.insert(self._context.pending, weapon)
+								table.insert(self._game.pending, weapon)
 							end
 						end
 					end
@@ -61,7 +59,7 @@ Hero = class({
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.pending, weapon)
+							table.insert(self._game.pending, weapon)
 						end
 					end
 				elseif self._picking then
@@ -70,7 +68,7 @@ Hero = class({
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.pending, weapon)
+							table.insert(self._game.pending, weapon)
 						end
 
 						self:setWeapon(v)
@@ -90,7 +88,7 @@ Hero = class({
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.pending, weapon)
+							table.insert(self._game.pending, weapon)
 						end
 					end
 				end
@@ -107,7 +105,7 @@ Hero = class({
 				self:setWeapon(nil)
 				weapon:revive()
 				weapon:throw(self._facing)
-				table.insert(self._context.pending, weapon)
+				table.insert(self._game.pending, weapon)
 			end
 
 			self._throwing = false

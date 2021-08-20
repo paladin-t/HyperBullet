@@ -6,8 +6,6 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'object'
-
 Bullet = class({
 	--[[ Variables. ]]
 
@@ -15,10 +13,10 @@ Bullet = class({
 
 	_ownerGroup = nil,
 
+	_box = nil, _maxBox = nil,
 	_direction = nil,
 	_moveSpeed = 0,
-	_lifetime = 1,
-	_ticks = 0,
+	_lifetime = 1, _ticks = 0,
 	_penetrable = false,
 
 	--[[ Constructor. ]]
@@ -32,6 +30,7 @@ Bullet = class({
 			self.atk = options.atk
 		end
 
+		self._box, self._maxBox = options.box, options.maxBox
 		self._direction = options.direction
 		self._moveSpeed = options.moveSpeed
 		self._lifetime = options.lifetime or 1
@@ -67,6 +66,15 @@ Bullet = class({
 			self:kill()
 
 			return self
+		end
+		if self._maxBox ~= nil then
+			local factor = self._ticks / self._lifetime
+			self.box = Recti.byXYWH(
+				lerp(self._box:xMin(), self._maxBox:xMin(), factor),
+				lerp(self._box:yMin(), self._maxBox:yMin(), factor),
+				lerp(self._box:width(), self._maxBox:width(), factor),
+				lerp(self._box:height(), self._maxBox:height(), factor)
+			)
 		end
 
 		return self

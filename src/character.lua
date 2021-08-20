@@ -6,15 +6,12 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'object'
-
 Character = class({
 	--[[ Variables. ]]
 
 	vacuum = nil,
 
-	_co = nil,
-	_context = nil,
+	_game = nil,
 
 	_weapon = nil,
 
@@ -39,14 +36,13 @@ Character = class({
 			self.atk = options.atk
 		end
 
-		self._co = options.co
-		self._context = options.context
+		self._game = options.game
 
 		self._moveSpeed = options.moveSpeed
 		self._moving = Vec2.new(0, 0)
 		self._facing = Vec2.new(1, 0)
 
-		self._raycaster = self._context.raycaster
+		self._raycaster = self._game.raycaster
 	end,
 
 	--[[ Meta methods. ]]
@@ -178,10 +174,23 @@ Character = class({
 			self._moving = Vec2.new(0, 0)
 		end
 
+		local weapon = self:weapon()
+		local before, after = false, false
+		if weapon ~= nil then
+			if self._spriteAngle < 0 then
+				before = true
+			else
+				after = true
+			end
+		end
+
+		if before then
+			weapon:update(delta)
+		end
+
 		Object.update(self, delta)
 
-		local weapon = self:weapon()
-		if weapon ~= nil then
+		if after then
 			weapon:update(delta)
 		end
 	end

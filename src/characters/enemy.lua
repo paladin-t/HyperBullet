@@ -6,8 +6,6 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'character'
-
 Enemy = class({
 	--[[ Variables. ]]
 
@@ -93,7 +91,7 @@ Enemy = class({
 		end
 
 		-- Interact with objects.
-		for _, v in ipairs(self._context.objects) do
+		for _, v in ipairs(self._game.objects) do
 			if v.group == 'hero' then
 				local weapon = self:weapon()
 				if weapon ~= nil then
@@ -106,7 +104,7 @@ Enemy = class({
 							if weapon ~= nil then
 								v:setWeapon(nil)
 								weapon:revive()
-								table.insert(self._context.pending, weapon)
+								table.insert(self._game.pending, weapon)
 							end
 						end
 					end
@@ -124,7 +122,7 @@ Enemy = class({
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.pending, weapon)
+							table.insert(self._game.pending, weapon)
 						end
 					end
 				end
@@ -141,7 +139,7 @@ Enemy = class({
 						if weapon ~= nil then
 							self:setWeapon(nil)
 							weapon:revive()
-							table.insert(self._context.pending, weapon)
+							table.insert(self._game.pending, weapon)
 						end
 					end
 				end

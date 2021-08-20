@@ -6,8 +6,6 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
-require 'object'
-
 Weapon = class({
 	--[[ Variables. ]]
 
@@ -15,6 +13,7 @@ Weapon = class({
 
 	cursor = nil,
 
+	_game = nil,
 	_owner = nil, _ownerGroup = nil,
 	_name = nil,
 
@@ -34,6 +33,8 @@ Weapon = class({
 		Object.ctor(self, resource, box, isBlocked)
 
 		self.atk = cfg['atk']
+
+		self._game = options.game
 		self._name = cfg['name']
 
 		self._facing = Vec2.new(1, 0)
@@ -136,13 +137,15 @@ Weapon = class({
 
 		Object.update(self, delta)
 
-		if not self._owner and not self._throwing then
-			font(NORMAL_FONT)
-			local txt = self._name
-			local textWidth, textHeight = measure(txt, NORMAL_FONT)
-			text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
-			text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, Color.new(200, 220, 210))
-			font(nil)
+		if self._game.state.playing then
+			if not self._owner and not self._throwing then
+				font(NORMAL_FONT)
+				local txt = self._name
+				local textWidth, textHeight = measure(txt, NORMAL_FONT)
+				text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
+				text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, Color.new(200, 220, 210))
+				font(nil)
+			end
 		end
 	end,
 

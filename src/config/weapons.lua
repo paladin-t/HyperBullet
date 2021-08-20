@@ -35,6 +35,8 @@ Weapons = {
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 8
 	},
+	['dual_pistols'] = {
+	},
 	['revolver'] = {
 	},
 	['shotgun'] = {
@@ -66,5 +68,7 @@ Weapons = {
 		['offset'] = 8
 	},
 	['laser'] = {
+	},
+	['disc_gun'] = {
 	}
 }
