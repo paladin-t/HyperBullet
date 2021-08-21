@@ -14,7 +14,7 @@ Game = class({
 	bgm = nil,
 	map = nil,
 	sceneWidth = 0, sceneHeight = 0,
-	isBlocked = nil,
+	isHeroBlocked = nil, isEnvironmentBlocked = nil,
 	raycaster = nil,
 
 	hero = nil,
@@ -30,12 +30,13 @@ Game = class({
 	_clearColor = nil, _hudColor = nil,
 	_cameraX = nil, _cameraY = nil,
 
-	ctor = function (self, co, isBlocked)
+	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked)
 		self.co = co
 		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
 		volume(1, 0.5)
 		--play(self.bgm, true, 2)
-		self.isBlocked = isBlocked
+		self.isHeroBlocked = isHeroBlocked
+		self.isEnvironmentBlocked = isEnvironmentBlocked
 		self.raycaster = Raycaster.new()
 		self.raycaster.tileSize = Vec2.new(16, 16)
 
@@ -45,7 +46,7 @@ Game = class({
 		self._clearColor, self._hudColor =
 			Color.new(80, 80, 80), Color.new(30, 30, 30)
 
-		self.state = States['title']()
+		self.state = States['title'](self)
 	end,
 
 	-- Adds the specific number of score to the current game.
@@ -91,7 +92,7 @@ Game = class({
 	-- Starts a new game.
 	start = function (self, toGame)
 		-- Pick a room.
-		local room = Scenes['room1'](self, self.isBlocked)
+		local room = Scenes['room1'](self, self.isEnvironmentBlocked)
 
 		-- Load map.
 		self.map = room['map']
@@ -108,7 +109,7 @@ Game = class({
 		local hero = Hero.new(
 			cfg['resource'],
 			cfg['box'],
-			self.isBlocked,
+			self.isHeroBlocked,
 			{
 				game = self,
 				hp = cfg['hp'],
@@ -121,7 +122,7 @@ Game = class({
 		table.insert(self.objects, hero)
 
 		hero:on('dead', function (sender)
-			self.state = States['gameover']()
+			self.state = States['gameover'](self)
 			self.co:clear()
 		end)
 
@@ -130,7 +131,7 @@ Game = class({
 		-- Generate weapon.
 		if toGame then
 			local weapon = Gun.new(
-				self.isBlocked,
+				self.isEnvironmentBlocked,
 				{
 					type = 'pistol',
 					game = self,
@@ -139,7 +140,7 @@ Game = class({
 			weapon.x, weapon.y = 130, 130
 			table.insert(self.objects, weapon)
 			weapon = Melee.new(
-				self.isBlocked,
+				self.isEnvironmentBlocked,
 				{
 					type = 'knife',
 					game = self,
@@ -153,7 +154,7 @@ Game = class({
 		self.level = 1
 		self.score = 0
 		if toGame then
-			self.state = States['playing']()
+			self.state = States['playing'](self)
 		end
 		self._cameraX, self._cameraY = nil, nil
 
@@ -211,23 +212,23 @@ Game = class({
 
 		local x, y, lmb, rmb, mmb = mouse()
 		if self.state.playing then
-			if key(KeyCode.W) then
+			if key(beInput.KeyCode.W) then
 				hero:moveUp(delta)
-			elseif key(KeyCode.S) then
+			elseif key(beInput.KeyCode.S) then
 				hero:moveDown(delta)
 			end
-			if key(KeyCode.A) then
+			if key(beInput.KeyCode.A) then
 				hero:moveLeft(delta)
-			elseif key(KeyCode.D) then
+			elseif key(beInput.KeyCode.D) then
 				hero:moveRight(delta)
 			end
 			hero:lookAt(x + self._cameraX, y + self._cameraY)
 			if lmb then
 				hero:attack(1)
 			end
-			if mmb or keyp(KeyCode.R) then
+			if mmb or keyp(beInput.KeyCode.R) then
 				hero:pick()
-			elseif rmb or keyp(KeyCode.F) then
+			elseif rmb or keyp(beInput.KeyCode.F) then
 				hero:throw()
 			end
 		end
@@ -253,7 +254,7 @@ Game = class({
 			:_mouse(x, y)
 			:_hud(delta)
 
-		self.state:update(self, delta)
+		self.state:update(delta)
 	end,
 
 	-- Removes all dead objects from the objects collection.

@@ -11,8 +11,10 @@ Homepage: https://paladin-t.github.io/bitty/
 --   press R or MMB to pick up a weapon, F or RMB to throw;
 --   move mouse to look around, LMB to attack (with weapon equipped).
 
+require 'libs/beInput/beInput'
+require 'libs/beGUI/beGUI'
+
 require 'utils'
-require 'keycode'
 require 'class'
 require 'co'
 require 'event'
@@ -69,6 +71,11 @@ function setup()
 		function (pos)
 			local cel = mget(game.map, pos.x, pos.y)
 
+			return cel ~= WALKABLE_CEL
+		end,
+		function (pos)
+			local cel = mget(game.map, pos.x, pos.y)
+
 			return cel ~= WALKABLE_CEL and cel ~= BORDER_CEL
 		end
 	)
@@ -78,5 +85,8 @@ end
 
 function update(delta)
 	delta = math.min(delta, 0.02)
+
+	beInput.update(delta)
+
 	game:update(delta)
 end

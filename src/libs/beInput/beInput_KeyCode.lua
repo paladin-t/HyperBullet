@@ -6,6 +6,10 @@ Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
 Homepage: https://paladin-t.github.io/bitty/
 ]]
 
+--[[
+Key code.
+]]
+
 local function asc(s)
 	return string.byte(s, 1)
 end
@@ -14,7 +18,7 @@ local function toKeycode(k)
 	return (1 << 30) | k
 end
 
-KeyCode = {
+local KeyCode = {
 	Return = 13,
 	Esc = 27,
 	Backspace = 8,
@@ -36,6 +40,7 @@ KeyCode = {
 	Minus = asc('-'),
 	Period = asc('.'),
 	Slash = asc('/'),
+	CapsLock = toKeycode(57),
 
 	Num0 = asc('0'),
 	Num1 = asc('1'),
@@ -102,6 +107,9 @@ KeyCode = {
 	F11 = toKeycode(68),
 	F12 = toKeycode(69),
 
+	PrintScreen = toKeycode(70),
+	ScrollLock = toKeycode(71),
+	Pause = toKeycode(72),
 	Insert = toKeycode(73),
 	Home = toKeycode(74),
 	PageUp = toKeycode(75),
@@ -139,4 +147,12 @@ KeyCode = {
 	RShift = toKeycode(229),
 	RAlt = toKeycode(230),
 	RGui = toKeycode(231)
+}
+
+--[[
+Exporting.
+]]
+
+return {
+	KeyCode = KeyCode
 }
