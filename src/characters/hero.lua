@@ -72,7 +72,7 @@ Hero = class({
 						end
 
 						self:setWeapon(v)
-						v:kill()
+						v:kill('picked')
 					end
 				end
 			elseif v.group == 'bullet' then
@@ -81,7 +81,7 @@ Hero = class({
 					if not IMMORTAL and self:intersects(v) then -- Hero intersects with bullet.
 						self:hurt(v)
 						if not v:penetrable() then
-							v:kill()
+							v:kill('killed')
 						end
 
 						local weapon = self:weapon()

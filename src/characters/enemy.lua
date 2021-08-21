@@ -11,12 +11,17 @@ Enemy = class({
 
 	group = 'enemy',
 
+	_behaviours = nil,
 	_goals = nil,
 
 	--[[ Constructor. ]]
 
 	ctor = function (self, resource, box, isBlocked, options)
 		Character.ctor(self, resource, box, isBlocked, options)
+
+		self._behaviours = transform(options.behaviours, function (b, i)
+			return Behaviours[b]()
+		end)
 	end,
 
 	--[[ Meta methods. ]]
@@ -37,57 +42,10 @@ Enemy = class({
 		-- Prepare.
 		Character.behave(self, delta, hero)
 
-		-- Walk through way points.
-		::again::
-		local goal = (self._goals ~= nil and #self._goals > 0) and self._goals[1] or nil
-		local dst = nil
-		if goal == nil then
-			dst = Vec2.new(hero.x, hero.y)
-		else
-			dst = goal
-		end
-		local src = Vec2.new(self.x, self.y)
-		local diff = dst - src
-		local l = diff.length
-		local epsilon = 4
-		if goal ~= nil and l <= epsilon then
-			table.remove(self._goals, 1)
-
-			goto again
-		elseif goal == nil and l <= epsilon * 4 then
-			-- Do nothing.
-		else
-			if l >= epsilon * 2 then
-				if diff.x <= -epsilon then
-					self:moveLeft(delta)
-				elseif diff.x >= epsilon then
-					self:moveRight(delta)
-				end
-				if diff.y <= -epsilon then
-					self:moveUp(delta)
-				elseif diff.y >= epsilon then
-					self:moveDown(delta)
-				end
-			else
-				self._moving = diff
-			end
-		end
-
-		-- Look at the hero.
-		self:lookAt(hero.x, hero.y)
-
-		-- Attack.
-		local pos, idx = self:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
-		if pos == nil then
-			self:attack(nil)
-		end
-
-		if DEBUG then
-			if pos then
-				line(src.x, src.y, pos.x, pos.y, Color.new(255, 255, 255, 128))
-			else
-				line(src.x, src.y, hero.x, hero.y, Color.new(255, 0, 0, 128))
-			end
+		-- Behave.
+		local src, dst = nil, nil
+		for _, b in ipairs(self._behaviours) do
+			src, dst = b:behave(self, delta, hero, src, dst)
 		end
 
 		-- Interact with objects.
@@ -125,6 +83,18 @@ Enemy = class({
 							table.insert(self._game.pending, weapon)
 						end
 					end
+				elseif self._picking then
+					if self:intersects(v) then -- Enemy intersects with weapon for picking.
+						local weapon = self:weapon()
+						if weapon ~= nil then
+							self:setWeapon(nil)
+							weapon:revive()
+							table.insert(self._game.pending, weapon)
+						end
+
+						self:setWeapon(v)
+						v:kill('picked')
+					end
 				end
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
@@ -132,7 +102,7 @@ Enemy = class({
 					if self:intersects(v) then -- Enemy intersects with bullet.
 						self:hurt(v)
 						if not v:penetrable() then
-							v:kill()
+							v:kill('killed')
 						end
 
 						local weapon = self:weapon()
@@ -144,6 +114,22 @@ Enemy = class({
 					end
 				end
 			end
+		end
+
+		-- Process picking and throwing.
+		if self._picking then
+			self._picking = false
+		end
+		if self._throwing then
+			local weapon = self:weapon()
+			if weapon ~= nil then
+				self:setWeapon(nil)
+				weapon:revive()
+				weapon:throw(self._facing)
+				table.insert(self._game.pending, weapon)
+			end
+
+			self._throwing = false
 		end
 
 		-- Finish.

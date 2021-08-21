@@ -23,6 +23,7 @@ require 'character'
 
 require 'config/hero'
 require 'config/enemies'
+require 'config/behaviours'
 require 'config/weapons'
 require 'config/bullets'
 require 'config/scenes'

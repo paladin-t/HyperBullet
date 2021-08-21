@@ -95,7 +95,7 @@ Game = class({
 		local room = Scenes['room1'](self, self.isEnvironmentBlocked)
 
 		-- Load map.
-		self.map = room['map']
+		self.map = room.map
 		self.sceneWidth, self.sceneHeight =
 			self.map.width * 16, self.map.height * 16
 
@@ -160,7 +160,7 @@ Game = class({
 
 		-- Start a wave.
 		if toGame then
-			local wave = coroutine.create(room['wave'])
+			local wave = coroutine.create(room.wave)
 			self.co:start(wave, self.level)
 		end
 

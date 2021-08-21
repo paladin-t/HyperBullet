@@ -19,7 +19,7 @@ Vacuum = class({
 			'idle',
 			false, false,
 			function ()
-				self:kill()
+				self:kill('disappeared')
 
 				Resources.unload(self._sprite)
 				self._sprite = nil

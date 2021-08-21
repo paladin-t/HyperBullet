@@ -63,7 +63,7 @@ Bullet = class({
 	behave = function (self, delta, _1)
 		self._ticks = self._ticks + delta
 		if self._ticks >= self._lifetime then
-			self:kill()
+			self:kill('disappeared')
 
 			return self
 		end
@@ -84,7 +84,7 @@ Bullet = class({
 		local step = self._direction * delta * self._moveSpeed
 		local forward = self:_move(step)
 		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
-			self:kill()
+			self:kill('disappeared')
 		else
 			self.x = self.x + forward.x
 			self.y = self.y + forward.y

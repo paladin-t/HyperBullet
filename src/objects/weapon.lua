@@ -61,6 +61,7 @@ Weapon = class({
 		self._timestamp = nil
 		self._throwing = nil
 		self._throwingTicks = 0
+		self._disappearing, self._disappearingTicks = nil, 0
 		self._spriteAngle = 0
 
 		return self

@@ -69,7 +69,7 @@ Object = class({
 	hurt = function (self, other)
 		self.hp = math.max(self.hp - other.atk, 0)
 		if self.hp == 0 then
-			self:kill()
+			self:kill('killed')
 		end
 
 		return self
@@ -77,10 +77,10 @@ Object = class({
 	dead = function (self)
 		return self._dead
 	end,
-	kill = function (self)
+	kill = function (self, reason)
 		self._dead = true
 
-		self:trigger('dead')
+		self:trigger('dead', reason)
 
 		return self
 	end,
@@ -142,7 +142,7 @@ Object = class({
 				self._disappearingTicks = self._disappearingTicks - INTERVAL
 				self._disappearing = self._disappearing - 1
 				if self._disappearing <= 0 then
-					self:kill()
+					self:kill('disappeared')
 					self._disappearing, self._disappearingTicks = nil, 0
 				end
 			end

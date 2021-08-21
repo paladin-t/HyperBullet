@@ -9,11 +9,11 @@ Homepage: https://paladin-t.github.io/bitty/
 Scenes = {
 	['room1'] = function (game, isBlocked)
 		return {
-			['map'] = Resources.load('assets/maps/map1.map'),
-			['wave'] = function (level)
+			map = Resources.load('assets/maps/map1.map'),
+			wave = function (level)
 				-- Prepare.
 				Coroutine.waitFor(1.5)
-	
+
 				-- Way points.
 				local goals = {
 					{
@@ -34,12 +34,12 @@ Scenes = {
 					}
 				}
 				local n = 1
-	
+
 				-- Spawn enemies.
 				while not game.gameover do
 					-- Delay.
 					Coroutine.waitFor(1.5)
-	
+
 					-- Spawn.
 					if game.enemyCount < 1 and not PAUSE_SPAWNING then
 						-- Generate enemy.
@@ -52,6 +52,7 @@ Scenes = {
 							{
 								game = game,
 								hp = cfg['hp'],
+								behaviours = cfg['behaviours'],
 								moveSpeed = cfg['move_speed']
 							}
 						)
@@ -61,14 +62,16 @@ Scenes = {
 						enemy:setGoals(cdr(goal))
 						enemy:reset()
 						table.insert(game.objects, enemy)
-	
+
 						-- Setup event handler.
-						enemy:on('dead', function (sender)
-							game.enemyCount = game.enemyCount - 1
-							game:addScore(10)
+						enemy:on('dead', function (sender, reason)
+							if reason == 'killed' then
+								game.enemyCount = game.enemyCount - 1
+								game:addScore(10)
+							end
 						end)
 						game.enemyCount = game.enemyCount + 1
-	
+
 						-- Equip with weapon.
 						local weapon = Gun.new(
 							isBlocked,
@@ -78,8 +81,8 @@ Scenes = {
 							}
 						)
 						enemy:setWeapon(weapon)
-						weapon:kill()
-	
+						weapon:kill('picked')
+
 						-- Finish.
 						n = n + 1
 						if n > #goals then
