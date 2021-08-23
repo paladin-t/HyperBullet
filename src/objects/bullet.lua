@@ -19,6 +19,8 @@ Bullet = class({
 	_moveSpeed = 0,
 	_lifetime = 1, _ticks = 0,
 	_penetrable = false,
+	_bouncy = false,
+	_explosive = false,
 
 	--[[ Constructor. ]]
 
@@ -35,6 +37,8 @@ Bullet = class({
 		self._moveSpeed = options.moveSpeed
 		self._lifetime = options.lifetime or 1
 		self._penetrable = options.penetrable
+		self._bouncy = options.bouncy
+		self._explosive = options.explosive
 
 		self._slidable = 0
 	end,
@@ -75,6 +79,12 @@ Bullet = class({
 	penetrable = function (self)
 		return self._penetrable
 	end,
+	bouncy = function (self)
+		return self._bouncy
+	end,
+	explosive = function (self)
+		return self._explosive
+	end,
 
 	behave = function (self, delta, _1)
 		self._ticks = self._ticks + delta
@@ -99,11 +109,47 @@ Bullet = class({
 	update = function (self, delta)
 		local step = self._direction * delta * self._moveSpeed
 		local forward = self:_move(step)
-		if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
-			self:kill('disappeared')
+		if self._bouncy then
+			if step.x ~= 0 and forward.x == 0 then -- Intersects with tile.
+				step = Vec2.new(-self._direction.x, self._direction.y) * delta * self._moveSpeed -- Try reversing x.
+				forward = self:_move(step)
+				if forward.x == 0 then
+					step = Vec2.new(-self._direction.x, -self._direction.y) * delta * self._moveSpeed -- Try reversing y.
+					forward = self:_move(step)
+					if forward.y == 0 then
+						forward = nil
+					else
+						self._direction.y = -self._direction.y
+					end
+				else
+					self._direction.x = -self._direction.x
+				end
+			elseif step.y ~= 0 and forward.y == 0 then -- Intersects with tile.
+				step = Vec2.new(self._direction.x, -self._direction.y) * delta * self._moveSpeed -- Try reversing y.
+				forward = self:_move(step)
+				if forward.y == 0 then
+					step = Vec2.new(-self._direction.x, -self._direction.y) * delta * self._moveSpeed -- Try reversing x.
+					forward = self:_move(step)
+					if forward.x == 0 then
+						forward = nil
+					else
+						self._direction.x = -self._direction.x
+					end
+				else
+					self._direction.y = -self._direction.y
+				end
+			end
+			if forward ~= nil then
+				self.x = self.x + forward.x
+				self.y = self.y + forward.y
+			end
 		else
-			self.x = self.x + forward.x
-			self.y = self.y + forward.y
+			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
+				self:kill('disappeared')
+			else
+				self.x = self.x + forward.x
+				self.y = self.y + forward.y
+			end
 		end
 
 		Object.update(self, delta)

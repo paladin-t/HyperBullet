@@ -48,7 +48,9 @@ Pool = class({
 					box = cfg['box'], maxBox = cfg['max_box'],
 					moveSpeed = cfg['move_speed'],
 					lifetime = cfg['lifetime'],
-					penetrable = cfg['penetrable']
+					penetrable = cfg['penetrable'],
+					bouncy = cfg['bouncy'],
+					explosive = cfg['explosive']
 				}
 			)
 		end
