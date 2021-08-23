@@ -304,7 +304,7 @@ Game = class({
 				table.insert(dead, 1, i)
 			end
 		end
-		if dead then
+		if dead ~= nil then
 			for _, idx in ipairs(dead) do
 				table.remove(self.backgroundEffects, idx)
 			end
@@ -320,7 +320,7 @@ Game = class({
 				table.insert(dead, 1, i)
 			end
 		end
-		if dead then
+		if dead ~= nil then
 			for _, idx in ipairs(dead) do
 				table.remove(self.foregroundEffects, idx)
 			end
@@ -346,12 +346,10 @@ Game = class({
 				end
 			end
 		end
-
 		if weaponCount > 2 and firstWeapon ~= nil then
 			firstWeapon:disappear()
 		end
-
-		if dead then
+		if dead ~= nil then
 			for _, idx in ipairs(dead) do
 				table.remove(self.objects, idx)
 			end

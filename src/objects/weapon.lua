@@ -65,6 +65,10 @@ Weapon = class({
 		self._disappearing, self._disappearingTicks = nil, 0
 		self._spriteAngle = 0
 
+		if owner ~= nil then
+			self:trigger('picked', owner)
+		end
+
 		return self
 	end,
 

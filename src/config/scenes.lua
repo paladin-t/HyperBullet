@@ -14,6 +14,7 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 			-- Prepare.
 			local WEAPON_ORIGIN = Vec2.new(map_.width * 16 * 0.5, map_.height * 16 * 0.5)
 			local WEAPON_VECTOR = Vec2.new(100, 0)
+			local weapons = { }
 			forEach(initialWeapons, function (w, i)
 				local weapon = w.class.new(
 					game.isEnvironmentBlocked,
@@ -22,6 +23,21 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 						game = game,
 					}
 				)
+					:on('picked', function (sender, owner)
+						if owner == game.hero then
+							forEach(weapons, function (w, _)
+								if w ~= sender then
+									w:kill()
+
+									local fx = game.pool:effect('disappearance', w.x, w.y, game)
+									table.insert(game.foregroundEffects, fx)
+								end
+							end)
+						else
+							remove(weapons, weapon)
+						end
+					end)
+				table.insert(weapons, weapon)
 				local pos = w.position
 				if pos == nil then
 					pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(math.pi * 2 * ((i - 1) / #initialWeapons))
