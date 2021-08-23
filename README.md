@@ -6,6 +6,8 @@ Hyper Bullet is a top-down shoot'em up game.
 
 ## Description
 
+This project is still under early development.
+
 * Pick weapon
 * Attack enemies
 * Death
@@ -28,10 +30,6 @@ TODO
 # How to run
 
 Open the project with [Bitty Engine](https://paladin-t.github.io/bitty/) then run it.
-
-TODO
-
-# Credits
 
 TODO
 

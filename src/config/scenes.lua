@@ -24,17 +24,14 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 					}
 				)
 					:on('picked', function (sender, owner)
+						remove(weapons, weapon)
 						if owner == game.hero then
 							forEach(weapons, function (w, _)
-								if w ~= sender then
-									w:kill()
+								w:kill()
 
-									local fx = game.pool:effect('disappearance', w.x, w.y, game)
-									table.insert(game.foregroundEffects, fx)
-								end
+								local fx = game.pool:effect('disappearance', w.x, w.y, game)
+								table.insert(game.foregroundEffects, fx)
 							end)
-						else
-							remove(weapons, weapon)
 						end
 					end)
 				table.insert(weapons, weapon)
@@ -157,6 +154,30 @@ Scenes = {
 				}
 			},
 			--[[ Passing-by way points. ]] {
+				{
+					Vec2.new(-32, 144),
+					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32),
+					Vec2.new(368, 32), Vec2.new(432, 32), Vec2.new(432, 144),
+					Vec2.new(496, 144)
+				},
+				{
+					Vec2.new(496, 144),
+					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240),
+					Vec2.new(96, 240), Vec2.new(32, 240), Vec2.new(32, 144),
+					Vec2.new(-32, 144)
+				},
+				{
+					Vec2.new(-32, 144),
+					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240),
+					Vec2.new(368, 240), Vec2.new(432, 240), Vec2.new(432, 144),
+					Vec2.new(496, 144)
+				},
+				{
+					Vec2.new(496, 144),
+					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32),
+					Vec2.new(96, 32), Vec2.new(32, 32), Vec2.new(32, 144),
+					Vec2.new(-32, 144)
+				}
 			},
 			--[[ Initial weapons.       ]] {
 				{
