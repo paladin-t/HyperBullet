@@ -73,6 +73,7 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 							game = game,
 							hp = cfg['hp'],
 							behaviours = cfg['behaviours'],
+							lookAtTarget = cfg['look_at_target'],
 							moveSpeed = cfg['move_speed']
 						}
 					)

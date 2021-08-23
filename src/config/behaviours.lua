@@ -149,12 +149,26 @@ Behaviours = {
 		}
 	end,
 
-	['attack'] = function ()
+	['look_at'] = function ()
 		return {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Look at the hero.
-				this:lookAt(hero.x, hero.y)
+				local lookAtTarget = this:lookAtTarget()
+				if lookAtTarget == 'hero' then
+					this:lookAt(hero.x, hero.y)
+				else
+					this:lookAt(lookAtTarget.x, lookAtTarget.y)
+				end
 
+				-- Finish.
+				return src, dst
+			end
+		}
+	end,
+
+	['attack'] = function ()
+		return {
+			behave = function (self, this, delta, hero, src, dst)
 				-- Attack.
 				local pos, idx = this:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
 				if pos == nil and not hero:dead() then
