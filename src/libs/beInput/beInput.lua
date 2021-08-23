@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 local beGamepad = require 'libs/beInput/beInput_Gamepad'
@@ -22,7 +23,7 @@ local touch2 = { NAN, NAN, false, false }
 local axises1 = { 0, 0, 0, 0, 0, 0 }
 local axises2 = { 0, 0, 0, 0, 0, 0 }
 
-local update = function (_)
+local function update(_)
 	local x, y, lmb, rmb = mouse()
 	touch1 = touch2
 	touch2 = {
@@ -39,7 +40,7 @@ local update = function (_)
 		btn(beController.Controller.AxisTriggerRight, beController.Controller.first)
 	}
 end
-local reset = function ()
+local function reset()
 	touch1 = { NAN, NAN, false, false }
 	touch2 = { NAN, NAN, false, false }
 
@@ -47,10 +48,10 @@ local reset = function ()
 	axises2 = { 0, 0, 0, 0, 0, 0 }
 end
 
-touch = function ()
+function touch()
 	return touch2[1], touch2[2], touch2[3], touch2[4]
 end
-touchp = function ()
+function touchp()
 	if Features.hasTouchScreen() then
 		if touch1[3] and not touch2[3] then
 			return touch1[1], touch1[2], touch1[3] and not touch2[3], touch1[4] and not touch2[4]
@@ -62,7 +63,7 @@ touchp = function ()
 	end
 end
 
-axis = function (axis_, dir)
+function axis(axis_, dir)
 	if dir < 0 then
 		return axises2[-axis_] <= -20000
 	elseif dir > 0 then
@@ -71,7 +72,7 @@ axis = function (axis_, dir)
 		return false
 	end
 end
-axisp = function (axis_, dir)
+function axisp(axis_, dir)
 	if dir < 0 then
 		return axises1[-axis_] <= -20000 and math.abs(axises2[-axis_]) < 20000
 	elseif dir > 0 then

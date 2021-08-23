@@ -1,15 +1,14 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 Character = class({
 	--[[ Variables. ]]
-
-	vacuum = nil,
 
 	_game = nil,
 
@@ -25,8 +24,6 @@ Character = class({
 
 	ctor = function (self, resource, box, isBlocked, options)
 		Object.ctor(self, resource, box, isBlocked)
-
-		self.vacuum = options.vacuum
 
 		if options.hp then
 			self.maxHp = options.hp
@@ -54,9 +51,7 @@ Character = class({
 	--[[ Methods. ]]
 
 	intersects = function (self, other)
-		local inter = Math.intersects(self._collider, other._collider)
-
-		return inter
+		return Math.intersects(self._collider, other._collider)
 	end,
 	intersectsWithShape = function (self, shape)
 		return Math.intersects(self._collider, shape)
@@ -86,6 +81,10 @@ Character = class({
 		self._weight = weight
 
 		return self
+	end,
+
+	facing = function (self)
+		return self._facing
 	end,
 
 	moveLeft = function (self, delta)

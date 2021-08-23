@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 --[[ Maths. ]]
@@ -349,6 +350,21 @@ function merge(first, second)
 	if second then
 		for k, v in pairs(second) do
 			result[k] = v
+		end
+	end
+
+	return result
+end
+
+function flat(dict, pred)
+	if not dict then
+		return nil
+	end
+	local result = { }
+	for k, v in pairs(dict) do
+		local val = pred(k, v)
+		if val ~= nil then
+			table.insert(result, val)
 		end
 	end
 

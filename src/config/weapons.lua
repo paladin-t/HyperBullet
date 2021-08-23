@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 Weapons = {

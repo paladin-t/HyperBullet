@@ -1,21 +1,22 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local navPrev = function (self)
+local function navPrev(self)
 	return keyp(beInput.KeyCode.Up)
 end
-local navNext = function (self)
+local function navNext(self)
 	return keyp(beInput.KeyCode.Down)
 end
-local navConfirm = function (self)
+local function navConfirm(self)
 	return keyp(beInput.KeyCode.Return)
 end
-local navCancel = function (self)
+local function navCancel(self)
 	return keyp(beInput.KeyCode.Esc)
 end
 
@@ -34,7 +35,7 @@ States = {
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
 						game:save()
-						game:start(true)
+						game:start(true, true)
 					end)
 			)
 
@@ -75,6 +76,34 @@ States = {
 			end
 		}
 	end,
+	['next'] = function (game)
+		local ticks = 0
+
+		return {
+			playing = false,
+			update = function (self, delta)
+				local canvasWidth, canvasHeight = Canvas.main:size()
+
+				font(TITLE_FONT)
+				local txt = 'LEVEL ' .. tostring(game.level)
+				local textWidth, textHeight = measure(txt, TITLE_FONT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, Color.new(200, 220, 210))
+				font(nil)
+
+				if ticks ~= nil then
+					ticks = ticks + delta
+					if ticks >= 1 then
+						ticks = nil
+					end
+				else
+					game.state = States['playing'](game)
+				end
+
+				return self
+			end
+		}
+	end,
 	['gameover'] = function (game)
 		local P = beGUI.percent
 		local theme = beTheme.default()
@@ -89,7 +118,7 @@ States = {
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
 						game:save()
-						game:start(true)
+						game:start(true, true)
 					end)
 			)
 		local ticks = 0

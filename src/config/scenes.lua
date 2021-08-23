@@ -1,96 +1,172 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-Scenes = {
-	['room1'] = function (game, isBlocked)
-		return {
-			map = Resources.load('assets/maps/map1.map'),
-			wave = function (level)
-				-- Prepare.
+local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options)
+	return {
+		map = map_,
+		wave = function (game, isBlocked)
+			-- Prepare.
+			local WEAPON_ORIGIN = Vec2.new(map_.width * 16 * 0.5, map_.height * 16 * 0.5)
+			local WEAPON_VECTOR = Vec2.new(100, 0)
+			forEach(initialWeapons, function (w, i)
+				local weapon = w.class.new(
+					game.isEnvironmentBlocked,
+					{
+						type = w.type,
+						game = game,
+					}
+				)
+				local pos = w.position
+				if pos == nil then
+					pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(math.pi * 2 * ((i - 1) / #initialWeapons))
+				end
+				weapon.x, weapon.y = pos.x, pos.y
+				table.insert(game.objects, weapon)
+
+				local fx = game.pool:effect('appearance', pos.x, pos.y, game)
+				table.insert(game.foregroundEffects, fx)
+			end)
+
+			local pointIndex = 1
+
+			-- Delay.
+			Coroutine.waitFor(1.5)
+
+			-- Spawn enemies.
+			while game.state.playing do
+				-- Delay.
 				Coroutine.waitFor(1.5)
 
-				-- Way points.
-				local goals = {
-					{
-						Vec2.new(-32, 144),
-						Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32)
-					},
-					{
-						Vec2.new(496, 144),
-						Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240)
-					},
-					{
-						Vec2.new(-32, 144),
-						Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240)
-					},
-					{
-						Vec2.new(496, 144),
-						Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32)
-					}
-				}
-				local n = 1
+				-- Spawn.
+				if game.enemyCount < options.maxEnemyCount and not PAUSE_SPAWNING then
+					-- Generate enemy.
+					local _, type_ = coroutine.resume(enemySequence)
+					local cfg = Enemies[type_]
+					local enemy = Enemy.new(
+						cfg['resource'],
+						cfg['box'],
+						isBlocked,
+						{
+							game = game,
+							hp = cfg['hp'],
+							behaviours = cfg['behaviours'],
+							moveSpeed = cfg['move_speed']
+						}
+					)
+					local isLingering, isPassingBy =
+						exists(cfg['behaviours'], 'chase') or exists(cfg['behaviours'], 'besiege'),
+						exists(cfg['behaviours'], 'pass_by')
+					local points = nil
+					if isLingering then
+						points = lingeringPoints
+					elseif isPassingBy then
+						points = passingByPoints
+					end
+					local goal = points[pointIndex]
+					local pos = car(goal)
+					enemy.x, enemy.y = pos.x, pos.y
+					enemy:setGoals(cdr(goal))
+					enemy:reset()
+					table.insert(game.objects, enemy)
 
-				-- Spawn enemies.
-				while not game.gameover do
-					-- Delay.
-					Coroutine.waitFor(1.5)
+					local fx = game.pool:effect('appearance', pos.x, pos.y, game)
+					table.insert(game.foregroundEffects, fx)
 
-					-- Spawn.
-					if game.enemyCount < 1 and not PAUSE_SPAWNING then
-						-- Generate enemy.
-						local type_ = 'enemy1'
-						local cfg = Enemies[type_]
-						local enemy = Enemy.new(
-							cfg['resource'],
-							cfg['box'],
-							isBlocked,
-							{
-								game = game,
-								hp = cfg['hp'],
-								behaviours = cfg['behaviours'],
-								moveSpeed = cfg['move_speed']
-							}
-						)
-						local goal = goals[n]
-						local pos = car(goal)
-						enemy.x, enemy.y = pos.x, pos.y
-						enemy:setGoals(cdr(goal))
-						enemy:reset()
-						table.insert(game.objects, enemy)
+					-- Setup event handler.
+					enemy:on('dead', function (sender, reason)
+						if reason == 'killed' then
+							game.enemyCount = game.enemyCount - 1
+							game:addKilling(1)
+							game:addScore(cfg['score'])
 
-						-- Setup event handler.
-						enemy:on('dead', function (sender, reason)
-							if reason == 'killed' then
-								game.enemyCount = game.enemyCount - 1
-								game:addScore(10)
-							end
-						end)
-						game.enemyCount = game.enemyCount + 1
-
-						-- Equip with weapon.
-						local weapon = Gun.new(
-							isBlocked,
-							{
-								type = 'pistol',
-								game = game,
-							}
-						)
-						enemy:setWeapon(weapon)
-						weapon:kill('picked')
-
-						-- Finish.
-						n = n + 1
-						if n > #goals then
-							n = 1
+							local fx = game.pool:effect('disappearance', sender.x, sender.y, game)
+							table.insert(game.foregroundEffects, fx)
 						end
+					end)
+					game.enemyCount = game.enemyCount + 1
+
+					-- Equip with weapon.
+					local weapon = Gun.new(
+						isBlocked,
+						{
+							type = cfg['weapon'],
+							game = game,
+						}
+					)
+					enemy:setWeapon(weapon)
+					weapon:kill('picked')
+
+					-- Finish.
+					pointIndex = pointIndex + 1
+					if pointIndex > #points then
+						pointIndex = 1
 					end
 				end
 			end
-		}
+		end,
+		finished = function (game)
+			return options.finishingCondition(game)
+		end
+	}
+end
+
+Scenes = {
+	['room1'] = function (level)
+		print('Build room1 for level ' .. tostring(level) .. '.')
+
+		return build(
+			--[[ Map asset.             ]] Resources.load('assets/maps/map1.map'),
+			--[[ Lingering way points.  ]] {
+				{
+					Vec2.new(-32, 144),
+					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32)
+				},
+				{
+					Vec2.new(496, 144),
+					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240)
+				},
+				{
+					Vec2.new(-32, 144),
+					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240)
+				},
+				{
+					Vec2.new(496, 144),
+					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32)
+				}
+			},
+			--[[ Passing-by way points. ]] {
+			},
+			--[[ Initial weapons.       ]] {
+				{
+					class = Gun,
+					type = 'pistol',
+					position = nil
+				},
+				{
+					class = Melee,
+					type = 'knife',
+					position = nil
+				}
+			},
+			--[[ Enemy sequence.        ]] coroutine.create(
+				function ()
+					while true do
+						coroutine.yield('enemy1_chase_pistol')
+					end
+				end
+			),
+			--[[ Other options.         ]] {
+				maxEnemyCount = 1,
+				finishingCondition = function (game)
+					return game.killingCount >= 20
+				end
+			}
+		)
 	end
 }

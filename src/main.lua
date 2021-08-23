@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 -- Usage:
@@ -17,15 +18,17 @@ require 'libs/beGUI/beGUI'
 require 'utils'
 require 'class'
 require 'co'
+require 'probabilistic'
 require 'event'
 require 'object'
 require 'character'
+require 'pool'
 
-require 'config/hero'
-require 'config/enemies'
-require 'config/behaviours'
-require 'config/weapons'
 require 'config/bullets'
+require 'config/weapons'
+require 'config/behaviours'
+require 'config/enemies'
+require 'config/hero'
 require 'config/scenes'
 require 'config/states'
 require 'characters/hero'

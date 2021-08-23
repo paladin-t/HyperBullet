@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 local SAVE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet.txt')
@@ -19,9 +20,13 @@ Game = class({
 
 	hero = nil,
 	objects = nil, pending = nil,
+	backgroundEffects = nil, foregroundEffects = nil,
 	enemyCount = 0,
+	pool = nil,
 
+	room = nil,
 	level = 1,
+	killingCount = 0,
 	score = 0,
 	highscore = 0, newHighscore = false,
 	state = nil,
@@ -49,12 +54,29 @@ Game = class({
 		self.state = States['title'](self)
 	end,
 
+	-- Adds the specific number of killing to the current game.
+	addKilling = function (self, num)
+		if num == nil then
+			num = 1
+		end
+		self.killingCount = self.killingCount + num
+
+		if self.room.finished(self) then
+			self:start(true, false)
+		end
+
+		return self
+	end,
 	-- Adds the specific number of score to the current game.
 	addScore = function (self, num)
 		self.score = self.score + num
 		if self.score > self.highscore then
 			self.highscore = self.score
 			self.newHighscore = true
+		end
+
+		if self.room.finished(self) then
+			self:start(true, false)
 		end
 
 		return self
@@ -84,84 +106,92 @@ Game = class({
 
 	-- Loads initial resources, setups environments.
 	setup = function (self)
-		self:start(false)
+		self:start(false, true)
 
 		return self
 	end,
 
 	-- Starts a new game.
-	start = function (self, toGame)
+	start = function (self, toGame, restart)
 		-- Pick a room.
-		local room = Scenes['room1'](self, self.isEnvironmentBlocked)
+		if restart then
+			self.level = 1
+		else
+			self.level = self.level + 1
+		end
+		local types = flat(Scenes, function (k, _)
+			return k
+		end)
+		local type_ = any(types)
+		self.room = Scenes[type_](self.level)
 
 		-- Load map.
-		self.map = room.map
+		self.map = self.room.map
 		self.sceneWidth, self.sceneHeight =
 			self.map.width * 16, self.map.height * 16
 
 		-- Initialize objects.
-		self.objects = { }
-		self.pending = { }
+		self.objects, self.pending = { }, { }
+		self.backgroundEffects, self.foregroundEffects = { }, { }
 		self.enemyCount = 0
+		self.pool = Pool.new()
 
 		-- Load hero.
-		local cfg = Heroes['hero']
-		local hero = Hero.new(
-			cfg['resource'],
-			cfg['box'],
-			self.isHeroBlocked,
-			{
-				game = self,
-				hp = cfg['hp'],
-				moveSpeed = cfg['move_speed']
-			}
-		)
-		local pos = Vec2.new(self.sceneWidth * 0.5, self.sceneHeight * 0.5)
-		hero.x, hero.y = pos.x, pos.y
-		hero:reset()
-		table.insert(self.objects, hero)
-
-		hero:on('dead', function (sender)
-			self.state = States['gameover'](self)
-			self.co:clear()
-		end)
-
-		self.hero = hero
-
-		-- Generate weapon.
-		if toGame then
-			local weapon = Gun.new(
-				self.isEnvironmentBlocked,
+		if restart then
+			local cfg = Heroes['hero']
+			local hero = Hero.new(
+				cfg['resource'],
+				cfg['box'],
+				self.isHeroBlocked,
 				{
-					type = 'pistol',
 					game = self,
+					hp = cfg['hp'],
+					moveSpeed = cfg['move_speed']
 				}
 			)
-			weapon.x, weapon.y = 130, 130
-			table.insert(self.objects, weapon)
-			weapon = Melee.new(
-				self.isEnvironmentBlocked,
-				{
-					type = 'knife',
-					game = self,
-				}
-			)
-			weapon.x, weapon.y = 350, 190
-			table.insert(self.objects, weapon)
+			local pos = Vec2.new(self.sceneWidth * 0.5, self.sceneHeight * 0.5)
+			hero.x, hero.y = pos.x, pos.y
+			hero:reset()
+			table.insert(self.objects, hero)
+
+			local fx = self.pool:effect('appearance', pos.x, pos.y, self)
+			table.insert(self.foregroundEffects, fx)
+
+			hero:on('dead', function (sender, _)
+				self.state = States['gameover'](self)
+				self.co:clear()
+
+				local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
+				table.insert(self.foregroundEffects, fx)
+			end)
+
+			self.hero = hero
+		else
+			local hero = self.hero
+			local pos = Vec2.new(self.sceneWidth * 0.5, self.sceneHeight * 0.5)
+			hero.x, hero.y = pos.x, pos.y
+			table.insert(self.objects, hero)
 		end
 
 		-- Initialize states.
-		self.level = 1
-		self.score = 0
+		self.killingCount = 0
+		if restart then
+			self.score = 0
+		end
 		if toGame then
-			self.state = States['playing'](self)
+			self.state = States['next'](self)
 		end
 		self._cameraX, self._cameraY = nil, nil
 
 		-- Start a wave.
 		if toGame then
-			local wave = coroutine.create(room.wave)
-			self.co:start(wave, self.level)
+			local wave = coroutine.create(self.room.wave)
+			self.co
+				:clear()
+				:start(
+					wave,
+					self, self.isEnvironmentBlocked
+				)
 		end
 
 		-- Finish.
@@ -236,17 +266,22 @@ Game = class({
 		-- Update objects and draw everything.
 		camera(self._cameraX, self._cameraY)
 		map(self.map, 0, 0)
-		if self.state.playing then
-			for i, v in ipairs(self.objects) do
-				v:behave(delta, hero)
-			end
+		for i, v in ipairs(self.objects) do
+			v:behave(delta, hero)
+		end
+		for _, v in ipairs(self.backgroundEffects) do
+			v:update(delta)
 		end
 		for _, v in ipairs(self.objects) do
+			v:update(delta)
+		end
+		for _, v in ipairs(self.foregroundEffects) do
 			v:update(delta)
 		end
 		camera()
 
 		self
+			:_removeDeadEffects()
 			:_removeDeadObjects()
 			:_commitPendingObjects()
 
@@ -257,17 +292,53 @@ Game = class({
 		self.state:update(delta)
 	end,
 
+	-- Removes all dead effects from the effects collections.
+	_removeDeadEffects = function (self)
+		local dead = nil
+		for i = 1, #self.backgroundEffects do
+			local obj = self.backgroundEffects[i]
+			if obj:dead() then
+				if dead == nil then
+					dead = { }
+				end
+				table.insert(dead, 1, i)
+			end
+		end
+		if dead then
+			for _, idx in ipairs(dead) do
+				table.remove(self.backgroundEffects, idx)
+			end
+		end
+
+		dead = nil
+		for i = 1, #self.foregroundEffects do
+			local obj = self.foregroundEffects[i]
+			if obj:dead() then
+				if dead == nil then
+					dead = { }
+				end
+				table.insert(dead, 1, i)
+			end
+		end
+		if dead then
+			for _, idx in ipairs(dead) do
+				table.remove(self.foregroundEffects, idx)
+			end
+		end
+
+		return self
+	end,
 	-- Removes all dead objects from the objects collection.
 	_removeDeadObjects = function (self)
 		local weaponCount, firstWeapon = 0, nil
 		local dead = nil
-		for i = #self.objects, 1, -1 do
+		for i = 1, #self.objects do
 			local obj = self.objects[i]
 			if obj:dead() then
 				if dead == nil then
 					dead = { }
 				end
-				table.insert(dead, i)
+				table.insert(dead, 1, i)
 			elseif obj.group == 'weapon' then
 				weaponCount = weaponCount + 1
 				if firstWeapon == nil then

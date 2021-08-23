@@ -1,0 +1,48 @@
+{
+  "width": 16,
+  "height": 16,
+  "count": 5,
+  "data": [
+    {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "interval": 0.05000000074505806,
+      "key": "idle"
+    },
+    {
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "interval": 0.05000000074505806,
+      "key": ""
+    },
+    {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "interval": 0.05000000074505806,
+      "key": ""
+    },
+    {
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "interval": 0.05000000074505806,
+      "key": ""
+    },
+    {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "interval": 0.05000000074505806,
+      "key": ""
+    }
+  ],
+  "ref": "assets/imgs/bank.png"
+}

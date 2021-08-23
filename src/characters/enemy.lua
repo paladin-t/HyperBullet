@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 Enemy = class({
@@ -19,7 +20,7 @@ Enemy = class({
 	ctor = function (self, resource, box, isBlocked, options)
 		Character.ctor(self, resource, box, isBlocked, options)
 
-		self._behaviours = transform(options.behaviours, function (b, i)
+		self._behaviours = transform(options.behaviours, function (b, _)
 			return Behaviours[b]()
 		end)
 	end,
@@ -106,7 +107,7 @@ Enemy = class({
 						end
 
 						local weapon = self:weapon()
-						if weapon ~= nil then
+						if weapon ~= nil and self._game.state.playing then
 							self:setWeapon(nil)
 							weapon:revive()
 							table.insert(self._game.pending, weapon)

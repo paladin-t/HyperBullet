@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 Gun = class({
@@ -20,7 +21,7 @@ Gun = class({
 		Weapon.ctor(self, isBlocked, options)
 
 		local cfg = Weapons[options.type]
-		self._bullet = Bullets[options.type]
+		self._bullet = options.type
 
 		self._recoil = cfg['recoil']
 		self._capacity = cfg['capacity']
@@ -65,23 +66,14 @@ Gun = class({
 
 		-- Emit.
 		local owner = self._owner
-		local bullet = Bullet.new(
-			self._bullet['resource'],
-			owner._isBlocked,
-			{
-				game = owner._game,
-				direction = dir or self._facing,
-				atk = self._bullet['atk'],
-				box = self._bullet['box'], maxBox = self._bullet['max_box'],
-				moveSpeed = self._bullet['move_speed'],
-				lifetime = self._bullet['lifetime'],
-				penetrable = self._bullet['penetrable']
-			}
-		)
 		local pos = Vec2.new(owner.x, owner.y) + self._facing * self._offset * 1.5
-		bullet.x, bullet.y =
-			pos.x, pos.y
-		bullet:setOwnerGroup(owner.group)
+		local bullet = self._game.pool:bullet(
+			self._bullet,
+			pos.x, pos.y, dir or self._facing,
+			owner.group,
+			game,
+			owner._isBlocked
+		)
 		table.insert(owner._game.pending, bullet)
 
 		-- Finish.

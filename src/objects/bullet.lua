@@ -1,9 +1,10 @@
 --[[
-A top-down shoot'em up game for the Bitty Engine
+A top-down shoot'em up game made with Bitty Engine
 
-Copyright (C) 2020 - 2021 Tony Wang, all rights reserved
+Copyright (C) 2021 Tony Wang, all rights reserved
 
-Homepage: https://paladin-t.github.io/bitty/
+Engine page: https://paladin-t.github.io/bitty/
+  Game page: https://paladin-t.github.io/games/hb/
 ]]
 
 Bullet = class({
@@ -31,7 +32,6 @@ Bullet = class({
 		end
 
 		self._box, self._maxBox = options.box, options.maxBox
-		self._direction = options.direction
 		self._moveSpeed = options.moveSpeed
 		self._lifetime = options.lifetime or 1
 		self._penetrable = options.penetrable
@@ -52,6 +52,15 @@ Bullet = class({
 	end,
 	setOwnerGroup = function (self, ownerGroup)
 		self._ownerGroup = ownerGroup
+
+		return self
+	end,
+
+	direction = function (self)
+		return self._direction
+	end,
+	setDirection = function (self, dir)
+		self._direction = dir
 
 		return self
 	end,
