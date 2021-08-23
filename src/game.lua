@@ -341,7 +341,7 @@ Game = class({
 				table.insert(dead, 1, i)
 			elseif obj.group == 'weapon' then
 				weaponCount = weaponCount + 1
-				if firstWeapon == nil then
+				if firstWeapon == nil and obj:disappearable() then
 					firstWeapon = obj
 				end
 			end

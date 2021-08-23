@@ -17,7 +17,7 @@ Object = class({
 	box = nil,
 
 	_dead = false,
-	_disappearing = nil, _disappearingTicks = 0,
+	_disappearable = true, _disappearing = nil, _disappearingTicks = 0,
 	_collider = nil,
 
 	_sprite = nil,
@@ -88,11 +88,22 @@ Object = class({
 	revive = function (self)
 		self._dead = false
 		self._disappearing, self._disappearingTicks = nil, 0
+		self._shapeHeadPosition = nil
+
+		return self
+	end,
+	disappearable = function (self)
+		return self._disappearable
+	end,
+	setDisappearable = function (self, disappearable)
+		self._disappearable = disappearable
 
 		return self
 	end,
 	disappear = function (self)
-		self._disappearing, self._disappearingTicks = 5, 0
+		if self._disappearable and self._disappearing == nil then
+			self._disappearing, self._disappearingTicks = 5, 0
+		end
 
 		return self
 	end,
@@ -136,7 +147,7 @@ Object = class({
 		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
 
 		local visible = true
-		if self._disappearing then
+		if self._disappearing ~= nil then
 			local INTERVAL = 0.3
 			self._disappearingTicks = self._disappearingTicks + delta
 			if self._disappearingTicks > INTERVAL then

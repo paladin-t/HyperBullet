@@ -37,8 +37,20 @@ Bullets = {
 		['penetrable'] = true
 	},
 	['submachine_gun'] = {
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 300,
+		['lifetime'] = 8,
+		['penetrable'] = false
 	},
 	['machine_gun'] = {
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 300,
+		['lifetime'] = 8,
+		['penetrable'] = false
 	},
 	['rifle'] = {
 		['resource'] = {
@@ -52,9 +64,32 @@ Bullets = {
 		['penetrable'] = false
 	},
 	['laser'] = {
+		['resource'] = {
+			['type'] = 'line',
+			['color'] = Color.new(255, 0, 0)
+		},
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 300,
+		['lifetime'] = 10,
+		['penetrable'] = false
 	},
 	['disc_gun'] = {
+		-- TODO
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 100,
+		['lifetime'] = 10,
+		['penetrable'] = false
 	},
 	['mines'] = {
+		-- TODO
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 100,
+		['lifetime'] = 10,
+		['penetrable'] = false
 	}
 }

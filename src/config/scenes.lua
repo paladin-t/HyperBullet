@@ -23,6 +23,7 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 						game = game,
 					}
 				)
+					:setDisappearable(false)
 					:on('picked', function (sender, owner)
 						remove(weapons, weapon)
 						if owner == game.hero then
@@ -37,7 +38,10 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 				table.insert(weapons, weapon)
 				local pos = w.position
 				if pos == nil then
-					pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(math.pi * 2 * ((i - 1) / #initialWeapons))
+					pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(
+						math.pi * 2 * ((i - 1) / #initialWeapons)
+							+ math.pi * 0.07
+					)
 				end
 				weapon.x, weapon.y = pos.x, pos.y
 				table.insert(game.objects, weapon)
@@ -183,7 +187,47 @@ Scenes = {
 			--[[ Initial weapons.       ]] {
 				{
 					class = 'Gun',
+					type = 'pistol',
+					position = nil
+				},
+				{
+					class = 'Gun',
 					type = 'dual_pistols',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'shotgun',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'submachine_gun',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'machine_gun',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'rifle',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'laser',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'disc_gun',
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'mines',
 					position = nil
 				},
 				{
