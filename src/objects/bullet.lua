@@ -47,6 +47,13 @@ Bullet = class({
 
 	--[[ Methods. ]]
 
+	revive = function (self)
+		Object.revive(self)
+		self._ticks = 0
+
+		return self
+	end,
+
 	ownerGroup = function (self)
 		return self._ownerGroup
 	end,

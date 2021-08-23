@@ -9,6 +9,7 @@ Engine page: https://paladin-t.github.io/bitty/
 
 Weapons = {
 	['knife'] = {
+		['class'] = 'Melee',
 		['name'] = 'Knife',
 		['entry'] = 'assets/sprites/objects/knife.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
@@ -25,6 +26,7 @@ Weapons = {
 	},
 
 	['pistol'] = {
+		['class'] = 'Gun',
 		['name'] = 'Pistol',
 		['entry'] = 'assets/sprites/objects/gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
@@ -34,13 +36,25 @@ Weapons = {
 		['capacity'] = 120,
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
-		['offset'] = 8
+		['offset'] = 8,
+		['dual'] = false
 	},
 	['dual_pistols'] = {
-	},
-	['revolver'] = {
+		['class'] = 'Gun',
+		['name'] = 'Dual Pistol',
+		['entry'] = 'assets/sprites/objects/gun.spr',
+		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['recoil'] = 0,
+		['capacity'] = 120,
+		['interval'] = 0.25,
+		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
+		['offset'] = 8,
+		['dual'] = true
 	},
 	['shotgun'] = {
+		['class'] = 'Gun',
 		['name'] = 'Shotgun',
 		['entry'] = 'assets/sprites/objects/gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
@@ -50,13 +64,15 @@ Weapons = {
 		['capacity'] = 120,
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8
+		['offset'] = 8,
+		['dual'] = false
 	},
 	['submachine_gun'] = {
 	},
 	['machine_gun'] = {
 	},
 	['rifle'] = {
+		['class'] = 'Gun',
 		['name'] = 'Rifle',
 		['entry'] = 'assets/sprites/objects/gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
@@ -66,10 +82,13 @@ Weapons = {
 		['capacity'] = 120,
 		['interval'] = 0.35,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
-		['offset'] = 8
+		['offset'] = 8,
+		['dual'] = false
 	},
 	['laser'] = {
 	},
 	['disc_gun'] = {
+	},
+	['mines'] = {
 	}
 }

@@ -17,8 +17,12 @@ Bullets = {
 		['penetrable'] = false
 	},
 	['dual_pistols'] = {
-	},
-	['revolver'] = {
+		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['atk'] = 1,
+		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
+		['move_speed'] = 100,
+		['lifetime'] = 10,
+		['penetrable'] = false
 	},
 	['shotgun'] = {
 		['resource'] = {
@@ -50,5 +54,7 @@ Bullets = {
 	['laser'] = {
 	},
 	['disc_gun'] = {
+	},
+	['mines'] = {
 	}
 }

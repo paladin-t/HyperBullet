@@ -25,6 +25,11 @@ Gun = class({
 
 		self._recoil = cfg['recoil']
 		self._capacity = cfg['capacity']
+
+		if cfg['dual'] and not options.shadow then
+			self._shadow = Gun.new(isBlocked, merge(options, { shadow = true }))
+				:setShadowed(true)
+		end
 	end,
 
 	--[[ Meta methods. ]]

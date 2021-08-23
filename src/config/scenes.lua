@@ -16,7 +16,7 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 			local WEAPON_VECTOR = Vec2.new(100, 0)
 			local weapons = { }
 			forEach(initialWeapons, function (w, i)
-				local weapon = w.class.new(
+				local weapon = (w.class == 'Gun' and Gun or Melee).new(
 					game.isEnvironmentBlocked,
 					{
 						type = w.type,
@@ -105,7 +105,8 @@ local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, 
 					game.enemyCount = game.enemyCount + 1
 
 					-- Equip with weapon.
-					local weapon = Gun.new(
+					local weaponCfg = Weapons[cfg['weapon']]
+					local weapon = (weaponCfg['class'] == 'Gun' and Gun or Melee).new(
 						isBlocked,
 						{
 							type = cfg['weapon'],
@@ -181,12 +182,12 @@ Scenes = {
 			},
 			--[[ Initial weapons.       ]] {
 				{
-					class = Gun,
-					type = 'pistol',
+					class = 'Gun',
+					type = 'dual_pistols',
 					position = nil
 				},
 				{
-					class = Melee,
+					class = 'Melee',
 					type = 'knife',
 					position = nil
 				}

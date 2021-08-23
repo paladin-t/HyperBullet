@@ -22,6 +22,7 @@ Weapon = class({
 	_interval = 0.25, _timestamp = nil,
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
 	_offset = 0,
+	_shadow = nil, _shadowed = false,
 
 	--[[ Constructor. ]]
 
@@ -69,6 +70,10 @@ Weapon = class({
 			self:trigger('picked', owner)
 		end
 
+		if self._shadow ~= nil then
+			self._shadow:setOwner(owner)
+		end
+
 		return self
 	end,
 
@@ -77,6 +82,10 @@ Weapon = class({
 	end,
 	setOwnerGroup = function (self, ownerGroup)
 		self._ownerGroup = ownerGroup
+
+		if self._shadow ~= nil then
+			self._shadow:setOwnerGroup(ownerGroup)
+		end
 
 		return self
 	end,
@@ -106,6 +115,18 @@ Weapon = class({
 		return nil
 	end,
 
+	shadow = function (self)
+		return self._shadow
+	end,
+	shadowed = function (self)
+		return self._shadowed
+	end,
+	setShadowed = function (self, shadowed)
+		self._shadowed = shadowed
+
+		return self
+	end,
+
 	attack = function (self, dir, consumption)
 		error('Implement me.')
 	end,
@@ -113,7 +134,11 @@ Weapon = class({
 	behave = function (self, delta, _1)
 		local owner = self._owner
 		if owner then
-			self._facing = owner._facing
+			if self._shadowed then
+				self._facing = -owner._facing
+			else
+				self._facing = owner._facing
+			end
 			self._spriteAngle = self._facing.angle
 			local pos = Vec2.new(owner.x, owner.y) + self._facing * self._offset
 			self.x, self.y = pos.x, pos.y
@@ -123,7 +148,7 @@ Weapon = class({
 	end,
 
 	update = function (self, delta)
-		if self._throwing ~= nil then
+		if self._throwing ~= nil and not self._shadowed then
 			local step = self._throwing * delta * self._throwingSpeed
 			local forward = self:_move(step)
 			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
@@ -143,7 +168,7 @@ Weapon = class({
 
 		Object.update(self, delta)
 
-		if self._game.state.playing then
+		if self._game.state.playing and not self._shadowed then
 			if not self._owner and not self._throwing then
 				font(NORMAL_FONT)
 				local txt = self._name

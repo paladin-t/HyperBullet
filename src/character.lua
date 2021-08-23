@@ -137,6 +137,11 @@ Character = class({
 			if recoil ~= nil and recoil > 0 then
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
 			end
+
+			local shadow = weapon:shadow()
+			if shadow ~= nil then
+				shadow:attack(-self._facing, nil)
+			end
 		end
 
 		return self
@@ -145,10 +150,15 @@ Character = class({
 		return self
 	end,
 
-	behave = function (self, delta, _1)
+	behave = function (self, delta, hero)
 		local weapon = self:weapon()
 		if weapon ~= nil then
-			weapon:behave()
+			weapon:behave(delta, hero)
+
+			local shadow = weapon:shadow()
+			if shadow ~= nil then
+				shadow:behave(delta, hero)
+			end
 		end
 
 		return self
@@ -174,8 +184,10 @@ Character = class({
 		end
 
 		local weapon = self:weapon()
+		local shadow = nil
 		local before, after = false, false
 		if weapon ~= nil then
+			shadow = weapon:shadow()
 			if self._spriteAngle < 0 then
 				before = true
 			else
@@ -186,11 +198,17 @@ Character = class({
 		if before then
 			weapon:update(delta)
 		end
+		if shadow ~= nil and after then
+			shadow:update(delta)
+		end
 
 		Object.update(self, delta)
 
 		if after then
 			weapon:update(delta)
+		end
+		if shadow ~= nil and before then
+			shadow:update(delta)
 		end
 	end
 }, Object)
