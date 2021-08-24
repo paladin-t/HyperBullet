@@ -10,6 +10,7 @@ Engine page: https://paladin-t.github.io/bitty/
 Weapon = class({
 	--[[ Variables. ]]
 
+	type = nil,
 	group = 'weapon',
 
 	cursor = nil,
@@ -30,6 +31,7 @@ Weapon = class({
 		local cfg = Weapons[options.type]
 		local resource = Resources.load(cfg['entry'])
 		local box = cfg['box']
+		self.type = options.type
 		self.cursor = cfg['cursor']
 
 		Object.ctor(self, resource, box, isBlocked)

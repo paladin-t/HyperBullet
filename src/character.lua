@@ -130,9 +130,9 @@ Character = class({
 	attack = function (self, consumption)
 		local weapon = self:weapon()
 		if weapon == nil then
-			return self
+			return nil
 		end
-		local success, empty, recoil = weapon:attack(self._facing, consumption)
+		local success, bullet, empty, recoil = weapon:attack(self._facing, consumption)
 		if success then
 			if recoil ~= nil and recoil > 0 then
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
@@ -144,7 +144,7 @@ Character = class({
 			end
 		end
 
-		return self
+		return bullet
 	end,
 	reset = function (self)
 		return self

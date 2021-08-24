@@ -50,7 +50,7 @@ Melee = class({
 	end,
 
 	-- Attacks with this melee itself.
-	-- returns success, out of bullet (always false), recoil (always nil).
+	-- returns success, emitted bullet (always nil), out of bullet (always false), recoil (always nil).
 	attack = function (self, dir, _)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
@@ -58,13 +58,13 @@ Melee = class({
 			local diff = now - self._timestamp
 			diff = DateTime.toSeconds(diff)
 			if diff < self._interval then
-				return false, false, nil
+				return false, nil, false, nil
 			end
 		end
 		self._timestamp = now
 
 		-- Finish.
-		return true, false, nil
+		return true, nil, false, nil
 	end,
 
 	behave = function (self, delta, hero)

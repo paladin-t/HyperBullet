@@ -45,7 +45,7 @@ Gun = class({
 	end,
 
 	-- Emits bullet.
-	-- returns success, out of bullet, recoil.
+	-- returns success, emitted bullet, out of bullet, recoil.
 	attack = function (self, dir, consumption)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
@@ -53,7 +53,7 @@ Gun = class({
 			local diff = now - self._timestamp
 			diff = DateTime.toSeconds(diff)
 			if diff < self._interval then
-				return false, false, nil
+				return false, nil, false, nil
 			end
 		end
 		self._timestamp = now
@@ -65,7 +65,7 @@ Gun = class({
 					self._capacity = self._capacity - consumption
 				end
 			else
-				return false, true, nil
+				return false, nil, true, nil
 			end
 		end
 
@@ -82,7 +82,7 @@ Gun = class({
 		table.insert(owner._game.pending, bullet)
 
 		-- Finish.
-		return true, false, self._recoil
+		return true, bullet, false, self._recoil
 	end,
 
 	update = function (self, delta)

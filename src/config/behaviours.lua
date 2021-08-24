@@ -167,12 +167,32 @@ Behaviours = {
 	end,
 
 	['attack'] = function ()
+		local count = 0
+
 		return {
 			behave = function (self, this, delta, hero, src, dst)
+				-- Check interval.
+				local limit = nil
+				local weapon = this:weapon()
+				if weapon ~= nil and weapon.type == 'mines' then
+					limit = 1
+				end
+
 				-- Attack.
 				local pos, idx = this:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
 				if pos == nil and not hero:dead() then
-					this:attack(nil)
+					if limit == nil or count < limit then
+						local bullet = this:attack(nil)
+						if bullet ~= nil then
+							bullet
+								:on('dead', function (sender, _)
+									count = count - 1
+								end)
+						end
+						if bullet ~= nil then
+							count = count + 1
+						end
+					end
 				end
 
 				if DEBUG then
