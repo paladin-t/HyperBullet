@@ -22,6 +22,7 @@ require 'probabilistic'
 require 'event'
 require 'object'
 require 'character'
+require 'camera'
 require 'pool'
 
 require 'config/bullets'
@@ -37,7 +38,7 @@ require 'objects/weapon'
 require 'objects/melee'
 require 'objects/gun'
 require 'objects/bullet'
-require 'objects/vacuum'
+require 'objects/mine'
 require 'game'
 
 --[[

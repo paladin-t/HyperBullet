@@ -17,6 +17,7 @@ Game = class({
 	sceneWidth = 0, sceneHeight = 0,
 	isHeroBlocked = nil, isEnvironmentBlocked = nil,
 	raycaster = nil,
+	camera = nil,
 
 	hero = nil,
 	objects = nil, pending = nil,
@@ -33,7 +34,6 @@ Game = class({
 
 	_blankImage = nil, _cursor = nil,
 	_clearColor = nil, _hudColor = nil,
-	_cameraX = nil, _cameraY = nil,
 
 	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked)
 		self.co = co
@@ -44,6 +44,7 @@ Game = class({
 		self.isEnvironmentBlocked = isEnvironmentBlocked
 		self.raycaster = Raycaster.new()
 		self.raycaster.tileSize = Vec2.new(16, 16)
+		self.camera = Camera.new()
 
 		self._blankImage = Image.new()
 		self._blankImage:resize(1, 1)
@@ -181,7 +182,7 @@ Game = class({
 		if toGame then
 			self.state = States['next'](self)
 		end
-		self._cameraX, self._cameraY = nil, nil
+		self.camera:reset()
 
 		-- Start a wave.
 		if toGame then
@@ -213,30 +214,33 @@ Game = class({
 		-- Game logic.
 		local canvasWidth, canvasHeight = Canvas.main:size()
 		local screenHalfWidth, screenHalfHeight = canvasWidth * 0.5, canvasHeight * 0.5
-		local cameraX, cameraY = nil, nil
+		local targetX, targetY = nil, nil
 		if canvasWidth >= self.sceneWidth + 60 then
 			local paddingX, paddingY =
 				(canvasWidth - self.sceneWidth) * 0.5, 20
-			cameraX, cameraY =
+			targetX, targetY =
 				-paddingX,
 				clamp(hero.y - screenHalfHeight + HUD_HEIGHT * 0.5, -paddingY, paddingY) - HUD_HEIGHT
 		else
 			local paddingX, paddingY =
 				30, 20
-			cameraX, cameraY =
+			targetX, targetY =
 				clamp(hero.x - screenHalfWidth, -paddingX, self.sceneWidth - canvasWidth + paddingX),
 				clamp(hero.y - screenHalfHeight + HUD_HEIGHT * 0.5, -paddingY, paddingY) - HUD_HEIGHT
 		end
-		if self._cameraX == nil or self._cameraY == nil then
-			self._cameraX, self._cameraY = cameraX, cameraY
+		local cameraX, cameraY = self.camera:get()
+		if cameraX == nil or cameraY == nil then
+			self.camera:set(targetX, targetY)
 		else
 			local diffX, diffY =
-				cameraX - self._cameraX,
-				cameraY - self._cameraY
+				targetX - cameraX,
+				targetY - cameraY
 			if diffX ~= 0 or diffY ~= 0 then
-				self._cameraX, self._cameraY =
-					math.abs(diffX) >= 0.5 and self._cameraX + diffX * 0.2 or cameraX,
-					math.abs(diffY) >= 0.5 and self._cameraY + diffY * 0.2 or cameraY
+				self.camera
+					:set(
+						math.abs(diffX) >= 0.5 and cameraX + diffX * 0.2 or targetX,
+						math.abs(diffY) >= 0.5 and cameraY + diffY * 0.2 or targetY
+					)
 			end
 		end
 
@@ -252,7 +256,8 @@ Game = class({
 			elseif key(beInput.KeyCode.D) then
 				hero:moveRight(delta)
 			end
-			hero:lookAt(x + self._cameraX, y + self._cameraY)
+			local cameraX, cameraY = self.camera:get()
+			hero:lookAt(x + cameraX, y + cameraY)
 			if lmb then
 				hero:attack(1)
 			end
@@ -264,7 +269,7 @@ Game = class({
 		end
 
 		-- Update objects and draw everything.
-		camera(self._cameraX, self._cameraY)
+		self.camera:prepare(delta)
 		map(self.map, 0, 0)
 		for i, v in ipairs(self.objects) do
 			v:behave(delta, hero)
@@ -278,7 +283,7 @@ Game = class({
 		for _, v in ipairs(self.foregroundEffects) do
 			v:update(delta)
 		end
-		camera()
+		self.camera:finish(delta)
 
 		self
 			:_removeDeadEffects()

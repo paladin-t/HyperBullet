@@ -76,7 +76,7 @@ Gun = class({
 			self._bullet,
 			pos.x, pos.y, dir or self._facing,
 			owner.group,
-			game,
+			self._game,
 			owner._isBlocked
 		)
 		table.insert(owner._game.pending, bullet)

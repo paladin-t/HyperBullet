@@ -12,6 +12,7 @@ Bullet = class({
 
 	group = 'bullet',
 
+	_game = nil,
 	_ownerGroup = nil,
 
 	_box = nil, _maxBox = nil,
@@ -32,6 +33,8 @@ Bullet = class({
 		if options.atk then
 			self.atk = options.atk
 		end
+
+		self._game = options.game
 
 		self._box, self._maxBox = options.box, options.maxBox
 		self._moveSpeed = options.moveSpeed
@@ -89,6 +92,9 @@ Bullet = class({
 	behave = function (self, delta, _1)
 		self._ticks = self._ticks + delta
 		if self._ticks >= self._lifetime then
+			if self._explosive then
+				self:_place()
+			end
 			self:kill('disappeared')
 
 			return self
@@ -145,6 +151,9 @@ Bullet = class({
 			end
 		else
 			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
+				if self._explosive then
+					self:_place()
+				end
 				self:kill('disappeared')
 			else
 				self.x = self.x + forward.x
@@ -153,6 +162,23 @@ Bullet = class({
 		end
 
 		Object.update(self, delta)
+	end,
+
+	_place = function (self)
+		local mine = Mine.new(
+			Resources.load('assets/sprites/objects/mine.spr'), self._isBlocked,
+			{
+				game = self._game,
+				atk = self.atk,
+				box = self.box,
+				lifetime = 2
+			}
+		)
+		mine.x, mine.y = self.x, self.y
+		mine:play('placed', true, true)
+		table.insert(self._game.pending, mine)
+
+		return self
 	end,
 
 	_build = function (self, dstX, dstY, dstW, dstH)

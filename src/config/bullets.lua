@@ -99,11 +99,11 @@ Bullets = {
 		['explosive'] = false
 	},
 	['mines'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/mine.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 100,
-		['lifetime'] = 10,
+		['lifetime'] = 0.75,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = true
