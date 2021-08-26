@@ -14,6 +14,7 @@ Engine page: https://paladin-t.github.io/bitty/
 
 require 'libs/beInput/beInput'
 require 'libs/beGUI/beGUI'
+require 'libs/beParticles/beParticles'
 
 require 'utils'
 require 'class'
