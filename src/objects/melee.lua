@@ -63,6 +63,14 @@ Melee = class({
 		end
 		self._timestamp = now
 
+		-- Add effect.
+		if self._effect ~= nil then
+			local fx = self._effect(self.x, self.y, self._facing, self._spriteAngle)
+			if fx ~= nil then
+				self:_emit(fx)
+			end
+		end
+
 		-- Finish.
 		return true, nil, false, nil
 	end,
@@ -87,7 +95,6 @@ Melee = class({
 
 		return self
 	end,
-
 	update = function (self, delta)
 		Weapon.update(self, delta)
 

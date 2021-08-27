@@ -23,13 +23,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require 'libs/beCompilers/beCompilers'
 
+-- Helper functions.
+local function merge(first, second)
+	if first == nil and second == nil then
+		return nil
+	end
+	local result = { }
+	if first then
+		for k, v in pairs(first) do
+			result[k] = v
+		end
+	end
+	if second then
+		for k, v in pairs(second) do
+			result[k] = v
+		end
+	end
+
+	return result
+end
+
 -- Compile the particle system implementation.
-local chunk = beCompilers.compileLuax(
+local chunk, env = beCompilers.compileLuax(
+	-- Implementation source.
 	-- Credits:
 	--   pico-ps created by Maxwell Dexter
 	--     https://github.com/MaxwellDexter/pico-ps
 	--     https://maxwelldexter.itch.io/pico-ps
-	'libs/beParticles/pico-ps.lua'
+	'libs/beParticles/pico-ps.lua',
+	-- Custom environment.
+	{
+		print = print, warn = warn, error = error,
+		ipairs = ipairs, pairs = pairs,
+		getmetatable = getmetatable, setmetatable = setmetatable,
+		math = math, table = table,
+		Color = Color,
+		DateTime = DateTime,
+		circ = circ, rect = rect, spr = spr
+	}
 )
 -- Inject the particle system to global scope.
 chunk()
@@ -38,6 +69,15 @@ chunk()
 Exporting.
 ]]
 
-beParticles = {
-	version = '1.0.0'
-}
+beParticles = merge(
+	{
+		version = '1.0.1',
+
+		setup = function ()
+			local now = DateTime.toSeconds(DateTime.ticks())
+			env.prev_time = now
+			env.delta_time = now - env.prev_time
+		end
+	},
+	env
+)

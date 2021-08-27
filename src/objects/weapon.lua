@@ -24,6 +24,7 @@ Weapon = class({
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
 	_offset = 0,
 	_shadow = nil, _shadowed = false,
+	_effect = nil,
 
 	--[[ Constructor. ]]
 
@@ -46,6 +47,7 @@ Weapon = class({
 		self._throwingSpeed, self._throwingInterval, self._throwingTicks =
 			cfg['throwing_speed'], cfg['throwing_interval'], 0
 		self._offset = cfg['offset']
+		self._effect = cfg['effect']
 	end,
 
 	--[[ Meta methods. ]]
@@ -148,8 +150,8 @@ Weapon = class({
 
 		return self
 	end,
-
 	update = function (self, delta)
+		-- Process throwing.
 		if self._throwing ~= nil and not self._shadowed then
 			local step = self._throwing * delta * self._throwingSpeed
 			local forward = self:_move(step)
@@ -168,8 +170,18 @@ Weapon = class({
 			end
 		end
 
+		-- Process effect.
+		if self._emitters ~= nil then
+			for _, entry in ipairs(self._emitters) do
+				local emitter = entry.emitter
+				emitter.pos.x, emitter.pos.y = self.x, self.y
+			end
+		end
+
+		-- Base update.
 		Object.update(self, delta)
 
+		-- Draw information text.
 		if self._game.state.playing and not self._shadowed then
 			if not self._owner and not self._throwing then
 				font(NORMAL_FONT)

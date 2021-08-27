@@ -111,7 +111,6 @@ Bullet = class({
 
 		return self
 	end,
-
 	update = function (self, delta)
 		local step = self._direction * delta * self._moveSpeed
 		local forward = self:_move(step)

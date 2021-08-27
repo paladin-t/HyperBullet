@@ -28,6 +28,7 @@ Object = class({
 	_shapeLines = nil,
 	_shapeHeadPosition = nil,
 	_color = Color.new(0, 255, 0),
+	_emitters = nil,
 
 	_walker = nil,
 	_raycaster = nil,
@@ -136,16 +137,19 @@ Object = class({
 	behave = function (self, delta, hero)
 		error('Implement me.')
 	end,
-
 	update = function (self, delta)
+		-- Call custom sprite update handler if it's set.
 		if self._spriteUpdater then
 			self._spriteUpdater(delta)
 		end
 
+		-- Calculate basic information.
 		local sprite, shapeLine, shapeLines =
 			self._sprite, self._shapeLine, self._shapeLines
+		local emitters = self._emitters
 		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
 
+		-- Calculate visibility.
 		local visible = true
 		if self._disappearing ~= nil then
 			local INTERVAL = 0.3
@@ -162,6 +166,8 @@ Object = class({
 				visible = false
 			end
 		end
+
+		-- Draw if visible.
 		if visible then
 			if sprite ~= nil then
 				spr(
@@ -197,6 +203,37 @@ Object = class({
 			end
 		end
 
+		-- Process and draw emitters.
+		if emitters ~= nil then
+			local dead = nil
+			for i, entry in ipairs(emitters) do
+				local emitter = entry.emitter
+				if emitter.refresh ~= nil then
+					emitter:refresh(self, delta)
+				end
+				emitter:update(delta)
+				emitter:draw()
+
+				entry.interval = entry.interval - delta
+				if entry.interval <= 0 then
+					if dead == nil then
+						dead = { }
+					end
+					table.insert(dead, 1, i)
+				end
+			end
+			if dead ~= nil then
+				for _, idx in ipairs(dead) do
+					table.remove(emitters, idx)
+				end
+				if #emitters == 0 then
+					emitters = nil
+					self._emitters = nil
+				end
+			end
+		end
+
+		-- Draw debug information.
 		if DEBUG then
 			if self._collider.__name == 'Recti' then
 				rect(
@@ -214,6 +251,16 @@ Object = class({
 				)
 			end
 		end
+	end,
+
+	_move = function (self, step)
+		local newDir = self._walker:solve(
+			Vec2.new(self.x, self.y), step,
+			self._isBlocked,
+			self._slidable
+		)
+
+		return newDir
 	end,
 
 	_build = function (self, dstX, dstY, dstW, dstH)
@@ -234,13 +281,18 @@ Object = class({
 		return pos, idx
 	end,
 
-	_move = function (self, step)
-		local newDir = self._walker:solve(
-			Vec2.new(self.x, self.y), step,
-			self._isBlocked,
-			self._slidable
+	_emit = function (self, emitter, interval)
+		if self._emitters == nil then
+			self._emitters = { }
+		end
+		table.insert(
+			self._emitters,
+			{
+				emitter = emitter,
+				interval = interval
+			}
 		)
 
-		return newDir
-	end
+		return self
+	end,
 }, Event)

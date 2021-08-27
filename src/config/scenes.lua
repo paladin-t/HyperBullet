@@ -7,12 +7,12 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local build = function (map_, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options)
+local build = function (background, building, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options)
 	return {
-		map = map_,
+		background = background, building = building,
 		wave = function (game, isBlocked)
 			-- Prepare.
-			local WEAPON_ORIGIN = Vec2.new(map_.width * 16 * 0.5, map_.height * 16 * 0.5)
+			local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
 			local WEAPON_VECTOR = Vec2.new(100, 0)
 			local weapons = { }
 			forEach(initialWeapons, function (w, i)
@@ -140,7 +140,8 @@ Scenes = {
 		print('Build room1 for level ' .. tostring(level) .. '.')
 
 		return build(
-			--[[ Map asset.             ]] Resources.load('assets/maps/map1.map'),
+			--[[ Background asset.      ]] Resources.load('assets/maps/map1_background.map'),
+			--[[ Building asset.        ]] Resources.load('assets/maps/map1_building.map'),
 			--[[ Lingering way points.  ]] {
 				{
 					Vec2.new(-32, 144),

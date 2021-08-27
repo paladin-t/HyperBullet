@@ -13,8 +13,8 @@ Engine page: https://paladin-t.github.io/bitty/
 --   move mouse to look around, LMB to attack (with weapon equipped).
 
 require 'libs/beInput/beInput'
-require 'libs/beGUI/beGUI'
 require 'libs/beParticles/beParticles'
+require 'libs/beGUI/beGUI'
 
 require 'utils'
 require 'class'
@@ -70,17 +70,19 @@ function quit()
 end
 
 function setup()
+	beParticles.setup()
+
 	local WALKABLE_CEL = 97
 	local BORDER_CEL = -1
 	game = Game.new(
 		Coroutine.new(),
 		function (pos)
-			local cel = mget(game.map, pos.x, pos.y)
+			local cel = mget(game.building, pos.x, pos.y)
 
 			return cel ~= WALKABLE_CEL
 		end,
 		function (pos)
-			local cel = mget(game.map, pos.x, pos.y)
+			local cel = mget(game.building, pos.x, pos.y)
 
 			return cel ~= WALKABLE_CEL and cel ~= BORDER_CEL
 		end
@@ -93,6 +95,7 @@ function update(delta)
 	delta = math.min(delta, 0.02)
 
 	beInput.update(delta)
+	beParticles.update_time()
 
 	game:update(delta)
 end

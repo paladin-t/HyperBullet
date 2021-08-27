@@ -106,7 +106,6 @@ Mine = class({
 		-- Finish.
 		return self
 	end,
-
 	update = function (self, delta)
 		if self._spriteUpdater then
 			self._spriteUpdater(delta)

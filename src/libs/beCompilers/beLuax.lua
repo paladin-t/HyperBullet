@@ -34,7 +34,7 @@ Compiler.
 ]]
 
 -- Compiles Luax source code to regular Lua from an asset.
-local function compile(asset)
+local function compile(asset, env)
 	-- Prepare.
 	if not asset then
 		error('Invalid asset.')
@@ -56,7 +56,7 @@ local function compile(asset)
 	bytes:poke(1)
 	local com = bytes:readString()
 
-	-- Compile source.
+	-- Concat source.
 	local dst = ''
 	for ln in src:gmatch('([^\n]*)\n?') do
 		if #ln > 0 then
@@ -80,10 +80,17 @@ local function compile(asset)
 		end
 	end
 
-	-- Finish.
+	-- Compile source.
 	local full = com .. '\n' .. dst
+	local chunk = nil
+	if env == nil then
+		chunk = load(full, asset, 't')
+	else
+		chunk = load(full, asset, 't', env)
+	end
 
-	return load(full, asset) -- Return loaded and parsed Lua chunk.
+	-- Finish.
+	return chunk, env or _ENV -- Return loaded and parsed Lua chunk, environment.
 end
 
 --[[

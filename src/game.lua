@@ -13,7 +13,8 @@ local HUD_HEIGHT = 32
 Game = class({
 	co = nil,
 	bgm = nil,
-	map = nil,
+	background = nil, building = nil,
+	backgroundOffsetX = 0, backgroundOffsetY = 0,
 	sceneWidth = 0, sceneHeight = 0,
 	isHeroBlocked = nil, isEnvironmentBlocked = nil,
 	raycaster = nil,
@@ -127,9 +128,11 @@ Game = class({
 		self.room = Scenes[type_](self.level)
 
 		-- Load map.
-		self.map = self.room.map
+		self.background, self.building = self.room.background, self.room.building
+		self.backgroundOffsetX, self.backgroundOffsetY =
+			(self.building.width - self.background.width) * 0.5 * 16, (self.building.height - self.background.height) * 0.5 * 16
 		self.sceneWidth, self.sceneHeight =
-			self.map.width * 16, self.map.height * 16
+			self.building.width * 16, self.building.height * 16
 
 		-- Initialize objects.
 		self.objects, self.pending = { }, { }
@@ -270,7 +273,8 @@ Game = class({
 
 		-- Update objects and draw everything.
 		self.camera:prepare(delta)
-		map(self.map, 0, 0)
+		map(self.background, self.backgroundOffsetX, self.backgroundOffsetY)
+		map(self.building, 0, 0)
 		for i, v in ipairs(self.objects) do
 			v:behave(delta, hero)
 		end

@@ -81,6 +81,14 @@ Gun = class({
 		)
 		table.insert(owner._game.pending, bullet)
 
+		-- Add effect.
+		if self._effect ~= nil then
+			local fx, interval = self._effect(self, self.x, self.y, self._facing, self._spriteAngle)
+			if fx ~= nil then
+				self:_emit(fx, interval)
+			end
+		end
+
 		-- Finish.
 		return true, bullet, false, self._recoil
 	end,

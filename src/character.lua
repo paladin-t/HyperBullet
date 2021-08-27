@@ -163,7 +163,6 @@ Character = class({
 
 		return self
 	end,
-
 	update = function (self, delta)
 		if self._movingByRecoil ~= nil then
 			local m = self:_move(self._movingByRecoil)

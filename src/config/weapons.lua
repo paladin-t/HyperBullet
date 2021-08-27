@@ -7,6 +7,22 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
+local function refreshParticle(emitter)
+	local x, y = nil, nil
+
+	return function (self, that, delta)
+		if x == nil then
+			x, y = that.x, that.y
+		end
+		local diffX, diffY = that.x - x, that.y - y
+		x, y = that.x, that.y
+		for _, particle in ipairs(emitter.particles) do
+			particle.pos.x, particle.pos.y =
+				particle.pos.x + diffX, particle.pos.y + diffY
+		end
+	end
+end
+
 Weapons = {
 	['knife'] = {
 		['class'] = 'Melee',
@@ -22,7 +38,8 @@ Weapons = {
 		['shape'] = {
 			['type'] = 'circle',
 			['r'] = 8
-		}
+		},
+		['effect'] = nil
 	},
 
 	['pistol'] = {
@@ -37,6 +54,25 @@ Weapons = {
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 10)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 350, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 2, 4)
+			beParticles.ps_set_life(emitter, 0.5, 1)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.8
+		end,
 		['dual'] = false
 	},
 	['dual_pistols'] = {
@@ -51,6 +87,25 @@ Weapons = {
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 10)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 350, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 2, 4)
+			beParticles.ps_set_life(emitter, 0.5, 1)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.8
+		end,
 		['dual'] = true
 	},
 	['shotgun'] = {
@@ -65,6 +120,26 @@ Weapons = {
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 20)
+			beParticles.ps_set_size(emitter, 0, 2, 0, 2)
+			beParticles.ps_set_speed(emitter, 15, 250, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 7, 14)
+			beParticles.ps_set_life(emitter, 0.5, 1)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(255, 0,   77,  255),
+					Color.new(255, 163, 0,   255),
+					Color.new(255, 236, 39,  255),
+					Color.new(95,  87,  79,  255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 1
+		end,
 		['dual'] = false
 	},
 	['submachine_gun'] = {
@@ -79,6 +154,25 @@ Weapons = {
 		['interval'] = 0.15,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 20)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
+			beParticles.ps_set_life(emitter, 0.5, 0.3)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.3
+		end,
 		['dual'] = false
 	},
 	['machine_gun'] = {
@@ -93,6 +187,25 @@ Weapons = {
 		['interval'] = 0.05,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 20)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
+			beParticles.ps_set_life(emitter, 0.5, 0.3)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.3
+		end,
 		['dual'] = false
 	},
 	['rifle'] = {
@@ -107,6 +220,25 @@ Weapons = {
 		['interval'] = 0.75,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 5)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
+			beParticles.ps_set_life(emitter, 0.5, 0.3)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.3
+		end,
 		['dual'] = false
 	},
 	['laser'] = {
@@ -121,6 +253,9 @@ Weapons = {
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			return nil, nil
+		end,
 		['dual'] = false
 	},
 	['disc_gun'] = {
@@ -135,6 +270,25 @@ Weapons = {
 		['interval'] = 0.45,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			local angle_ = -math.deg(angle)
+			local emitter = beParticles.emitter.create(x, y, 4, 15)
+			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
+			beParticles.ps_set_speed(emitter, 15, 250, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
+			beParticles.ps_set_life(emitter, 0.5, 0.3)
+			beParticles.ps_set_colours(
+				emitter,
+				{
+					Color.new(29,  43,  83,  255),
+					Color.new(131, 118, 156, 255),
+					Color.new(194, 195, 199, 255)
+				}
+			)
+			emitter.refresh = refreshParticle(emitter)
+
+			return emitter, 0.3
+		end,
 		['dual'] = false
 	},
 	['mines'] = {
@@ -149,6 +303,9 @@ Weapons = {
 		['interval'] = 0.55,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
 		['offset'] = 8,
+		['effect'] = function (this, x, y, dir, angle)
+			return nil, nil
+		end,
 		['dual'] = false
 	}
 }
