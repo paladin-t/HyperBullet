@@ -28,6 +28,7 @@ require 'pool'
 
 require 'config/bullets'
 require 'config/weapons'
+require 'config/armours'
 require 'config/behaviours'
 require 'config/enemies'
 require 'config/hero'
@@ -38,6 +39,8 @@ require 'characters/enemy'
 require 'objects/weapon'
 require 'objects/melee'
 require 'objects/gun'
+require 'objects/armour'
+require 'objects/body_armour'
 require 'objects/bullet'
 require 'objects/mine'
 require 'game'
@@ -76,47 +79,7 @@ end
 function setup()
 	beParticles.setup()
 
-	local WALKABLE_CEL = 768
-	local BORDER_CEL = -1
-	game = Game.new(
-		Coroutine.new(),
-		function (pos) -- Is hero blocked?
-			local cel = mget(game.building, pos.x, pos.y)
-			if cel == WALKABLE_CEL then
-				return false
-			end
-			if game.foreground ~= nil then
-				cel = mget(game.foreground, pos.x, pos.y)
-				if cel == WALKABLE_CEL then
-					return false
-				end
-			end
-
-			return true
-		end,
-		function (pos) -- Is environment blocked?
-			local cel = mget(game.building, pos.x, pos.y)
-			if cel == WALKABLE_CEL or cel == BORDER_CEL then
-				return false
-			end
-			if game.foreground ~= nil then
-				cel = mget(game.foreground, pos.x, pos.y)
-				if cel == WALKABLE_CEL or cel == BORDER_CEL then
-					return false
-				end
-			end
-
-			return true
-		end,
-		function (pos) -- Is bullet blocked?
-			local cel = mget(game.building, pos.x, pos.y)
-			if cel == WALKABLE_CEL then
-				return false
-			end
-
-			return true
-		end
-	)
+	game = Game.new(Coroutine.new())
 		:load()
 		:setup()
 end

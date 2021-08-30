@@ -22,26 +22,26 @@ Behaviours = {
 				end
 
 				-- Walk through way points.
+				local EPSILON = 1
 				local src = Vec2.new(this.x, this.y)
 				local diff = dst - src
 				local l = diff.length
-				local epsilon = 4
-				if goal ~= nil and l <= epsilon then
+				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
 					goto again
-				elseif goal == nil and l <= epsilon * 4 then
+				elseif goal == nil and l <= EPSILON * 4 then
 					-- Do nothing.
 				else
-					if l >= epsilon * 2 then
-						if diff.x <= -epsilon then
+					if l >= EPSILON * 2 then
+						if diff.x <= -EPSILON then
 							this:moveLeft(delta)
-						elseif diff.x >= epsilon then
+						elseif diff.x >= EPSILON then
 							this:moveRight(delta)
 						end
-						if diff.y <= -epsilon then
+						if diff.y <= -EPSILON then
 							this:moveUp(delta)
-						elseif diff.y >= epsilon then
+						elseif diff.y >= EPSILON then
 							this:moveDown(delta)
 						end
 					else
@@ -68,26 +68,26 @@ Behaviours = {
 				end
 
 				-- Walk through way points.
+				local EPSILON = 1
 				local src = Vec2.new(this.x, this.y)
 				local diff = dst - src
 				local l = diff.length
-				local epsilon = 4
-				if goal ~= nil and l <= epsilon then
+				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
 					goto again
-				elseif goal == nil and l <= epsilon * 4 then
+				elseif goal == nil and l <= EPSILON * 4 then
 					-- Do nothing.
 				else
-					if l >= epsilon * 2 then
-						if diff.x <= -epsilon then
+					if l >= EPSILON * 2 then
+						if diff.x <= -EPSILON then
 							this:moveLeft(delta)
-						elseif diff.x >= epsilon then
+						elseif diff.x >= EPSILON then
 							this:moveRight(delta)
 						end
-						if diff.y <= -epsilon then
+						if diff.y <= -EPSILON then
 							this:moveUp(delta)
-						elseif diff.y >= epsilon then
+						elseif diff.y >= EPSILON then
 							this:moveDown(delta)
 						end
 					else
@@ -116,26 +116,26 @@ Behaviours = {
 				end
 
 				-- Walk through way points.
+				local EPSILON = 1
 				local src = Vec2.new(this.x, this.y)
 				local diff = dst - src
 				local l = diff.length
-				local epsilon = 4
-				if goal ~= nil and l <= epsilon then
+				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
 					goto again
-				elseif goal == nil and l <= epsilon * 4 then
+				elseif goal == nil and l <= EPSILON * 4 then
 					-- Do nothing.
 				else
-					if l >= epsilon * 2 then
-						if diff.x <= -epsilon then
+					if l >= EPSILON * 2 then
+						if diff.x <= -EPSILON then
 							this:moveLeft(delta)
-						elseif diff.x >= epsilon then
+						elseif diff.x >= EPSILON then
 							this:moveRight(delta)
 						end
-						if diff.y <= -epsilon then
+						if diff.y <= -EPSILON then
 							this:moveUp(delta)
-						elseif diff.y >= epsilon then
+						elseif diff.y >= EPSILON then
 							this:moveDown(delta)
 						end
 					else

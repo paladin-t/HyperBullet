@@ -314,5 +314,9 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = nil,
 		['dual'] = false
+	},
+
+	['body_armour'] = {
+		-- TODO
 	}
 }

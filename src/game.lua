@@ -40,9 +40,46 @@ Game = class({
 		self.co = co
 		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
 		volume(1, 0.5)
-		--play(self.bgm, true, 2)
+		play(self.bgm, true, 2)
+		local WALKABLE_CEL = 768
+		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnvironmentBlocked, self.isBulletBlocked =
-			isHeroBlocked, isEnvironmentBlocked, isBulletBlocked
+			function (pos) -- Is hero blocked?
+				local cel = mget(self.building, pos.x, pos.y)
+				if cel ~= WALKABLE_CEL then
+					return true
+				end
+				if self.foreground ~= nil then
+					cel = mget(self.foreground, pos.x, pos.y)
+					if cel ~= WALKABLE_CEL then
+						return true
+					end
+				end
+
+				return false
+			end,
+			function (pos) -- Is environment blocked?
+				local cel = mget(self.building, pos.x, pos.y)
+				if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
+					return true
+				end
+				if self.foreground ~= nil then
+					cel = mget(self.foreground, pos.x, pos.y)
+					if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
+						return true
+					end
+				end
+
+				return false
+			end,
+			function (pos) -- Is bullet blocked?
+				local cel = mget(self.building, pos.x, pos.y)
+				if cel ~= WALKABLE_CEL then
+					return true
+				end
+
+				return false
+			end
 		self.raycaster = Raycaster.new()
 		self.raycaster.tileSize = Vec2.new(16, 16)
 		self.camera = Camera.new()
@@ -277,8 +314,10 @@ Game = class({
 		map(self.background, self.backgroundOffsetX, self.backgroundOffsetY)
 		map(self.building, 0, 0)
 		map(self.foreground, 0, 0)
-		for i, v in ipairs(self.objects) do
-			v:behave(delta, hero)
+		if self.state.playing then
+			for i, v in ipairs(self.objects) do
+				v:behave(delta, hero)
+			end
 		end
 		for _, v in ipairs(self.backgroundEffects) do
 			v:update(delta)
@@ -341,7 +380,7 @@ Game = class({
 	end,
 	-- Removes all dead objects from the objects collection.
 	_removeDeadObjects = function (self)
-		local weaponCount, firstWeapon = 0, nil
+		local weaponAndArmourCount, firstWeapon = 0, nil
 		local dead = nil
 		for i = 1, #self.objects do
 			local obj = self.objects[i]
@@ -350,14 +389,14 @@ Game = class({
 					dead = { }
 				end
 				table.insert(dead, 1, i)
-			elseif obj.group == 'weapon' then
-				weaponCount = weaponCount + 1
+			elseif obj.group == 'weapon' or obj.group == 'armour' then
+				weaponAndArmourCount = weaponAndArmourCount + 1
 				if firstWeapon == nil and obj:disappearable() then
 					firstWeapon = obj
 				end
 			end
 		end
-		if weaponCount > 2 and firstWeapon ~= nil then
+		if weaponAndArmourCount > 5 and firstWeapon ~= nil then -- Up to 5.
 			firstWeapon:disappear()
 		end
 		if dead ~= nil then
