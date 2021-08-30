@@ -184,11 +184,11 @@ Weapon = class({
 		-- Draw information text.
 		if self._game.state.playing and not self._shadowed then
 			if not self._owner and not self._throwing then
-				font(NORMAL_FONT)
+				font(FONT_NORMAL_TEXT)
 				local txt = self._name
-				local textWidth, textHeight = measure(txt, NORMAL_FONT)
+				local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
 				text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
-				text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, Color.new(200, 220, 210))
+				text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_NORMAL_TEXT)
 				font(nil)
 			end
 		end

@@ -5,7 +5,7 @@
   "data": [
     {
       "x": 32,
-      "y": 16,
+      "y": 320,
       "width": 16,
       "height": 16,
       "interval": 0.25,
@@ -13,15 +13,15 @@
     },
     {
       "x": 32,
-      "y": 16,
+      "y": 320,
       "width": 16,
       "height": 16,
       "interval": 0.25,
       "key": "placed"
     },
     {
-      "x": 48,
-      "y": 16,
+      "x": 16,
+      "y": 288,
       "width": 16,
       "height": 16,
       "interval": 0.25,

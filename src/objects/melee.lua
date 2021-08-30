@@ -98,7 +98,7 @@ Melee = class({
 	update = function (self, delta)
 		Weapon.update(self, delta)
 
-		if DEBUG then
+		if DEBUG_SHOW_WIREFRAME then
 			if self._affecting then
 				if self._shape['type'] == 'circle' then
 					circ(

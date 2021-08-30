@@ -9,41 +9,41 @@ Engine page: https://paladin-t.github.io/bitty/
 
 Bullets = {
 	['pistol'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_pistol.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 100,
-		['lifetime'] = 10,
+		['move_speed'] = 400,
+		['lifetime'] = 5,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
 	},
 	['dual_pistols'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_dual_pistols.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 100,
-		['lifetime'] = 10,
+		['move_speed'] = 400,
+		['lifetime'] = 5,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
 	},
 	['shotgun'] = {
 		['resource'] = {
-			['type'] = 'lines',
-			['count'] = 5, ['angle'] = math.pi * 0.02,
-			['color'] = Color.new(0, 0, 0)
+			['type'] = 'sprites',
+			['count'] = 5, ['angle'] = math.pi * 0.015,
+			['resource'] = Resources.load('assets/sprites/objects/bullet_shotgun.spr')
 		},
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = Recti.byXYWH(-6, -6, 28, 28),
-		['move_speed'] = 200,
+		['move_speed'] = 300,
 		['lifetime'] = 0.5,
 		['penetrable'] = true,
 		['bouncy'] = false,
 		['explosive'] = false
 	},
 	['submachine_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_submachine_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
@@ -53,7 +53,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['machine_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_machine_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
@@ -63,13 +63,10 @@ Bullets = {
 		['explosive'] = false
 	},
 	['rifle'] = {
-		['resource'] = {
-			['type'] = 'line',
-			['color'] = Color.new(0, 0, 0)
-		},
+		['resource'] = Resources.load('assets/sprites/objects/bullet_rifle.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 200,
+		['move_speed'] = 600,
 		['lifetime'] = 10,
 		['penetrable'] = false,
 		['bouncy'] = false,
@@ -82,27 +79,27 @@ Bullets = {
 		},
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 300,
-		['lifetime'] = 10,
+		['move_speed'] = 1500,
+		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
 	},
 	['disc_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_disc_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 100,
+		['move_speed'] = 300,
 		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = true,
 		['explosive'] = false
 	},
 	['mines'] = {
-		['resource'] = Resources.load('assets/sprites/objects/mine.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullet_mines.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 100,
+		['move_speed'] = 200,
 		['lifetime'] = 0.75,
 		['penetrable'] = false,
 		['bouncy'] = false,

@@ -8,10 +8,13 @@ Engine page: https://paladin-t.github.io/bitty/
 ]]
 
 Heroes = {
-	['hero'] = {
-		['resource'] = Resources.load('assets/sprites/characters/hero.spr'),
+	['hero1'] = {
+		['assets'] = {
+			'assets/sprites/characters/hero1.spr',
+			'assets/sprites/characters/legs1.spr'
+		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['move_speed'] = 100
+		['move_speed'] = 150
 	}
 }

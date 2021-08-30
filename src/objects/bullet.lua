@@ -182,11 +182,15 @@ Bullet = class({
 
 	_build = function (self, dstX, dstY, dstW, dstH)
 		local dstX, dstY, dstW, dstH = nil, nil, nil, nil
-		local sprite, shapeLine, shapeLines =
-			self._sprite, self._shapeLine, self._shapeLines
+		local sprite, shapeSprites, shapeLine, shapeLines =
+			self._sprite, self._shapeSprites, self._shapeLine, self._shapeLines
 		if sprite ~= nil then
 			dstX, dstY, dstW, dstH =
 				self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - (self.box:yMin() + self.box:height() * 0.5),
+				self._spriteWidth, self._spriteHeight
+		elseif shapeSprites ~= nil then
+			dstX, dstY, dstW, dstH =
+				self.x, self.y,
 				self._spriteWidth, self._spriteHeight
 		elseif shapeLine ~= nil then
 			dstX, dstY, dstW, dstH =

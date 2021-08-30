@@ -8,7 +8,7 @@ Engine page: https://paladin-t.github.io/bitty/
 ]]
 
 local SAVE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet.txt')
-local HUD_HEIGHT = 32
+local HUD_HEIGHT = 40
 
 Game = class({
 	co = nil,
@@ -142,9 +142,9 @@ Game = class({
 
 		-- Load hero.
 		if restart then
-			local cfg = Heroes['hero']
+			local cfg = Heroes['hero1']
 			local hero = Hero.new(
-				cfg['resource'],
+				Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
 				cfg['box'],
 				self.isHeroBlocked,
 				{
@@ -232,7 +232,7 @@ Game = class({
 				clamp(hero.y - screenHalfHeight + HUD_HEIGHT * 0.5, -paddingY, paddingY) - HUD_HEIGHT
 		end
 		local cameraX, cameraY = self.camera:get()
-		if cameraX == nil or cameraY == nil then
+		if cameraX == nil --[[ or cameraY == nil ]] then
 			self.camera:set(targetX, targetY)
 		else
 			local diffX, diffY =
@@ -417,31 +417,36 @@ Game = class({
 		rect(0, 0, canvasWidth, HUD_HEIGHT, true, self._hudColor)
 
 		-- Information.
-		font(NORMAL_FONT)
+		font(FONT_NORMAL_TEXT)
 
-		text('LEVEL', 10, 7, Color.new(200, 220, 210))
-		text(self.level, 70, 7, Color.new(200, 220, 210))
-		text('WEAPON', 10, 20, Color.new(200, 220, 210))
+		text('LEVEL', 10, 11, COLOR_NORMAL_TEXT)
+		text(self.level, 70, 11, COLOR_NORMAL_TEXT)
+		text('WEAPON', 10, 24, COLOR_NORMAL_TEXT)
 		if weapon == nil then
-			text('NONE', 70, 20, Color.new(200, 220, 210))
+			text('NONE', 70, 24, COLOR_NORMAL_TEXT)
 		else
 			local txt = weapon:name()
 			local cap = weapon:capacity()
 			if cap ~= nil then
 				txt = txt .. ' [' .. tostring(cap) .. ']'
 			end
-			text(txt, 70, 20, Color.new(200, 220, 210))
+			text(txt, 70, 24, COLOR_NORMAL_TEXT)
 		end
 
-		local scoreWidth, _ = measure(self.score, NORMAL_FONT)
-		local highscoreWidth, _ = measure(self.highscore, NORMAL_FONT)
+		local scoreWidth, _ = measure(self.score, FONT_NORMAL_TEXT)
+		local highscoreWidth, _ = measure(self.highscore, FONT_NORMAL_TEXT)
 		local maxScoreWidth = math.max(scoreWidth, highscoreWidth)
-		local textWidth, _ = measure('HIGHSCORE', NORMAL_FONT)
-		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, Color.new(200, 220, 210))
-		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or Color.new(200, 220, 210))
-		textWidth, _ = measure('SCORE', NORMAL_FONT)
-		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 20, Color.new(200, 220, 210))
-		text(self.score, canvasWidth - maxScoreWidth - 10, 20, Color.new(200, 220, 210))
+		local textWidth, _ = measure('HIGHSCORE', FONT_NORMAL_TEXT)
+		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 11, COLOR_NORMAL_TEXT)
+		text(self.highscore, canvasWidth - maxScoreWidth - 10, 11, self.newHighscore and Color.new(255, 100, 100) or COLOR_NORMAL_TEXT)
+		textWidth, _ = measure('SCORE', FONT_NORMAL_TEXT)
+		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 24, COLOR_NORMAL_TEXT)
+		text(self.score, canvasWidth - maxScoreWidth - 10, 24, COLOR_NORMAL_TEXT)
+
+		if DEBUG_SHOW_WIREFRAME then
+			local txt = 'POS: ' .. tostring(math.floor(self.hero.x + 0.5)) .. ', ' .. tostring(math.floor(self.hero.y + 0.5))
+			text(txt, 128, 11)
+		end
 
 		font(nil)
 

@@ -11,7 +11,7 @@ local function refreshParticle(emitter)
 	local x, y = nil, nil
 
 	return function (self, that, delta)
-		if x == nil then
+		if x == nil --[[ or y == nil ]] then
 			x, y = that.x, that.y
 		end
 		local diffX, diffY = that.x - x, that.y - y
@@ -27,14 +27,14 @@ Weapons = {
 	['knife'] = {
 		['class'] = 'Melee',
 		['name'] = 'Knife',
-		['entry'] = 'assets/sprites/objects/knife.spr',
+		['entry'] = 'assets/sprites/objects/weapon_knife.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['pre_interval'] = 0.05, ['post_interval'] = 0.05,
 		['interval'] = 0.15,
 		['throwing_speed'] = 550, ['throwing_interval'] = nil,
-		['offset'] = 8,
+		['offset'] = 12,
 		['shape'] = {
 			['type'] = 'circle',
 			['r'] = 8
@@ -45,7 +45,7 @@ Weapons = {
 	['pistol'] = {
 		['class'] = 'Gun',
 		['name'] = 'Pistol',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_pistol.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -53,7 +53,7 @@ Weapons = {
 		['capacity'] = 40,
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
-		['offset'] = 8,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 10)
@@ -78,7 +78,7 @@ Weapons = {
 	['dual_pistols'] = {
 		['class'] = 'Gun',
 		['name'] = 'Dual Pistols',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_dual_pistols.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -86,7 +86,7 @@ Weapons = {
 		['capacity'] = 20,
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
-		['offset'] = 8,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 10)
@@ -111,15 +111,15 @@ Weapons = {
 	['shotgun'] = {
 		['class'] = 'Gun',
 		['name'] = 'Shotgun',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_shotgun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.15,
 		['capacity'] = 15,
 		['interval'] = 0.65,
-		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8,
+		['throwing_speed'] = 350, ['throwing_interval'] = 0.4,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 20)
@@ -145,15 +145,15 @@ Weapons = {
 	['submachine_gun'] = {
 		['class'] = 'Gun',
 		['name'] = 'Submachine Gun',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_submachine_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['recoil'] = 0.15,
-		['capacity'] = 50,
+		['recoil'] = 0.06,
+		['capacity'] = 45,
 		['interval'] = 0.15,
-		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8,
+		['throwing_speed'] = 350, ['throwing_interval'] = 0.4,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 20)
@@ -178,15 +178,15 @@ Weapons = {
 	['machine_gun'] = {
 		['class'] = 'Gun',
 		['name'] = 'Machine Gun',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_machine_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['recoil'] = 0.25,
-		['capacity'] = 60,
+		['recoil'] = 0.07,
+		['capacity'] = 55,
 		['interval'] = 0.05,
-		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8,
+		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 20)
@@ -211,15 +211,15 @@ Weapons = {
 	['rifle'] = {
 		['class'] = 'Gun',
 		['name'] = 'Rifle',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_rifle.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.15,
 		['capacity'] = 15,
 		['interval'] = 0.75,
-		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8,
+		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 5)
@@ -244,15 +244,15 @@ Weapons = {
 	['laser'] = {
 		['class'] = 'Gun',
 		['name'] = 'Laser',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_laser.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
-		['capacity'] = 35,
+		['capacity'] = 25,
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
-		['offset'] = 8,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			return nil, nil
 		end,
@@ -261,15 +261,15 @@ Weapons = {
 	['disc_gun'] = {
 		['class'] = 'Gun',
 		['name'] = 'Disc Gun',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_disc_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
-		['capacity'] = 25,
+		['capacity'] = 20,
 		['interval'] = 0.45,
-		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
-		['offset'] = 8,
+		['throwing_speed'] = 450, ['throwing_interval'] = 0.4,
+		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 15)
@@ -294,18 +294,16 @@ Weapons = {
 	['mines'] = {
 		['class'] = 'Gun',
 		['name'] = 'Mines',
-		['entry'] = 'assets/sprites/objects/gun.spr',
+		['entry'] = 'assets/sprites/objects/weapon_mines.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 5,
 		['interval'] = 0.55,
-		['throwing_speed'] = 350, ['throwing_interval'] = 0.2,
-		['offset'] = 8,
-		['effect'] = function (this, x, y, dir, angle)
-			return nil, nil
-		end,
+		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
+		['offset'] = 12,
+		['effect'] = nil,
 		['dual'] = false
 	}
 }

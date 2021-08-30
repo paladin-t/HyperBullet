@@ -14,8 +14,8 @@ Hero = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box, isBlocked, options)
-		Character.ctor(self, resource, box, isBlocked, options)
+	ctor = function (self, resource, legsResource, box, isBlocked, options)
+		Character.ctor(self, resource, legsResource, box, isBlocked, options)
 	end,
 
 	--[[ Meta methods. ]]
@@ -79,7 +79,7 @@ Hero = class({
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'hero' then
-					if not IMMORTAL and self:intersects(v) then -- Hero intersects with bullet.
+					if not DEBUG_IMMORTAL and self:intersects(v) then -- Hero intersects with bullet.
 						self:hurt(v)
 						if not v:penetrable() then
 							v:kill('killed')

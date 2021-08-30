@@ -195,7 +195,7 @@ Behaviours = {
 					end
 				end
 
-				if DEBUG then
+				if DEBUG_SHOW_WIREFRAME then
 					if pos then
 						line(src.x, src.y, pos.x, pos.y, Color.new(255, 255, 255, 128))
 					else

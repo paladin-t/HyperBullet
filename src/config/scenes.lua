@@ -25,7 +25,8 @@ local build = function (background, building, lingeringPoints, passingByPoints, 
 				)
 					:setDisappearable(false)
 					:on('picked', function (sender, owner)
-						remove(weapons, weapon)
+						sender:off('picked')
+						remove(weapons, sender)
 						if owner == game.hero then
 							forEach(weapons, function (w, _)
 								w:kill()
@@ -61,12 +62,12 @@ local build = function (background, building, lingeringPoints, passingByPoints, 
 				Coroutine.waitFor(1.5)
 
 				-- Spawn.
-				if game.enemyCount < options.maxEnemyCount and not PAUSE_SPAWNING then
+				if game.enemyCount < options.maxEnemyCount and not DEBUG_PAUSE_SPAWNING then
 					-- Generate enemy.
 					local _, type_ = coroutine.resume(enemySequence)
 					local cfg = Enemies[type_]
 					local enemy = Enemy.new(
-						cfg['resource'],
+						Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
 						cfg['box'],
 						isBlocked,
 						{
@@ -144,46 +145,46 @@ Scenes = {
 			--[[ Building asset.        ]] Resources.load('assets/maps/map1_building.map'),
 			--[[ Lingering way points.  ]] {
 				{
-					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32)
+					Vec2.new(-32, 160),
+					Vec2.new(32, 160), Vec2.new(32, 48), Vec2.new(96, 48)
 				},
 				{
-					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240)
+					Vec2.new(528, 160),
+					Vec2.new(480, 160), Vec2.new(480, 272), Vec2.new(368, 272)
 				},
 				{
-					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240)
+					Vec2.new(-32, 160),
+					Vec2.new(32, 160), Vec2.new(32, 272), Vec2.new(96, 272)
 				},
 				{
-					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32)
+					Vec2.new(528, 160),
+					Vec2.new(480, 160), Vec2.new(480, 48), Vec2.new(368, 48)
 				}
 			},
 			--[[ Passing-by way points. ]] {
 				{
-					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 32), Vec2.new(96, 32),
-					Vec2.new(368, 32), Vec2.new(432, 32), Vec2.new(432, 144),
-					Vec2.new(496, 144)
+					Vec2.new(-32, 160),
+					Vec2.new(32, 160), Vec2.new(32, 48), Vec2.new(96, 48),
+					Vec2.new(368, 48), Vec2.new(480, 48), Vec2.new(480, 160),
+					Vec2.new(528, 160)
 				},
 				{
-					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 240), Vec2.new(368, 240),
-					Vec2.new(96, 240), Vec2.new(32, 240), Vec2.new(32, 144),
-					Vec2.new(-32, 144)
+					Vec2.new(528, 160),
+					Vec2.new(480, 160), Vec2.new(480, 272), Vec2.new(368, 272),
+					Vec2.new(96, 272), Vec2.new(32, 272), Vec2.new(32, 160),
+					Vec2.new(-32, 160)
 				},
 				{
-					Vec2.new(-32, 144),
-					Vec2.new(32, 144), Vec2.new(32, 240), Vec2.new(96, 240),
-					Vec2.new(368, 240), Vec2.new(432, 240), Vec2.new(432, 144),
-					Vec2.new(496, 144)
+					Vec2.new(-32, 160),
+					Vec2.new(32, 160), Vec2.new(32, 272), Vec2.new(96, 272),
+					Vec2.new(368, 272), Vec2.new(480, 272), Vec2.new(480, 160),
+					Vec2.new(528, 160)
 				},
 				{
-					Vec2.new(496, 144),
-					Vec2.new(432, 144), Vec2.new(432, 32), Vec2.new(368, 32),
-					Vec2.new(96, 32), Vec2.new(32, 32), Vec2.new(32, 144),
-					Vec2.new(-32, 144)
+					Vec2.new(528, 160),
+					Vec2.new(480, 160), Vec2.new(480, 48), Vec2.new(368, 48),
+					Vec2.new(96, 48), Vec2.new(32, 48), Vec2.new(32, 160),
+					Vec2.new(-32, 160)
 				}
 			},
 			--[[ Initial weapons.       ]] {

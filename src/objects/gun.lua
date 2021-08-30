@@ -69,9 +69,17 @@ Gun = class({
 			end
 		end
 
-		-- Emit.
+		-- Check for obstacle.
 		local owner = self._owner
-		local pos = Vec2.new(owner.x, owner.y) + self._facing * self._offset * 1.5
+		local ownerPos = Vec2.new(owner.x, owner.y)
+		local emitPos = self._facing * self._offset * 1.5
+		local hit = owner:_raycast(ownerPos, emitPos)
+		if hit ~= nil then
+			return true, nil, false, self._recoil
+		end
+
+		-- Emit.
+		local pos = ownerPos + emitPos
 		local bullet = self._game.pool:bullet(
 			self._bullet,
 			pos.x, pos.y, dir or self._facing,

@@ -29,10 +29,12 @@ TODO
 
 # How to run
 
-Open the project with [Bitty Engine](https://paladin-t.github.io/bitty/) then run it.
+Open the project at the "src" directory with [Bitty Engine](https://paladin-t.github.io/bitty/) then run it.
 
 TODO
 
 # License
 
 Copyright 2021 Tony Wang.
+
+TODO

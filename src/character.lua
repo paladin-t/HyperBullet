@@ -20,9 +20,12 @@ Character = class({
 	_facing = nil,
 	_picking = false, _throwing = false,
 
+	_spriteLegs = nil,
+	_spriteLegsWidth = 0, _spriteLegsHeight = 0,
+
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box, isBlocked, options)
+	ctor = function (self, resource, legsResource, box, isBlocked, options)
 		Object.ctor(self, resource, box, isBlocked)
 
 		if options.hp then
@@ -32,6 +35,11 @@ Character = class({
 		if options.atk then
 			self.atk = options.atk
 		end
+
+		self._spriteLegs = legsResource
+		self._spriteLegs:play('walk', false)
+		self._spriteLegsWidth, self._spriteLegsHeight =
+			self._spriteLegs.width, self._spriteLegs.height
 
 		self._game = options.game
 
@@ -164,24 +172,41 @@ Character = class({
 		return self
 	end,
 	update = function (self, delta)
+		-- Process moving.
 		if self._movingByRecoil ~= nil then
-			local m = self:_move(self._movingByRecoil)
+			local m = self:_move(self._movingByRecoil) -- By recoil.
 			self.x = self.x + m.x
 			self.y = self.y + m.y
 			self._movingByRecoil = nil
 		end
-		local l = self._moving.length
-		if l ~= 0 then
+		local movementLength = self._moving.length
+		if movementLength ~= 0 then
 			local speed = delta * self._moveSpeed / self._weight
-			if l > speed then
-				self._moving = self._moving * (speed / l)
+			if movementLength > speed then
+				self._moving = self._moving * (speed / movementLength)
 			end
-			local m = self:_move(self._moving)
+			local m = self:_move(self._moving) -- By behaviour.
 			self.x = self.x + m.x
 			self.y = self.y + m.y
 			self._moving = Vec2.new(0, 0)
 		end
 
+		-- Updated and draw legs.
+		local spriteLegs = self._spriteLegs
+		if spriteLegs ~= nil then
+			if movementLength ~= 0 then
+				local dstX, dstY, dstW, dstH =
+					self.x - self._spriteLegsWidth * 0.5, self.y - self._spriteLegsHeight * 0.5,
+					self._spriteLegsWidth, self._spriteLegsHeight
+				spr(
+					spriteLegs,
+					dstX, dstY, dstW, dstH,
+					self._spriteAngle + math.pi * 0.5
+				)
+			end
+		end
+
+		-- Calculate weapon priority.
 		local weapon = self:weapon()
 		local shadow = nil
 		local before, after = false, false
@@ -194,6 +219,7 @@ Character = class({
 			end
 		end
 
+		-- Update and draw.
 		if before then
 			weapon:update(delta)
 		end

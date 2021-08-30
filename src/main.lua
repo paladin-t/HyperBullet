@@ -46,14 +46,18 @@ require 'game'
 Constant.
 ]]
 
-DEBUG = true -- Enable to show collision boxes.
-IMMORTAL = false -- Enable to make the hero unkillable.
-PAUSE_SPAWNING = false -- Enable to pause enemy spawning.
+DEBUG                = true and Debug.available  -- Enable for debug.
+DEBUG_SHOW_WIREFRAME = DEBUG and true            -- Enable to show wireframes.
+DEBUG_IMMORTAL       = DEBUG and true           -- Enable to make the hero unkillable.
+DEBUG_PAUSE_SPAWNING = DEBUG and true           -- Enable to pause enemy spawning.
 
-TITLE_FONT = Font.new('assets/fonts/college.ttf', 30)
-NORMAL_FONT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
+FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 30)
+FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
-Canvas.main:resize(0, 320)
+COLOR_TITLE_TEXT = Color.new(200, 220, 210)
+COLOR_NORMAL_TEXT = Color.new(200, 220, 210)
+
+Canvas.main:resize(DEBUG and 640 or 0, 360)
 
 --[[
 Variables.
@@ -72,7 +76,7 @@ end
 function setup()
 	beParticles.setup()
 
-	local WALKABLE_CEL = 97
+	local WALKABLE_CEL = 768
 	local BORDER_CEL = -1
 	game = Game.new(
 		Coroutine.new(),

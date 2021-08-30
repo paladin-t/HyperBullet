@@ -24,6 +24,7 @@ Object = class({
 	_spriteWidth = 0, _spriteHeight = 0,
 	_spriteAngle = 0,
 	_spriteUpdater = nil,
+	_shapeSprites = nil,
 	_shapeLine = nil,
 	_shapeLines = nil,
 	_shapeHeadPosition = nil,
@@ -45,6 +46,17 @@ Object = class({
 			self._sprite:play('idle', false)
 			self._spriteWidth, self._spriteHeight =
 				self._sprite.width, self._sprite.height
+		elseif resource['type'] == 'sprite' then
+			self._sprite = resource['resource']
+			self._sprite:play('idle', false)
+			self._spriteWidth, self._spriteHeight =
+				self._sprite.width, self._sprite.height
+		elseif resource['type'] == 'sprites' then
+			self._shapeSprites = resource
+			local sprite = self._shapeSprites['resource']
+			sprite:play('idle', false)
+			self._spriteWidth, self._spriteHeight =
+				sprite.width, sprite.height
 		elseif resource['type'] == 'line' then
 			self._shapeLine = resource
 		elseif resource['type'] == 'lines' then
@@ -144,8 +156,8 @@ Object = class({
 		end
 
 		-- Calculate basic information.
-		local sprite, shapeLine, shapeLines =
-			self._sprite, self._shapeLine, self._shapeLines
+		local sprite, shapeSprites, shapeLine, shapeLines =
+			self._sprite, self._shapeSprites, self._shapeLine, self._shapeLines
 		local emitters = self._emitters
 		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
 
@@ -175,6 +187,21 @@ Object = class({
 					dstX, dstY, dstW, dstH,
 					self._spriteAngle
 				)
+			elseif shapeSprites ~= nil then
+				if self._shapeHeadPosition == nil then
+					self._shapeHeadPosition = Vec2.new(dstX, dstY)
+				end
+				local pos = Vec2.new(dstX, dstY)
+				local diff = pos - self._shapeHeadPosition
+				local n, a = shapeSprites['count'], shapeSprites['angle']
+				for i = 1, n do
+					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * a)
+					spr(
+						shapeSprites['resource'],
+						p.x, p.y, self._spriteWidth, self._spriteHeight,
+						self._spriteAngle
+					)
+				end
 			elseif shapeLine ~= nil then
 				if self._shapeHeadPosition == nil then
 					self._shapeHeadPosition = Vec2.new(dstX, dstY)
@@ -234,7 +261,7 @@ Object = class({
 		end
 
 		-- Draw debug information.
-		if DEBUG then
+		if DEBUG_SHOW_WIREFRAME then
 			if self._collider.__name == 'Recti' then
 				rect(
 					self._collider:xMin(), self._collider:yMin(),
@@ -254,11 +281,29 @@ Object = class({
 	end,
 
 	_move = function (self, step)
-		local newDir = self._walker:solve(
-			Vec2.new(self.x, self.y), step,
-			self._isBlocked,
-			self._slidable
-		)
+		local newDir = Vec2.new(0, 0)
+		local stepLength = step:normalize()
+		if stepLength > 0 then
+			local singleStepLength = 8
+			local pos = Vec2.new(self.x, self.y)
+			while stepLength > 0 do -- Split into a few steps to avoid penetration.
+				local step_ = step * math.min(stepLength, singleStepLength)
+				local m = self._walker:solve(
+					pos, step_,
+					self._isBlocked,
+					self._slidable
+				)
+				pos = pos + m
+				newDir = newDir + m
+				stepLength = stepLength - singleStepLength
+			end
+		else
+			newDir = self._walker:solve(
+				Vec2.new(self.x, self.y), step * stepLength,
+				self._isBlocked,
+				self._slidable
+			)
+		end
 
 		return newDir
 	end,
