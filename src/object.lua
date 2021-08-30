@@ -63,7 +63,7 @@ Object = class({
 			self._shapeLines = resource
 		end
 
-		if isBlocked then
+		if isBlocked ~= nil then
 			self._walker = Walker.new()
 			self._walker.objectSize = Vec2.new(self.box:width(), self.box:height())
 			self._walker.tileSize = Vec2.new(16, 16)

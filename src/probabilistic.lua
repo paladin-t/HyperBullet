@@ -46,10 +46,10 @@ Probabilistic = class({
 
 	next = function (self, random)
 		local weight = nil
-		if random then
-			weight = random:next(1, self._total)
-		else
+		if random == nil then
 			weight = math.random(1, self._total)
+		else
+			weight = random:next(1, self._total)
 		end
 		for i, v in ipairs(self._candidates) do
 			if weight <= v.possibility then

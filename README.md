@@ -1,4 +1,4 @@
-# Hyper Bullet
+# Hyper Bullet (WIP)
 
 Hyper Bullet is a top-down shoot'em up game.
 
@@ -23,15 +23,19 @@ This project is still under early development.
 | Throw | RMB | F | L |
 | Attack | LMB | - | R |
 
-# Downloads
+# Get Hyper Bullet
+
+## Standalone binary
 
 TODO
 
-# How to run
+## In browser
+
+TODO
+
+## Source code
 
 Open the project at the "src" directory with [Bitty Engine](https://paladin-t.github.io/bitty/) then run it.
-
-TODO
 
 # License
 

@@ -19,7 +19,7 @@ Pool = class({
 	end,
 
 	-- Generates a bullet.
-	bullet = function (self, type, x, y, direction, group, game, isBlocked)
+	bullet = function (self, type, x, y, direction, group, game, isBulletBlocked)
 		-- Prepare.
 		if type == nil then
 			return nil
@@ -41,7 +41,7 @@ Pool = class({
 		if not cached then
 			obj = Bullet.new(
 				cfg['resource'],
-				isBlocked,
+				isBulletBlocked,
 				{
 					game = game,
 					atk = cfg['atk'],

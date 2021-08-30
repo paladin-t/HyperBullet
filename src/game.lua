@@ -16,7 +16,7 @@ Game = class({
 	background = nil, building = nil,
 	backgroundOffsetX = 0, backgroundOffsetY = 0,
 	sceneWidth = 0, sceneHeight = 0,
-	isHeroBlocked = nil, isEnvironmentBlocked = nil,
+	isHeroBlocked = nil, isEnvironmentBlocked = nil, isBulletBlocked = nil,
 	raycaster = nil,
 	camera = nil,
 
@@ -36,13 +36,13 @@ Game = class({
 	_blankImage = nil, _cursor = nil,
 	_clearColor = nil, _hudColor = nil,
 
-	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked)
+	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked, isBulletBlocked)
 		self.co = co
 		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
 		volume(1, 0.5)
 		--play(self.bgm, true, 2)
-		self.isHeroBlocked = isHeroBlocked
-		self.isEnvironmentBlocked = isEnvironmentBlocked
+		self.isHeroBlocked, self.isEnvironmentBlocked, self.isBulletBlocked =
+			isHeroBlocked, isEnvironmentBlocked, isBulletBlocked
 		self.raycaster = Raycaster.new()
 		self.raycaster.tileSize = Vec2.new(16, 16)
 		self.camera = Camera.new()
@@ -146,7 +146,7 @@ Game = class({
 			local hero = Hero.new(
 				Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
 				cfg['box'],
-				self.isHeroBlocked,
+				self.isHeroBlocked, self.isBulletBlocked,
 				{
 					game = self,
 					hp = cfg['hp'],
@@ -194,7 +194,7 @@ Game = class({
 				:clear()
 				:start(
 					wave,
-					self, self.isEnvironmentBlocked
+					self, self.isEnvironmentBlocked, self.isBulletBlocked
 				)
 		end
 
@@ -262,7 +262,7 @@ Game = class({
 			local cameraX, cameraY = self.camera:get()
 			hero:lookAt(x + cameraX, y + cameraY)
 			if lmb then
-				hero:attack(1)
+				hero:attack(1, nil)
 			end
 			if mmb or keyp(beInput.KeyCode.R) then
 				hero:pick()

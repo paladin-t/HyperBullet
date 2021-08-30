@@ -112,6 +112,8 @@ Bullet = class({
 		return self
 	end,
 	update = function (self, delta)
+		Object.update(self, delta)
+
 		local step = self._direction * delta * self._moveSpeed
 		local forward = self:_move(step)
 		if self._bouncy then
@@ -159,13 +161,11 @@ Bullet = class({
 				self.y = self.y + forward.y
 			end
 		end
-
-		Object.update(self, delta)
 	end,
 
 	_place = function (self)
 		local mine = Mine.new(
-			Resources.load('assets/sprites/objects/mine.spr'), self._isBlocked,
+			Resources.load('assets/sprites/objects/bullet_mines.spr'), self._isBlocked,
 			{
 				game = self._game,
 				atk = self.atk,

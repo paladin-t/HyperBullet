@@ -152,7 +152,7 @@ Behaviours = {
 	['look_at'] = function ()
 		return {
 			behave = function (self, this, delta, hero, src, dst)
-				-- Look at the hero.
+				-- Look at the target.
 				local lookAtTarget = this:lookAtTarget()
 				if lookAtTarget == 'hero' then
 					this:lookAt(hero.x, hero.y)
@@ -171,6 +171,11 @@ Behaviours = {
 
 		return {
 			behave = function (self, this, delta, hero, src, dst)
+				-- Prepare.
+				if src == nil then
+					return src, dst
+				end
+
 				-- Check interval.
 				local limit = nil
 				local weapon = this:weapon()
@@ -182,7 +187,12 @@ Behaviours = {
 				local pos, idx = this:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
 				if pos == nil and not hero:dead() then
 					if limit == nil or count < limit then
-						local bullet = this:attack(nil)
+						local accuracy = nil
+						local weapon = this:weapon()
+						if weapon ~= nil then
+							accuracy = weapon:accuracy()
+						end
+						local bullet = this:attack(nil, accuracy)
 						if bullet ~= nil then
 							bullet
 								:on('dead', function (sender, _)

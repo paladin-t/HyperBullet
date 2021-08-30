@@ -23,9 +23,11 @@ Character = class({
 	_spriteLegs = nil,
 	_spriteLegsWidth = 0, _spriteLegsHeight = 0,
 
+	_isBulletBlocked = nil,
+
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, legsResource, box, isBlocked, options)
+	ctor = function (self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
 		Object.ctor(self, resource, box, isBlocked)
 
 		if options.hp then
@@ -48,6 +50,7 @@ Character = class({
 		self._facing = Vec2.new(1, 0)
 
 		self._raycaster = self._game.raycaster
+		self._isBulletBlocked = isBulletBlocked
 	end,
 
 	--[[ Meta methods. ]]
@@ -135,12 +138,12 @@ Character = class({
 
 		return self
 	end,
-	attack = function (self, consumption)
+	attack = function (self, consumption, accuracy)
 		local weapon = self:weapon()
 		if weapon == nil then
 			return nil
 		end
-		local success, bullet, empty, recoil = weapon:attack(self._facing, consumption)
+		local success, bullet, empty, recoil = weapon:attack(self._facing, consumption, accuracy)
 		if success then
 			if recoil ~= nil and recoil > 0 then
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
@@ -148,7 +151,7 @@ Character = class({
 
 			local shadow = weapon:shadow()
 			if shadow ~= nil then
-				shadow:attack(-self._facing, nil)
+				shadow:attack(-self._facing, nil, accuracy)
 			end
 		end
 

@@ -14,8 +14,8 @@ Hero = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, legsResource, box, isBlocked, options)
-		Character.ctor(self, resource, legsResource, box, isBlocked, options)
+	ctor = function (self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
+		Character.ctor(self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
 	end,
 
 	--[[ Meta methods. ]]

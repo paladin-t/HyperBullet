@@ -46,7 +46,7 @@ Gun = class({
 
 	-- Emits bullet.
 	-- returns success, emitted bullet, out of bullet, recoil.
-	attack = function (self, dir, consumption)
+	attack = function (self, dir, consumption, accuracy)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
@@ -80,12 +80,18 @@ Gun = class({
 
 		-- Emit.
 		local pos = ownerPos + emitPos
+		if accuracy ~= nil then
+			local deviation = math.pi * 0.3
+			local tmp = dir or self._facing
+			tmp = tmp:rotated(deviation * ((math.random() - 0.5) * accuracy))
+			dir = tmp
+		end
 		local bullet = self._game.pool:bullet(
 			self._bullet,
-			pos.x, pos.y, dir or self._facing,
+			pos.x, pos.y, dir,
 			owner.group,
 			self._game,
-			owner._isBlocked
+			owner._isBulletBlocked
 		)
 		table.insert(owner._game.pending, bullet)
 

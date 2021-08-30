@@ -88,8 +88,8 @@ Bullets = {
 	['disc_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullet_disc_gun.spr'),
 		['atk'] = 1,
-		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
-		['move_speed'] = 300,
+		['box'] = Recti.byXYWH(0, 0, 16, 16), ['max_box'] = nil,
+		['move_speed'] = 200,
 		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = true,

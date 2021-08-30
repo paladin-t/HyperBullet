@@ -48,8 +48,8 @@ Constant.
 
 DEBUG                = true and Debug.available  -- Enable for debug.
 DEBUG_SHOW_WIREFRAME = DEBUG and true            -- Enable to show wireframes.
-DEBUG_IMMORTAL       = DEBUG and true           -- Enable to make the hero unkillable.
-DEBUG_PAUSE_SPAWNING = DEBUG and true           -- Enable to pause enemy spawning.
+DEBUG_IMMORTAL       = DEBUG and false           -- Enable to make the hero unkillable.
+DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawning.
 
 FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 30)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
@@ -82,13 +82,27 @@ function setup()
 		Coroutine.new(),
 		function (pos)
 			local cel = mget(game.building, pos.x, pos.y)
+			if cel == WALKABLE_CEL then
+				return false
+			end
 
-			return cel ~= WALKABLE_CEL
+			return true
 		end,
 		function (pos)
 			local cel = mget(game.building, pos.x, pos.y)
+			if cel == WALKABLE_CEL or cel == BORDER_CEL then
+				return false
+			end
 
-			return cel ~= WALKABLE_CEL and cel ~= BORDER_CEL
+			return true
+		end,
+		function (pos)
+			local cel = mget(game.building, pos.x, pos.y)
+			if cel == WALKABLE_CEL then
+				return false
+			end
+
+			return true
 		end
 	)
 		:load()

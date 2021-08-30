@@ -7,7 +7,7 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local function refreshParticle(emitter)
+local function refreshParticles(emitter)
 	local x, y = nil, nil
 
 	return function (self, that, delta)
@@ -30,6 +30,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_knife.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = nil,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['pre_interval'] = 0.05, ['post_interval'] = 0.05,
 		['interval'] = 0.15,
@@ -48,6 +49,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_pistol.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.3,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 40,
@@ -56,20 +58,19 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 10)
+			local emitter = beParticles.emitter.create(x, y, 8, 20)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 350, 20)
+			beParticles.ps_set_speed(emitter, 45, 60, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 2, 4)
-			beParticles.ps_set_life(emitter, 0.5, 1)
+			beParticles.ps_set_life(emitter, 0.5, 0.8)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
+					Color.new(89,  103, 143, 255),
 					Color.new(131, 118, 156, 255),
 					Color.new(194, 195, 199, 255)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
 
 			return emitter, 0.8
 		end,
@@ -81,6 +82,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_dual_pistols.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.3,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 20,
@@ -89,20 +91,19 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 10)
+			local emitter = beParticles.emitter.create(x, y, 8, 20)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 350, 20)
+			beParticles.ps_set_speed(emitter, 45, 60, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 2, 4)
-			beParticles.ps_set_life(emitter, 0.5, 1)
+			beParticles.ps_set_life(emitter, 0.5, 0.8)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
+					Color.new(89,  103, 143, 255),
 					Color.new(131, 118, 156, 255),
 					Color.new(194, 195, 199, 255)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
 
 			return emitter, 0.8
 		end,
@@ -114,6 +115,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_shotgun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.15,
 		['capacity'] = 15,
@@ -122,9 +124,9 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 20)
+			local emitter = beParticles.emitter.create(x, y, 8, 20)
 			beParticles.ps_set_size(emitter, 0, 2, 0, 2)
-			beParticles.ps_set_speed(emitter, 15, 250, 20)
+			beParticles.ps_set_speed(emitter, 45, 100, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 7, 14)
 			beParticles.ps_set_life(emitter, 0.5, 1)
 			beParticles.ps_set_colours(
@@ -132,11 +134,11 @@ Weapons = {
 				{
 					Color.new(255, 0,   77,  255),
 					Color.new(255, 163, 0,   255),
-					Color.new(255, 236, 39,  255),
-					Color.new(95,  87,  79,  255)
+					Color.new(255, 236, 39,  200),
+					Color.new(95,  87,  79,  128)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
+			emitter.refresh = refreshParticles(emitter)
 
 			return emitter, 1
 		end,
@@ -148,6 +150,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_submachine_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.06,
 		['capacity'] = 45,
@@ -158,18 +161,18 @@ Weapons = {
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 20)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_speed(emitter, 50, 150, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
 			beParticles.ps_set_life(emitter, 0.5, 0.3)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
+					Color.new(89,  103, 143, 255),
 					Color.new(131, 118, 156, 255),
-					Color.new(194, 195, 199, 255)
+					Color.new(194, 195, 199, 128),
+					Color.new(224, 225, 229, 64)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
 
 			return emitter, 0.3
 		end,
@@ -181,6 +184,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_machine_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.07,
 		['capacity'] = 55,
@@ -189,20 +193,20 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 20)
+			local emitter = beParticles.emitter.create(x, y, 8, 40)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_speed(emitter, 50, 150, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
 			beParticles.ps_set_life(emitter, 0.5, 0.3)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
+					Color.new(89,  103, 143, 255),
 					Color.new(131, 118, 156, 255),
-					Color.new(194, 195, 199, 255)
+					Color.new(194, 195, 199, 128),
+					Color.new(224, 225, 229, 64)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
 
 			return emitter, 0.3
 		end,
@@ -214,6 +218,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_rifle.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0.15,
 		['capacity'] = 15,
@@ -222,22 +227,23 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 5)
+			local emitter = beParticles.emitter.create(x, y, 8, 20)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 550, 20)
+			beParticles.ps_set_speed(emitter, 50, 80, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
 			beParticles.ps_set_life(emitter, 0.5, 0.3)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
+					Color.new(89,  103, 143, 255),
 					Color.new(131, 118, 156, 255),
-					Color.new(194, 195, 199, 255)
+					Color.new(255, 236, 39,  200),
+					Color.new(95,  87,  79,  128)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
+			emitter.refresh = refreshParticles(emitter)
 
-			return emitter, 0.3
+			return emitter, 0.6
 		end,
 		['dual'] = false
 	},
@@ -247,6 +253,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_laser.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 25,
@@ -264,6 +271,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_disc_gun.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.3,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 20,
@@ -272,22 +280,22 @@ Weapons = {
 		['offset'] = 12,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 4, 15)
+			local emitter = beParticles.emitter.create(x, y, 84, 60)
 			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 15, 250, 20)
+			beParticles.ps_set_speed(emitter, 50, 100, 20)
 			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
 			beParticles.ps_set_life(emitter, 0.5, 0.3)
 			beParticles.ps_set_colours(
 				emitter,
 				{
-					Color.new(29,  43,  83,  255),
-					Color.new(131, 118, 156, 255),
-					Color.new(194, 195, 199, 255)
+					Color.new(89,  103, 123, 255),
+					Color.new(101, 118, 156, 255),
+					Color.new(124, 165, 199, 200),
+					Color.new(104, 185, 219, 128)
 				}
 			)
-			emitter.refresh = refreshParticle(emitter)
 
-			return emitter, 0.3
+			return emitter, 0.6
 		end,
 		['dual'] = false
 	},
@@ -297,6 +305,7 @@ Weapons = {
 		['entry'] = 'assets/sprites/objects/weapon_mines.spr',
 		['cursor'] = Resources.load('assets/sprites/cursor.spr'),
 		['atk'] = 1,
+		['accuracy'] = 0.2,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['recoil'] = 0,
 		['capacity'] = 5,

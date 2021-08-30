@@ -10,7 +10,7 @@ Engine page: https://paladin-t.github.io/bitty/
 local build = function (background, building, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options)
 	return {
 		background = background, building = building,
-		wave = function (game, isBlocked)
+		wave = function (game, isBlocked, isBulletBlocked)
 			-- Prepare.
 			local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
 			local WEAPON_VECTOR = Vec2.new(100, 0)
@@ -69,7 +69,7 @@ local build = function (background, building, lingeringPoints, passingByPoints, 
 					local enemy = Enemy.new(
 						Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
 						cfg['box'],
-						isBlocked,
+						isBlocked, isBulletBlocked,
 						{
 							game = game,
 							hp = cfg['hp'],
@@ -241,13 +241,27 @@ Scenes = {
 			},
 			--[[ Enemy sequence.        ]] coroutine.create(
 				function ()
+					local prob = Probabilistic.new()
+						:add({ type = 'enemy1_chase_knife' }, 50)
+						:add({ type = 'enemy1_besiege_knife' }, 50)
+						:add({ type = 'enemy1_chase_pistol' }, 50)
+						:add({ type = 'enemy1_chase_dual_pistols' }, 50)
+						:add({ type = 'enemy1_chase_shotgun' }, 20)
+						:add({ type = 'enemy1_chase_submachine_gun' }, 20)
+						:add({ type = 'enemy1_chase_machine_gun' }, 10)
+						:add({ type = 'enemy1_pass_by_rifle' }, 20)
+						:add({ type = 'enemy1_pass_by_laser' }, 10)
+						:add({ type = 'enemy1_chase_disc_gun' }, 20)
+						:add({ type = 'enemy1_chase_mines' }, 20)
+
 					while true do
-						coroutine.yield('enemy1_chase_pistol')
+						local data, _ = prob:next()
+						coroutine.yield(data.type)
 					end
 				end
 			),
 			--[[ Other options.         ]] {
-				maxEnemyCount = 1,
+				maxEnemyCount = 3,
 				finishingCondition = function (game)
 					return game.killingCount >= 20
 				end

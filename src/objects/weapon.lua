@@ -19,6 +19,7 @@ Weapon = class({
 	_owner = nil, _ownerGroup = nil,
 	_name = nil,
 
+	_accuracy = nil,
 	_facing = nil,
 	_interval = 0.25, _timestamp = nil,
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
@@ -42,6 +43,7 @@ Weapon = class({
 		self._game = options.game
 		self._name = cfg['name']
 
+		self._accuracy = cfg['accuracy']
 		self._facing = Vec2.new(1, 0)
 		self._interval = cfg['interval']
 		self._throwingSpeed, self._throwingInterval, self._throwingTicks =
@@ -98,6 +100,10 @@ Weapon = class({
 		return self._name
 	end,
 
+	accuracy = function (self)
+		return self._accuracy
+	end,
+
 	throwing = function (self)
 		return self._throwing
 	end,
@@ -131,7 +137,7 @@ Weapon = class({
 		return self
 	end,
 
-	attack = function (self, dir, consumption)
+	attack = function (self, dir, consumption, accuracy)
 		error('Implement me.')
 	end,
 
