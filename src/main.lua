@@ -80,23 +80,35 @@ function setup()
 	local BORDER_CEL = -1
 	game = Game.new(
 		Coroutine.new(),
-		function (pos)
+		function (pos) -- Is hero blocked?
 			local cel = mget(game.building, pos.x, pos.y)
 			if cel == WALKABLE_CEL then
 				return false
 			end
-
-			return true
-		end,
-		function (pos)
-			local cel = mget(game.building, pos.x, pos.y)
-			if cel == WALKABLE_CEL or cel == BORDER_CEL then
-				return false
+			if game.foreground ~= nil then
+				cel = mget(game.foreground, pos.x, pos.y)
+				if cel == WALKABLE_CEL then
+					return false
+				end
 			end
 
 			return true
 		end,
-		function (pos)
+		function (pos) -- Is environment blocked?
+			local cel = mget(game.building, pos.x, pos.y)
+			if cel == WALKABLE_CEL or cel == BORDER_CEL then
+				return false
+			end
+			if game.foreground ~= nil then
+				cel = mget(game.foreground, pos.x, pos.y)
+				if cel == WALKABLE_CEL or cel == BORDER_CEL then
+					return false
+				end
+			end
+
+			return true
+		end,
+		function (pos) -- Is bullet blocked?
 			local cel = mget(game.building, pos.x, pos.y)
 			if cel == WALKABLE_CEL then
 				return false

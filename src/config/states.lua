@@ -76,6 +76,16 @@ States = {
 			end
 		}
 	end,
+	['options'] = function (game)
+		return {
+			playing = false,
+			update = function (self, delta)
+				-- TODO
+
+				return self
+			end
+		}
+	end,
 	['playing'] = function (game)
 		return {
 			playing = true,
@@ -170,6 +180,16 @@ States = {
 					widgets:update(theme, delta)
 					font(nil)
 				end
+
+				return self
+			end
+		}
+	end,
+	['tutorial'] = function (game)
+		return {
+			playing = true,
+			update = function (self, delta)
+				-- TODO
 
 				return self
 			end
