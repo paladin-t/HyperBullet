@@ -13,6 +13,7 @@ Weapon = class({
 	type = nil,
 	group = 'weapon',
 
+	icon = nil,
 	cursor = nil,
 
 	_game = nil,
@@ -34,6 +35,8 @@ Weapon = class({
 		local resource = Resources.load(cfg['entry'])
 		local box = cfg['box']
 		self.type = options.type
+		self.icon = Resources.load(cfg['entry'])
+		self.icon:play('idle')
 		self.cursor = cfg['cursor']
 
 		Object.ctor(self, resource, box, isBlocked)

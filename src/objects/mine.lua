@@ -57,10 +57,10 @@ Mine = class({
 			for _, v in ipairs(self._game.objects) do
 				if v.group == 'hero' then
 					if v:intersects(self) then -- Hero intersects with mine.
+						local hadArmour = v:armour()
 						v:hurt(self)
-
 						local weapon = v:weapon()
-						if weapon ~= nil then
+						if weapon ~= nil and hadArmour == nil then
 							v:setWeapon(nil)
 							weapon:revive()
 							table.insert(self._game.pending, weapon)
@@ -68,16 +68,18 @@ Mine = class({
 					end
 				elseif v.group == 'enemy' then
 					if v:intersects(self) then -- Enemy intersects with mine.
+						local hadArmour = v:armour()
 						v:hurt(self)
-
 						local weapon = v:weapon()
-						if weapon ~= nil then
+						if weapon ~= nil and hadArmour == nil then
 							v:setWeapon(nil)
 							weapon:revive()
 							table.insert(self._game.pending, weapon)
 						end
 					end
 				elseif v.group == 'weapon' then
+					-- Do nothing.
+				elseif v.group == 'armour' then
 					-- Do nothing.
 				elseif v.group == 'bullet' then
 					-- Do nothing.

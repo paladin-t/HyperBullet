@@ -19,6 +19,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'knife',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_besiege_knife'] = {
@@ -32,6 +33,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'knife',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_pistol'] = {
@@ -45,6 +47,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'pistol',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_dual_pistols'] = {
@@ -58,6 +61,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'dual_pistols',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_shotgun'] = {
@@ -71,6 +75,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'shotgun',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_submachine_gun'] = {
@@ -84,7 +89,22 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'submachine_gun',
+		['armour'] = nil,
 		['score'] = 10
+	},
+	['enemy2_chase_submachine_gun_body_armour'] = {
+		['assets'] = {
+			'assets/sprites/characters/enemy2.spr',
+			'assets/sprites/characters/legs2.spr'
+		},
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['behaviours'] = { 'chase', 'look_at', 'attack' },
+		['look_at_target'] = 'hero',
+		['move_speed'] = 80,
+		['weapon'] = 'submachine_gun',
+		['armour'] = 'body_armour',
+		['score'] = 20
 	},
 	['enemy1_chase_machine_gun'] = {
 		['assets'] = {
@@ -97,7 +117,22 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'machine_gun',
+		['armour'] = nil,
 		['score'] = 10
+	},
+	['enemy2_chase_machine_gun_body_armour'] = {
+		['assets'] = {
+			'assets/sprites/characters/enemy2.spr',
+			'assets/sprites/characters/legs2.spr'
+		},
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['behaviours'] = { 'chase', 'look_at', 'attack' },
+		['look_at_target'] = 'hero',
+		['move_speed'] = 80,
+		['weapon'] = 'machine_gun',
+		['armour'] = 'body_armour',
+		['score'] = 20
 	},
 	['enemy1_pass_by_rifle'] = {
 		['assets'] = {
@@ -110,6 +145,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'rifle',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_pass_by_laser'] = {
@@ -123,6 +159,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'laser',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_disc_gun'] = {
@@ -136,6 +173,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'disc_gun',
+		['armour'] = nil,
 		['score'] = 10
 	},
 	['enemy1_chase_mines'] = {
@@ -149,6 +187,7 @@ Enemies = {
 		['look_at_target'] = 'hero',
 		['move_speed'] = 130,
 		['weapon'] = 'mines',
+		['armour'] = nil,
 		['score'] = 10
 	}
 }

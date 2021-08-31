@@ -12,7 +12,7 @@ Character = class({
 
 	_game = nil,
 
-	_weapon = nil,
+	_weapon = nil, _armour = nil,
 
 	_weight = 1,
 	_moveSpeed = 0,
@@ -61,6 +61,22 @@ Character = class({
 
 	--[[ Methods. ]]
 
+	hurt = function (self, other)
+		local armour = self:armour()
+		if armour ~= nil then
+			armour.hp = math.max(armour.hp - other.atk, 0)
+			if armour.hp == 0 then
+				self:setArmour(nil)
+			end
+
+			return self
+		end
+
+		Object.hurt(self, other)
+
+		return self
+	end,
+
 	intersects = function (self, other)
 		return Math.intersects(self._collider, other._collider)
 	end,
@@ -81,6 +97,21 @@ Character = class({
 				:setOwnerGroup(self.group)
 		end
 		self._weapon = weapon
+
+		return self
+	end,
+	armour = function (self)
+		return self._armour
+	end,
+	setArmour = function (self, armour)
+		if self._armour ~= nil then
+			self._armour:setOwner(nil)
+		end
+		if armour ~= nil then
+			armour
+				:setOwner(self)
+		end
+		self._armour = armour
 
 		return self
 	end,

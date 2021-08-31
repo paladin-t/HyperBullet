@@ -453,40 +453,47 @@ Game = class({
 		-- Prepare.
 		local canvasWidth, canvasHeight = Canvas.main:size()
 		local hero = self.hero
-		local weapon = hero:weapon()
+		local weapon, armour = hero:weapon(), hero:armour()
 		clip(0, 0, canvasWidth, HUD_HEIGHT)
 		rect(0, 0, canvasWidth, HUD_HEIGHT, true, self._hudColor)
 
 		-- Information.
 		font(FONT_NORMAL_TEXT)
 
-		text('LEVEL', 10, 11, COLOR_NORMAL_TEXT)
-		text(self.level, 70, 11, COLOR_NORMAL_TEXT)
-		text('WEAPON', 10, 24, COLOR_NORMAL_TEXT)
-		if weapon == nil then
-			text('NONE', 70, 24, COLOR_NORMAL_TEXT)
+		text('LEVEL', 10, 7, COLOR_NORMAL_TEXT)
+		text(self.level, 70, 7, COLOR_NORMAL_TEXT)
+		text('EQUIP.', 10, 26, COLOR_NORMAL_TEXT)
+		if weapon == nil and armour == nil then
+			text('NONE', 70, 26, COLOR_NORMAL_TEXT)
 		else
-			local txt = weapon:name()
-			local cap = weapon:capacity()
-			if cap ~= nil then
-				txt = txt .. ' [' .. tostring(cap) .. ']'
+			local x = 70
+			if weapon ~= nil then
+				spr(weapon.icon, x, 22)
+				x = x + 12
+				local txt = ' [' .. tostring(weapon:capacity()) .. ']'
+				text(txt, x, 26, COLOR_NORMAL_TEXT)
+				local capWidth, _ = measure(txt, FONT_NORMAL_TEXT)
+				x = x + capWidth + 8
 			end
-			text(txt, 70, 24, COLOR_NORMAL_TEXT)
+			if armour ~= nil then
+				spr(armour.icon, x, 22)
+				x = x + 12
+			end
 		end
 
 		local scoreWidth, _ = measure(self.score, FONT_NORMAL_TEXT)
 		local highscoreWidth, _ = measure(self.highscore, FONT_NORMAL_TEXT)
 		local maxScoreWidth = math.max(scoreWidth, highscoreWidth)
 		local textWidth, _ = measure('HIGHSCORE', FONT_NORMAL_TEXT)
-		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 11, COLOR_NORMAL_TEXT)
-		text(self.highscore, canvasWidth - maxScoreWidth - 10, 11, self.newHighscore and Color.new(255, 100, 100) or COLOR_NORMAL_TEXT)
+		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, COLOR_NORMAL_TEXT)
+		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or COLOR_NORMAL_TEXT)
 		textWidth, _ = measure('SCORE', FONT_NORMAL_TEXT)
-		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 24, COLOR_NORMAL_TEXT)
-		text(self.score, canvasWidth - maxScoreWidth - 10, 24, COLOR_NORMAL_TEXT)
+		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 22, COLOR_NORMAL_TEXT)
+		text(self.score, canvasWidth - maxScoreWidth - 10, 22, COLOR_NORMAL_TEXT)
 
 		if DEBUG_SHOW_WIREFRAME then
 			local txt = 'POS: ' .. tostring(math.floor(self.hero.x + 0.5)) .. ', ' .. tostring(math.floor(self.hero.y + 0.5))
-			text(txt, 128, 11)
+			text(txt, 128, 7)
 		end
 
 		font(nil)

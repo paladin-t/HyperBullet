@@ -1,0 +1,24 @@
+{
+  "width": 16,
+  "height": 32,
+  "count": 2,
+  "data": [
+    {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 32,
+      "interval": 0.25,
+      "key": "walk"
+    },
+    {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "interval": 0.25,
+      "key": ""
+    }
+  ],
+  "ref": "assets/imgs/bank.png"
+}

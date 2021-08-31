@@ -68,10 +68,10 @@ Enemy = class({
 					local affecting, shape = weapon:affecting()
 					if affecting then
 						if v:intersectsWithShape(shape) then -- Hero intersects with enemy's melee.
+							local hadArmour = v:armour()
 							v:hurt(weapon)
-
 							local weapon = v:weapon()
-							if weapon ~= nil then
+							if weapon ~= nil and hadArmour == nil then
 								v:setWeapon(nil)
 								weapon:revive()
 								table.insert(self._game.pending, weapon)
@@ -86,10 +86,10 @@ Enemy = class({
 					if v:ownerGroup() ~= 'enemy' and self:intersects(v) then -- Enemy intersects with a weapon which is being thrown.
 						v:throw(nil)
 
+						local hadArmour = self:armour()
 						self:hurt(v)
-
 						local weapon = self:weapon()
-						if weapon ~= nil then
+						if weapon ~= nil and hadArmour == nil then
 							self:setWeapon(nil)
 							weapon:revive()
 							table.insert(self._game.pending, weapon)
@@ -108,17 +108,19 @@ Enemy = class({
 						v:kill('picked')
 					end
 				end
+			elseif v.group == 'armour' then
+				-- Do nothing.
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'enemy' then
 					if self:intersects(v) then -- Enemy intersects with bullet.
+						local hadArmour = self:armour()
 						self:hurt(v)
 						if not v:penetrable() then
 							v:kill('killed')
 						end
-
 						local weapon = self:weapon()
-						if weapon ~= nil and self._game.state.playing then
+						if weapon ~= nil and hadArmour == nil and self._game.state.playing then
 							self:setWeapon(nil)
 							weapon:revive()
 							table.insert(self._game.pending, weapon)

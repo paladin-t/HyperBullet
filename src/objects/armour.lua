@@ -13,6 +13,8 @@ Armour = class({
 	type = nil,
 	group = 'armour',
 
+	icon = nil,
+
 	_game = nil,
 	_owner = nil,
 	_name = nil,
@@ -24,11 +26,12 @@ Armour = class({
 		local resource = Resources.load(cfg['entry'])
 		local box = cfg['box']
 		self.type = options.type
+		self.icon = Resources.load(cfg['entry'])
+		self.icon:play('idle')
 
 		Object.ctor(self, resource, box, nil)
 
-		self.maxHp = cfg['hp']
-		self.hp = cfg['hp']
+		self.maxHp, self.hp = cfg['hp'], cfg['hp']
 
 		self._game = options.game
 		self._name = cfg['name']
@@ -60,6 +63,9 @@ Armour = class({
 		return self._name
 	end,
 
+	behave = function (self, delta, _1)
+		return self
+	end,
 	update = function (self, delta)
 		-- Base update.
 		Object.update(self, delta)

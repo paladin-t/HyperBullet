@@ -111,16 +111,31 @@ local build = function (background, building, foreground, lingeringPoints, passi
 					game.enemyCount = game.enemyCount + 1
 
 					-- Equip with weapon.
-					local weaponCfg = Weapons[cfg['weapon']]
-					local weapon = (weaponCfg['class'] == 'Gun' and Gun or Melee).new(
-						isBlocked,
-						{
-							type = cfg['weapon'],
-							game = game,
-						}
-					)
-					enemy:setWeapon(weapon)
-					weapon:kill('picked')
+					if cfg['weapon'] ~= nil then
+						local weaponCfg = Weapons[cfg['weapon']]
+						local weapon = (weaponCfg['class'] == 'Gun' and Gun or Melee).new(
+							isBlocked,
+							{
+								type = cfg['weapon'],
+								game = game,
+							}
+						)
+						enemy:setWeapon(weapon)
+						weapon:kill('picked')
+					end
+
+					-- Equip with armour.
+					if cfg['armour'] ~= nil then
+						local armourCfg = Armours[cfg['armour']]
+						local armour = BodyArmour.new(
+							{
+								type = cfg['armour'],
+								game = game,
+							}
+						)
+						enemy:setArmour(armour)
+						armour:kill('picked')
+					end
 
 					-- Finish.
 					pointIndex = pointIndex + 1
@@ -165,7 +180,9 @@ Scenes = {
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
 				:add({ type = 'enemy1_chase_submachine_gun' }, 20)
+				:add({ type = 'enemy2_chase_submachine_gun_body_armour' }, 5)
 				:add({ type = 'enemy1_chase_machine_gun' }, 10)
+				:add({ type = 'enemy2_chase_machine_gun_body_armour' }, 5)
 				:add({ type = 'enemy1_pass_by_rifle' }, 20)
 				:add({ type = 'enemy1_pass_by_laser' }, 10)
 				:add({ type = 'enemy1_chase_disc_gun' }, 20)
@@ -316,7 +333,9 @@ Scenes = {
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
 				:add({ type = 'enemy1_chase_submachine_gun' }, 20)
+				:add({ type = 'enemy2_chase_submachine_gun_body_armour' }, 5)
 				:add({ type = 'enemy1_chase_machine_gun' }, 10)
+				:add({ type = 'enemy2_chase_machine_gun_body_armour' }, 5)
 				:add({ type = 'enemy1_pass_by_rifle' }, 20)
 				:add({ type = 'enemy1_pass_by_laser' }, 10)
 				:add({ type = 'enemy1_chase_disc_gun' }, 20)
