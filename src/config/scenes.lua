@@ -7,163 +7,19 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local build = function (background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options)
-	return {
-		background = background, building = building, foreground = foreground,
-		wave = function (game, isBlocked, isBulletBlocked)
-			-- Prepare.
-			local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
-			local WEAPON_VECTOR = Vec2.new(100, 0)
-			local weapons = { }
-			forEach(initialWeapons, function (w, i)
-				local weapon = (w.class == 'Gun' and Gun or Melee).new(
-					game.isEnvironmentBlocked,
-					{
-						type = w.type,
-						game = game,
-					}
-				)
-					:setDisappearable(false)
-					:on('picked', function (sender, owner)
-						sender:off('picked')
-						remove(weapons, sender)
-						if owner == game.hero then
-							forEach(weapons, function (w, _)
-								w:kill()
-
-								local fx = game.pool:effect('disappearance', w.x, w.y, game)
-								table.insert(game.foregroundEffects, fx)
-							end)
-						end
-					end)
-				table.insert(weapons, weapon)
-				local pos = w.position
-				if pos == nil then
-					pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(
-						math.pi * 2 * ((i - 1) / #initialWeapons)
-							+ math.pi * 0.07
-					)
-				end
-				weapon.x, weapon.y = pos.x, pos.y
-				table.insert(game.objects, weapon)
-
-				local fx = game.pool:effect('appearance', pos.x, pos.y, game)
-				table.insert(game.foregroundEffects, fx)
-			end)
-
-			local pointIndex = 1
-
-			-- Delay.
-			Coroutine.waitFor(1.5)
-
-			-- Spawn enemies.
-			while game.state.playing do
-				-- Delay.
-				Coroutine.waitFor(1.5)
-
-				-- Spawn.
-				if game.enemyCount < options.maxEnemyCount and not DEBUG_PAUSE_SPAWNING then
-					-- Generate enemy.
-					local _, type_ = coroutine.resume(enemySequence)
-					local cfg = Enemies[type_]
-					local enemy = Enemy.new(
-						Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
-						cfg['box'],
-						isBlocked, isBulletBlocked,
-						{
-							game = game,
-							hp = cfg['hp'],
-							behaviours = cfg['behaviours'],
-							lookAtTarget = cfg['look_at_target'],
-							moveSpeed = cfg['move_speed']
-						}
-					)
-					local isLingering, isPassingBy =
-						exists(cfg['behaviours'], 'chase') or exists(cfg['behaviours'], 'besiege'),
-						exists(cfg['behaviours'], 'pass_by')
-					local points = nil
-					if isLingering then
-						points = lingeringPoints
-					elseif isPassingBy then
-						points = passingByPoints
-					end
-					local goal = points[pointIndex]
-					local pos = car(goal)
-					enemy.x, enemy.y = pos.x, pos.y
-					enemy:setGoals(cdr(goal))
-					enemy:reset()
-					table.insert(game.objects, enemy)
-
-					local fx = game.pool:effect('appearance', pos.x, pos.y, game)
-					table.insert(game.foregroundEffects, fx)
-
-					-- Setup event handler.
-					enemy:on('dead', function (sender, reason)
-						if reason == 'killed' then
-							game.enemyCount = game.enemyCount - 1
-							game:addKilling(1)
-							game:addScore(cfg['score'])
-
-							local fx = game.pool:effect('disappearance', sender.x, sender.y, game)
-							table.insert(game.foregroundEffects, fx)
-						end
-					end)
-					game.enemyCount = game.enemyCount + 1
-
-					-- Equip with weapon.
-					if cfg['weapon'] ~= nil then
-						local weaponCfg = Weapons[cfg['weapon']]
-						local weapon = (weaponCfg['class'] == 'Gun' and Gun or Melee).new(
-							isBlocked,
-							{
-								type = cfg['weapon'],
-								game = game,
-							}
-						)
-						enemy:setWeapon(weapon)
-						weapon:kill('picked')
-					end
-
-					-- Equip with armour.
-					if cfg['armour'] ~= nil then
-						local armourCfg = Armours[cfg['armour']]
-						local armour = BodyArmour.new(
-							{
-								type = cfg['armour'],
-								game = game,
-							}
-						)
-						enemy:setArmour(armour)
-						armour:kill('picked')
-					end
-
-					-- Finish.
-					pointIndex = pointIndex + 1
-					if pointIndex > #points then
-						pointIndex = 1
-					end
-				end
-			end
-		end,
-		finished = function (game)
-			return options.finishingCondition(game)
-		end
-	}
-end
-
 Scenes = {
-	['room1'] = function (level)
-		print('Build room1 for level ' .. tostring(level) .. '.')
+	['room1'] = function (game, index)
+		print('Build room1 for level ' .. tostring(index) .. '.')
 
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if level == 1 then
+		if index == 1 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
 				:add({ type = 'enemy1_chase_pistol' }, 50)
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
-		elseif level == 2 then
+		elseif index == 2 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
@@ -189,7 +45,7 @@ Scenes = {
 				:add({ type = 'enemy1_chase_mines' }, 20)
 		end
 
-		return build(
+		return game:build(
 			--[[ Background asset.      ]] Resources.load('assets/maps/map1_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/map1_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/map1_foreground.map'),
@@ -241,51 +97,61 @@ Scenes = {
 				{
 					class = 'Gun',
 					type = 'pistol',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'dual_pistols',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'shotgun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'submachine_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'machine_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'rifle',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'laser',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'disc_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'mines',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
+					capacity = nil,
 					position = nil
 				}
 			},
@@ -298,25 +164,33 @@ Scenes = {
 				end
 			),
 			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
-					return game.killingCount >= 20
+					if game.killingCount >= 20 then
+						game:play(true, false)
+
+						return true
+					end
+
+					return false
 				end
-			}
+			},
+			--[[ Effects.               ]] nil
 		)
 	end,
-	['room2'] = function (level)
-		print('Build room2 for level ' .. tostring(level) .. '.')
+	['room2'] = function (game, index)
+		print('Build room2 for level ' .. tostring(index) .. '.')
 
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if level == 1 then
+		if index == 1 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
 				:add({ type = 'enemy1_chase_pistol' }, 50)
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
-		elseif level == 2 then
+		elseif index == 2 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
@@ -342,7 +216,7 @@ Scenes = {
 				:add({ type = 'enemy1_chase_mines' }, 20)
 		end
 
-		return build(
+		return game:build(
 			--[[ Background asset.      ]] Resources.load('assets/maps/map2_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/map2_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/map2_foreground.map'),
@@ -394,51 +268,61 @@ Scenes = {
 				{
 					class = 'Gun',
 					type = 'pistol',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'dual_pistols',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'shotgun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'submachine_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'machine_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'rifle',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'laser',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'disc_gun',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Gun',
 					type = 'mines',
+					capacity = nil,
 					position = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
+					capacity = nil,
 					position = nil
 				}
 			},
@@ -451,11 +335,19 @@ Scenes = {
 				end
 			),
 			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
-					return game.killingCount >= 20
+					if game.killingCount >= 20 then
+						game:play(true, false)
+
+						return true
+					end
+
+					return false
 				end
-			}
+			},
+			--[[ Effects.               ]] nil
 		)
 	end
 }

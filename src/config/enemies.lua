@@ -8,6 +8,20 @@ Engine page: https://paladin-t.github.io/bitty/
 ]]
 
 Enemies = {
+	['enemy1_pass_by_none'] = {
+		['assets'] = {
+			'assets/sprites/characters/enemy1.spr',
+			'assets/sprites/characters/legs1.spr'
+		},
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['behaviours'] = { 'pass_by', 'look_at' },
+		['look_at_target'] = 'hero',
+		['move_speed'] = 130,
+		['weapon'] = nil,
+		['armour'] = nil,
+		['score'] = 1
+	},
 	['enemy1_chase_knife'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',

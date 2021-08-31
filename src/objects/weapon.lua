@@ -127,6 +127,9 @@ Weapon = class({
 	capacity = function (self)
 		return nil
 	end,
+	setCapacity = function (self, capacity)
+		return self
+	end,
 
 	shadow = function (self)
 		return self._shadow

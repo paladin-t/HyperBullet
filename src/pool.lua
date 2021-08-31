@@ -115,6 +115,15 @@ Pool = class({
 				)
 			end
 			autoRemove = true
+		elseif type == 'text' then
+			obj = Text.new(
+				{
+					game = game
+				}
+			)
+			obj.x, obj.y = x, y
+
+			return obj
 		else
 			error('Unknown effect: ' .. type .. '.')
 		end

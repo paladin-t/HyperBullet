@@ -41,26 +41,28 @@ Object = class({
 	ctor = function (self, resource, box, isBlocked)
 		self.box = box
 
-		if resource.__name == 'Sprite' then
-			self._sprite = resource
-			self._sprite:play('idle', false)
-			self._spriteWidth, self._spriteHeight =
-				self._sprite.width, self._sprite.height
-		elseif resource['type'] == 'sprite' then
-			self._sprite = resource['resource']
-			self._sprite:play('idle', false)
-			self._spriteWidth, self._spriteHeight =
-				self._sprite.width, self._sprite.height
-		elseif resource['type'] == 'sprites' then
-			self._shapeSprites = resource
-			local sprite = self._shapeSprites['resource']
-			sprite:play('idle', false)
-			self._spriteWidth, self._spriteHeight =
-				sprite.width, sprite.height
-		elseif resource['type'] == 'line' then
-			self._shapeLine = resource
-		elseif resource['type'] == 'lines' then
-			self._shapeLines = resource
+		if resource ~= nil then
+			if resource.__name == 'Sprite' then
+				self._sprite = resource
+				self._sprite:play('idle', false)
+				self._spriteWidth, self._spriteHeight =
+					self._sprite.width, self._sprite.height
+			elseif resource['type'] == 'sprite' then
+				self._sprite = resource['resource']
+				self._sprite:play('idle', false)
+				self._spriteWidth, self._spriteHeight =
+					self._sprite.width, self._sprite.height
+			elseif resource['type'] == 'sprites' then
+				self._shapeSprites = resource
+				local sprite = self._shapeSprites['resource']
+				sprite:play('idle', false)
+				self._spriteWidth, self._spriteHeight =
+					sprite.width, sprite.height
+			elseif resource['type'] == 'line' then
+				self._shapeLine = resource
+			elseif resource['type'] == 'lines' then
+				self._shapeLines = resource
+			end
 		end
 
 		if isBlocked ~= nil then

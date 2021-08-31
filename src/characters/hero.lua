@@ -74,6 +74,8 @@ Hero = class({
 
 						self:setWeapon(v)
 						v:kill('picked')
+
+						self._game.room.finished(self)
 					end
 				end
 			elseif v.group == 'armour' then
@@ -83,6 +85,8 @@ Hero = class({
 						if armour == nil then
 							self:setArmour(v)
 							v:kill('picked')
+
+							self._game.room.finished(self)
 						end
 					end
 				end

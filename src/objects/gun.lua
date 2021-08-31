@@ -43,6 +43,11 @@ Gun = class({
 	capacity = function (self)
 		return self._capacity
 	end,
+	setCapacity = function (self, capacity)
+		self._capacity = capacity
+
+		return self
+	end,
 
 	-- Emits bullet.
 	-- returns success, emitted bullet, out of bullet, recoil.
@@ -64,7 +69,7 @@ Gun = class({
 				if consumption ~= nil then
 					self._capacity = self._capacity - consumption
 				end
-			else
+			elseif self._capacity == 0 then
 				return false, nil, true, nil
 			end
 		end
