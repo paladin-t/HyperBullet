@@ -7,7 +7,8 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local SAVE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet.txt')
+local DATE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet_data.txt')
+local CONFIG_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet_config.txt')
 local HUD_HEIGHT = 40
 
 Game = class({
@@ -36,11 +37,11 @@ Game = class({
 	_blankImage = nil, _cursor = nil,
 	_clearColor = nil, _hudColor = nil,
 
+	_options = nil,
+
 	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked, isBulletBlocked)
 		self.co = co
 		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
-		volume(1, 0.5)
-		play(self.bgm, true, 2)
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnvironmentBlocked, self.isBulletBlocked =
@@ -91,6 +92,24 @@ Game = class({
 			Color.new(80, 80, 80), Color.new(30, 30, 30)
 
 		self.state = States['title'](self)
+
+		self._options = {
+			['audio/sfx/volume'] = 0.8,
+			['audio/bgm/volume'] = 0.8,
+			['video/canvas/scale'] = 2,
+			['gameplay/blood/show'] = true
+		}
+	end,
+
+	-- Gets option value of the specific key.
+	getOption = function (self, key)
+		return self._options[key]
+	end,
+	-- Sets option value of the specific key.
+	setOption = function (self, key, val)
+		self._options[key] = val
+
+		return self
 	end,
 
 	-- Adds the specific number of killing to the current game.
@@ -120,10 +139,19 @@ Game = class({
 	-- Loads game data.
 	load = function (self)
 		local file = File.new()
-		if file:open(SAVE_FILE, Stream.Read) then
+		if file:open(DATE_FILE, Stream.Read) then
 			local score = file:readLine()
 			self.highscore = tonumber(score)
 			file:close()
+		end
+
+		file = File.new()
+		if file:open(CONFIG_FILE, Stream.Read) then
+			local str = file:readString()
+			file:close()
+			local json = Json.new()
+			json:fromString(str)
+			self._options = json:toTable()
 		end
 
 		return self
@@ -131,8 +159,17 @@ Game = class({
 	-- Saves game data.
 	save = function (self)
 		local file = File.new()
-		if file:open(SAVE_FILE, Stream.Write) then
+		if file:open(DATE_FILE, Stream.Write) then
 			file:writeLine(tostring(self.highscore))
+			file:close()
+		end
+
+		file = File.new()
+		if file:open(CONFIG_FILE, Stream.Write) then
+			local json = Json.new()
+			json:fromTable(self._options)
+			local str = json:toString()
+			file:writeLine(str)
 			file:close()
 		end
 
@@ -141,6 +178,11 @@ Game = class({
 
 	-- Loads initial resources, setups environments.
 	setup = function (self)
+		local sfxVol, bgmVol =
+			self:getOption('audio/sfx/volume') or 0.8, self:getOption('audio/bgm/volume') or 0.8
+		volume(sfxVol, bgmVol)
+		play(self.bgm, true, 2)
+
 		self:play(false, true)
 
 		return self

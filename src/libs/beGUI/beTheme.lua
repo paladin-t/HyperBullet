@@ -51,9 +51,13 @@ local function default()
 		},
 
 		['label'] = {
+			resource = font_,
+			color = Color.new(200, 220, 210),
 			content_offset = nil
 		},
 		['label_shadow'] = {
+			resource = font_,
+			color = Color.new(0, 0, 0),
 			content_offset = { 1, 1 }
 		},
 		['multilinelabel'] = {

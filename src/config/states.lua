@@ -29,7 +29,7 @@ States = {
 		local theme = beTheme.default()
 		local widgets = beGUI.Widget.new()
 			:anchor(0.5, 1)
-			:put(P(50), P(90))
+			:put(P(50), 320)
 			:resize(200, 60)
 			:addChild(
 				beGUI.Button.new('PLAY')
@@ -76,8 +76,8 @@ States = {
 				font(FONT_TITLE_TEXT)
 				local txt = 'Hyper Bullet'
 				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, COLOR_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
 				font(nil)
 
 				if navPrev() then
@@ -102,10 +102,145 @@ States = {
 		}
 	end,
 	['options'] = function (game)
+		local numberOptionToBoolean = function (key)
+			local val = game:getOption(key)
+			if not val then
+				return 0
+			end
+
+			return val > 0
+		end
+		local booleanToNumberOption = function (key, val, trueVal)
+			local val_ = val and trueVal or 0
+			game:setOption(key, val_)
+		end
+		local P = beGUI.percent
+		local theme = beTheme.default()
+		local widgets = beGUI.Widget.new()
+			:anchor(0.5, 1)
+			:put(P(50), 264)
+			:resize(200, 60)
+			:addChild(
+				beGUI.Label.new('AUDIO', 'left', false, 'label', 'label_shadow')
+					:anchor(0, 0)
+					:put(0, 0)
+					:resize(P(100), 16)
+			)
+			:addChild(
+				beGUI.Button.new('SFX: ' .. (numberOptionToBoolean('audio/sfx/volume') and 'ON ' or 'OFF'))
+					:anchor(0, 0)
+					:put(0, 17)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						booleanToNumberOption('audio/sfx/volume', not numberOptionToBoolean('audio/sfx/volume'), 0.8)
+						local sfxVol, bgmVol =
+							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
+						volume(sfxVol, bgmVol)
+						sender:setValue('SFX: ' .. (numberOptionToBoolean('audio/sfx/volume') and 'ON ' or 'OFF'))
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('BGM: ' .. (numberOptionToBoolean('audio/bgm/volume') and 'ON ' or 'OFF'))
+					:anchor(0, 0)
+					:put(0, 34)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						booleanToNumberOption('audio/bgm/volume', not numberOptionToBoolean('audio/bgm/volume'), 0.8)
+						local sfxVol, bgmVol =
+							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
+						volume(sfxVol, bgmVol)
+						sender:setValue('BGM: ' .. (numberOptionToBoolean('audio/bgm/volume') and 'ON ' or 'OFF'))
+					end)
+			)
+			:addChild(
+				beGUI.Label.new('VIDEO', 'left', false, 'label', 'label_shadow')
+					:anchor(0, 0)
+					:put(0, 51)
+					:resize(P(100), 16)
+			)
+			:addChild(
+				beGUI.Button.new('x1')
+					:anchor(0, 0)
+					:put(0, 68)
+					:resize(P(32), 16)
+					:on('clicked', function (sender)
+						local w, h = 640, 360
+						Application.resize(w, h)
+						game:setOption('video/canvas/scale', 1)
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('x2')
+					:anchor(0.5, 0)
+					:put(P(50), 68)
+					:resize(P(32), 16)
+					:on('clicked', function (sender)
+						local w, h = 640, 360
+						Application.resize(w * 2, h * 2)
+						game:setOption('video/canvas/scale', 2)
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('x3')
+					:anchor(1, 0)
+					:put(P(100), 68)
+					:resize(P(32), 16)
+					:on('clicked', function (sender)
+						local w, h = 640, 360
+						Application.resize(w * 3, h * 3)
+						game:setOption('video/canvas/scale', 3)
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('FULL SCREEN')
+					:anchor(0, 0)
+					:put(0, 85)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						Application.resize('fullscreen')
+						game:setOption('video/canvas/scale', 'full')
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('BACK')
+					:anchor(0, 0)
+					:put(0, 107)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						game:save()
+						game.state = States['title'](game)
+					end)
+			)
+
 		return {
 			playing = false,
 			update = function (self, delta)
-				-- TODO
+				local canvasWidth, canvasHeight = Canvas.main:size()
+
+				font(FONT_TITLE_TEXT)
+				local txt = 'Hyper Bullet'
+				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
+				font(nil)
+
+				if navPrev() then
+					widgets:navigate('prev')
+				elseif navNext() then
+					widgets:navigate('next')
+				elseif navConfirm() then
+					widgets:navigate('press')
+				elseif navCancel() then
+					if widgets.context and widgets.context.focus == nil then
+						game.state = States['title'](game)
+					else
+						game:save()
+						widgets:navigate('cancel')
+					end
+				end
+				font(theme['font'].resource)
+				widgets:update(theme, delta)
+				font(nil)
 
 				return self
 			end
@@ -131,8 +266,8 @@ States = {
 				font(FONT_TITLE_TEXT)
 				local txt = 'LEVEL ' .. tostring(game.levelIndex)
 				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, COLOR_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
 				font(nil)
 
 				if ticks ~= nil then
@@ -153,7 +288,7 @@ States = {
 		local theme = beTheme.default()
 		local widgets = beGUI.Widget.new()
 			:anchor(0.5, 1)
-			:put(P(50), P(90))
+			:put(P(50), 320)
 			:resize(200, 60)
 			:addChild(
 				beGUI.Button.new('PRESS R TO RESTART')
@@ -163,6 +298,16 @@ States = {
 					:on('clicked', function (sender)
 						game:save()
 						game:play(true, true)
+					end)
+			)
+			:addChild(
+				beGUI.Button.new('BACK')
+					:anchor(0, 0)
+					:put(0, 17)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						game:save()
+						game.state = States['title'](game)
 					end)
 			)
 		local ticks = 0
@@ -175,8 +320,8 @@ States = {
 				font(FONT_TITLE_TEXT)
 				local txt = 'GAME OVER'
 				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, COLOR_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
 				font(nil)
 
 				if ticks ~= nil then
@@ -231,8 +376,8 @@ States = {
 				font(FONT_TITLE_TEXT)
 				local txt = 'TUTORIAL ' .. tostring(game.tutorialIndex)
 				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, COLOR_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
 				font(nil)
 
 				if ticks ~= nil then
@@ -253,7 +398,7 @@ States = {
 		local theme = beTheme.default()
 		local widgets = beGUI.Widget.new()
 			:anchor(0.5, 1)
-			:put(P(50), P(90))
+			:put(P(50), 320)
 			:resize(200, 60)
 			:addChild(
 				beGUI.Button.new('PRESS R TO CONTINUE')
@@ -273,10 +418,10 @@ States = {
 				local canvasWidth, canvasHeight = Canvas.main:size()
 
 				font(FONT_TITLE_TEXT)
-				local txt = 'TUTORIAL COMPLETED'
+				local txt = 'FINISH'
 				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 20, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 20, COLOR_TITLE_TEXT)
+				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
 				font(nil)
 
 				if ticks ~= nil then

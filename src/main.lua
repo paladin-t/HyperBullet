@@ -56,7 +56,7 @@ DEBUG_SHOW_WIREFRAME = DEBUG and true            -- Enable to show wireframes.
 DEBUG_IMMORTAL       = DEBUG and false           -- Enable to make the hero unkillable.
 DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawning.
 
-FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 30)
+FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
 COLOR_TITLE_TEXT = Color.new(200, 220, 210)
