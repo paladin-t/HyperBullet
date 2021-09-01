@@ -38,6 +38,7 @@ Weapon = class({
 		self.icon = Resources.load(cfg['entry'])
 		self.icon:play('idle')
 		self.cursor = cfg['cursor']
+		self.cursor:play('idle', true, true)
 
 		Object.ctor(self, resource, box, isBlocked)
 

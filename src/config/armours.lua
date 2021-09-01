@@ -10,7 +10,7 @@ Engine page: https://paladin-t.github.io/bitty/
 Armours = {
 	['body_armour'] = {
 		['name'] = 'Body Armour',
-		['entry'] = 'assets/sprites/objects/armour_body_armour.spr',
+		['entry'] = 'assets/sprites/objects/armours/body_armour.spr',
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16)
 	}

@@ -165,7 +165,7 @@ Bullet = class({
 
 	_place = function (self)
 		local mine = Mine.new(
-			Resources.load('assets/sprites/objects/bullet_mines.spr'), self._isBlocked,
+			Resources.load('assets/sprites/objects/bullets/mines.spr'), self._isBlocked,
 			{
 				game = self._game,
 				atk = self.atk,

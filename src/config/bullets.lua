@@ -9,7 +9,7 @@ Engine page: https://paladin-t.github.io/bitty/
 
 Bullets = {
 	['pistol'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_pistol.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/pistol.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 400,
@@ -19,7 +19,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['dual_pistols'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_dual_pistols.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/dual_pistols.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 400,
@@ -32,7 +32,7 @@ Bullets = {
 		['resource'] = {
 			['type'] = 'sprites',
 			['count'] = 5, ['angle'] = math.pi * 0.015,
-			['resource'] = Resources.load('assets/sprites/objects/bullet_shotgun.spr')
+			['resource'] = Resources.load('assets/sprites/objects/bullets/shotgun.spr')
 		},
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = Recti.byXYWH(-6, -6, 28, 28),
@@ -43,7 +43,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['submachine_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_submachine_gun.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/submachine_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
@@ -53,7 +53,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['machine_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_machine_gun.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/machine_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
@@ -63,7 +63,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['rifle'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_rifle.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/rifle.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 600,
@@ -86,7 +86,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['disc_gun'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_disc_gun.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/disc_gun.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16), ['max_box'] = nil,
 		['move_speed'] = 200,
@@ -96,7 +96,7 @@ Bullets = {
 		['explosive'] = false
 	},
 	['mines'] = {
-		['resource'] = Resources.load('assets/sprites/objects/bullet_mines.spr'),
+		['resource'] = Resources.load('assets/sprites/objects/bullets/mines.spr'),
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 200,
