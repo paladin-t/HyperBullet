@@ -102,7 +102,9 @@ Gun = class({
 
 		-- Add effect.
 		if self._effect ~= nil then
-			local fx, interval = self._effect(self, self.x, self.y, self._facing, self._spriteAngle)
+			local x, y =
+				self.x + self._facing.x * 8, self.y + self._facing.y * 8
+			local fx, interval = self._effect(self, x, y, self._facing, self._spriteAngle)
 			if fx ~= nil then
 				self:_emit(fx, interval)
 			end

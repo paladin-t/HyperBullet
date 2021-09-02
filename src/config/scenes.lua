@@ -167,7 +167,7 @@ Scenes = {
 				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
-					if game.killingCount >= 20 then
+					if game.killingCount >= 10 then
 						game:play(true, false)
 
 						return true
@@ -338,7 +338,7 @@ Scenes = {
 				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
-					if game.killingCount >= 20 then
+					if game.killingCount >= 10 then
 						game:play(true, false)
 
 						return true

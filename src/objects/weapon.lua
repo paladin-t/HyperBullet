@@ -187,7 +187,9 @@ Weapon = class({
 		if self._emitters ~= nil then
 			for _, entry in ipairs(self._emitters) do
 				local emitter = entry.emitter
-				emitter.pos.x, emitter.pos.y = self.x, self.y
+				local x, y =
+					self.x + self._facing.x * 8, self.y + self._facing.y * 8
+				emitter.pos.x, emitter.pos.y = x, y
 			end
 		end
 
