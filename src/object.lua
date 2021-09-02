@@ -14,6 +14,7 @@ Object = class({
 	atk = 0,
 
 	x = 0, y = 0,
+	xOffset = nil, yOffset = nil,
 	box = nil,
 
 	_dead = false,
@@ -30,6 +31,7 @@ Object = class({
 	_shapeHeadPosition = nil,
 	_color = Color.new(0, 255, 0),
 	_emitters = nil,
+	_tweens = nil,
 
 	_walker = nil,
 	_raycaster = nil,
@@ -148,10 +150,70 @@ Object = class({
 		return success, duration
 	end,
 
+	tween = function (self, t)
+		if self._tweens == nil then
+			self._tweens = { }
+		end
+		table.insert(self._tweens, t)
+
+		return self
+	end,
+	float = function (self, interval, val)
+		local up, down = nil, nil
+		up = Tween.new(interval, { y = 0 }, { y = val or -4 }, Tween.easing.linear)
+			:on('changed', function (sender, val)
+				self.yOffset = val.y
+			end)
+			:on('completed', function (sender, val)
+				remove(self._tweens, up)
+				down:reset()
+				self:tween(down)
+			end)
+		down = Tween.new(interval, { y = val or -4 }, { y = 0 }, Tween.easing.linear)
+			:on('changed', function (sender, val)
+				self.yOffset = val.y
+			end)
+			:on('completed', function (sender, val)
+				remove(self._tweens, down)
+				up:reset()
+				self:tween(up)
+			end)
+		self:tween(up)
+
+		return self
+	end,
+
+	reset = function (self)
+		self._tweens = nil
+
+		return self
+	end,
+
 	behave = function (self, delta, hero)
 		error('Implement me.')
 	end,
 	update = function (self, delta)
+		-- Update the tweenings.
+		if self._tweens ~= nil then
+			local dead = nil
+			for _, t in ipairs(self._tweens) do
+				if t:update(delta) then
+					if dead == nil then
+						dead = { }
+					end
+					table.insert(dead, t)
+				end
+			end
+			if dead ~= nil then
+				self._tweens = filter(self._tweens, function (t)
+					return not exists(dead, t)
+				end)
+				if #self._tweens == 0 then
+					self._tweens = nil
+				end
+			end
+		end
+
 		-- Call custom sprite update handler if it's set.
 		if self._spriteUpdater then
 			self._spriteUpdater(delta)
@@ -161,7 +223,13 @@ Object = class({
 		local sprite, shapeSprites, shapeLine, shapeLines =
 			self._sprite, self._shapeSprites, self._shapeLine, self._shapeLines
 		local emitters = self._emitters
-		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
+		local dstX, dstY, dstW, dstH = self:_build()
+		if self.xOffset ~= nil then
+			dstX = dstX + self.xOffset
+		end
+		if self.yOffset ~= nil then
+			dstY = dstY + self.yOffset
+		end
 
 		-- Calculate visibility.
 		local visible = true
@@ -310,7 +378,7 @@ Object = class({
 		return newDir
 	end,
 
-	_build = function (self, dstX, dstY, dstW, dstH)
+	_build = function (self)
 		local dstX, dstY, dstW, dstH =
 			self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - (self.box:yMin() + self.box:height() * 0.5),
 			self._spriteWidth, self._spriteHeight

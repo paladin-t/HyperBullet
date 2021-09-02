@@ -114,7 +114,7 @@ Mine = class({
 		end
 
 		local sprite = self._sprite
-		local dstX, dstY, dstW, dstH = self:_build(dstX, dstY, dstW, dstH)
+		local dstX, dstY, dstW, dstH = self:_build()
 
 		if self._timeout then
 			local a = (1 - self._ticks / self._flashtime) * 255

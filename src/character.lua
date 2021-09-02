@@ -95,6 +95,9 @@ Character = class({
 			weapon
 				:setOwner(self)
 				:setOwnerGroup(self.group)
+				:reset()
+				:play('picked')
+			weapon.xOffset, weapon.yOffset = nil, nil
 		end
 		self._weapon = weapon
 

@@ -191,12 +191,25 @@ Weapon = class({
 			end
 		end
 
+		-- Draw shadow effect.
+		local owner = self._owner
+		if owner == nil then
+			local dstX, dstY, dstW, dstH = self:_build()
+			local sprite = self._sprite
+			spr(
+				sprite,
+				dstX + 2, dstY + 2, dstW, dstH,
+				0, nil,
+				Color.new(0, 0, 0, 200)
+			)
+		end
+
 		-- Base update.
 		Object.update(self, delta)
 
 		-- Draw information text.
 		if self._game.state.playing and not self._shadowed then
-			if not self._owner and not self._throwing then
+			if not owner and not self._throwing then
 				font(FONT_NORMAL_TEXT)
 				local txt = self._name
 				local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)

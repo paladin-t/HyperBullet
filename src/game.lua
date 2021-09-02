@@ -206,6 +206,7 @@ Game = class({
 						}
 					)
 						:setDisappearable(false)
+						:float(1)
 						:on('picked', function (sender, owner)
 							sender:off('picked')
 							remove(weapons, sender)
@@ -314,6 +315,7 @@ Game = class({
 										game = self,
 									}
 								)
+									:float(1)
 								enemy:setWeapon(weapon)
 								weapon:kill('picked')
 							end
@@ -747,23 +749,25 @@ Game = class({
 		else
 			local x = 70
 			if weapon ~= nil then
+				circ(x + 8, 30, 9, true, Color.new(13, 108, 174))
 				spr(weapon.icon, x, 22)
-				x = x + 12
+				x = x + 24
+				local txt = weapon:name()
 				if weapon:capacity() ~= nil then
-					local txt = nil
 					if weapon:capacity() >= 0 then
-						txt = ' [' .. tostring(weapon:capacity()) .. ']'
+						txt = txt .. ' [' .. tostring(weapon:capacity()) .. ']'
 					else
-						txt = ' [INF.]'
+						txt = txt .. ' [INF.]'
 					end
-					text(txt, x, 26, COLOR_NORMAL_TEXT)
-					local capWidth, _ = measure(txt, FONT_NORMAL_TEXT)
-					x = x + capWidth + 8
 				end
+				local weaponWidth, _ = measure(txt, FONT_NORMAL_TEXT)
+				text(txt, x, 26, COLOR_NORMAL_TEXT)
+				x = x + weaponWidth + 8
 			end
 			if armour ~= nil then
+				circ(x + 8, 30, 9, true, Color.new(13, 108, 174))
 				spr(armour.icon, x, 22)
-				x = x + 12
+				x = x + 24
 			end
 		end
 

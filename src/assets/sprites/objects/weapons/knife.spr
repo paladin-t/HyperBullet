@@ -1,7 +1,7 @@
 {
   "width": 16,
   "height": 16,
-  "count": 1,
+  "count": 2,
   "data": [
     {
       "x": 0,
@@ -10,6 +10,14 @@
       "height": 16,
       "interval": 0.25,
       "key": "idle"
+    },
+    {
+      "x": 0,
+      "y": 336,
+      "width": 16,
+      "height": 16,
+      "interval": 0.25,
+      "key": "picked"
     }
   ],
   "ref": "assets/imgs/bank.png"
