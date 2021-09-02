@@ -89,7 +89,10 @@ Character = class({
 	end,
 	setWeapon = function (self, weapon)
 		if self._weapon ~= nil then
-			self._weapon:setOwner(nil)
+			self._weapon
+				:setOwner(nil)
+				:float(1)
+				:play('idle')
 		end
 		if weapon ~= nil then
 			weapon
