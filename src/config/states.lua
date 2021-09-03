@@ -257,6 +257,7 @@ States = {
 	end,
 	['next'] = function (game)
 		local ticks = 0
+		clear(game.pending)
 
 		return {
 			playing = false,
@@ -367,6 +368,7 @@ States = {
 	end,
 	['tutorial_next'] = function (game)
 		local ticks = 0
+		clear(game.pending)
 
 		return {
 			playing = false,
