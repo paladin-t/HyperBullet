@@ -62,6 +62,7 @@ FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
 COLOR_TITLE_TEXT = Color.new(200, 220, 210)
 COLOR_NORMAL_TEXT = Color.new(200, 220, 210)
+COLOR_SHADOW = Color.new(0, 0, 0, 100)
 
 Canvas.main:resize(DEBUG and 640 or 0, 360)
 

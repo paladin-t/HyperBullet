@@ -38,6 +38,7 @@ Character = class({
 			self.atk = options.atk
 		end
 
+		self._spriteAngle = math.pi * 0.5
 		self._spriteLegs = legsResource
 		self._spriteLegs:play('walk', false)
 		self._spriteLegsWidth, self._spriteLegsHeight =
@@ -102,7 +103,7 @@ Character = class({
 				:reset()
 				:play('picked')
 			weapon.xOffset, weapon.yOffset = nil, nil
-			if weapon:shadow() == nil then
+			if weapon:dual() == nil then
 				self:play('picked')
 			else
 				self:play('picked_dual')
@@ -117,7 +118,8 @@ Character = class({
 	end,
 	setArmour = function (self, armour)
 		if self._armour ~= nil then
-			self._armour:setOwner(nil)
+			self._armour
+				:setOwner(nil)
 		end
 		if armour ~= nil then
 			armour
@@ -192,13 +194,14 @@ Character = class({
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
 			end
 
-			local shadow = weapon:shadow()
-			if shadow ~= nil then
-				shadow:attack(-self._facing, nil, accuracy)
+			local dual = weapon:dual()
+			if dual ~= nil then
+				dual:attack(-self._facing, nil, accuracy)
 			end
 
 			if weapon:isMelee() then
-				self:slash(0.4)
+				local interval, _2, _3, _4 = weapon:interval()
+				self:slash(interval)
 			end
 		end
 
@@ -213,9 +216,9 @@ Character = class({
 		if weapon ~= nil then
 			weapon:behave(delta, hero)
 
-			local shadow = weapon:shadow()
-			if shadow ~= nil then
-				shadow:behave(delta, hero)
+			local dual = weapon:dual()
+			if dual ~= nil then
+				dual:behave(delta, hero)
 			end
 		end
 
@@ -241,27 +244,12 @@ Character = class({
 			self._moving = Vec2.new(0, 0)
 		end
 
-		-- Updated and draw legs.
-		local spriteLegs = self._spriteLegs
-		if spriteLegs ~= nil then
-			if movementLength ~= 0 then
-				local dstX, dstY, dstW, dstH =
-					self.x - self._spriteLegsWidth * 0.5, self.y - self._spriteLegsHeight * 0.5,
-					self._spriteLegsWidth, self._spriteLegsHeight
-				spr(
-					spriteLegs,
-					dstX, dstY, dstW, dstH,
-					self._spriteAngle + math.pi * 0.5
-				)
-			end
-		end
-
 		-- Calculate weapon priority.
 		local weapon = self:weapon()
-		local shadow = nil
+		local dual = nil
 		local before, after = false, false
 		if weapon ~= nil then
-			shadow = weapon:shadow()
+			dual = weapon:dual()
 			if weapon:isMelee() then
 				before = true
 			else
@@ -269,12 +257,37 @@ Character = class({
 			end
 		end
 
+		-- Updated and draw legs.
+		local spriteLegs = self._spriteLegs
+		if spriteLegs ~= nil then
+			if movementLength ~= 0 then
+				local dstX, dstY, dstW, dstH =
+					self.x - self._spriteLegsWidth * 0.5, self.y - self._spriteLegsHeight * 0.5,
+					self._spriteLegsWidth, self._spriteLegsHeight
+				local angle = self._spriteAngle + math.pi * 0.5
+				if dual ~= nil then
+					angle = angle + math.pi * 0.5
+				end
+				spr( -- Draw shadow effect.
+					spriteLegs,
+					dstX + 2, dstY + 2, dstW, dstH,
+					angle, nil,
+					COLOR_SHADOW
+				)
+				spr(
+					spriteLegs,
+					dstX, dstY, dstW, dstH,
+					angle
+				)
+			end
+		end
+
 		-- Update and draw.
 		if before then
 			weapon:update(delta)
 		end
-		if shadow ~= nil and before then
-			shadow:update(delta)
+		if dual ~= nil and before then
+			dual:update(delta)
 		end
 
 		Object.update(self, delta)
@@ -282,8 +295,8 @@ Character = class({
 		if after then
 			weapon:update(delta)
 		end
-		if shadow ~= nil and after then
-			shadow:update(delta)
+		if dual ~= nil and after then
+			dual:update(delta)
 		end
 	end
 }, Object)

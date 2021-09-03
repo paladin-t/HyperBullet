@@ -25,7 +25,7 @@ Weapon = class({
 	_interval = 0.25, _timestamp = nil,
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
 	_offset = 0,
-	_shadow = nil, _shadowed = false,
+	_dual = nil, _isDual = false,
 	_effect = nil,
 
 	--[[ Constructor. ]]
@@ -80,8 +80,8 @@ Weapon = class({
 			self:trigger('picked', owner)
 		end
 
-		if self._shadow ~= nil then
-			self._shadow:setOwner(owner)
+		if self._dual ~= nil then
+			self._dual:setOwner(owner)
 		end
 
 		return self
@@ -93,19 +93,23 @@ Weapon = class({
 	setOwnerGroup = function (self, ownerGroup)
 		self._ownerGroup = ownerGroup
 
-		if self._shadow ~= nil then
-			self._shadow:setOwnerGroup(ownerGroup)
+		if self._dual ~= nil then
+			self._dual:setOwnerGroup(ownerGroup)
 		end
 
 		return self
+	end,
+
+	name = function (self)
+		return self._name
 	end,
 
 	isMelee = function (self)
 		return false
 	end,
 
-	name = function (self)
-		return self._name
+	interval = function (self)
+		error('Implement me.')
 	end,
 
 	accuracy = function (self)
@@ -136,14 +140,14 @@ Weapon = class({
 		return self
 	end,
 
-	shadow = function (self)
-		return self._shadow
+	dual = function (self)
+		return self._dual
 	end,
-	shadowed = function (self)
-		return self._shadowed
+	isDual = function (self)
+		return self._isDual
 	end,
-	setShadowed = function (self, shadowed)
-		self._shadowed = shadowed
+	setIsDual = function (self, isDual)
+		self._isDual = isDual
 
 		return self
 	end,
@@ -155,7 +159,7 @@ Weapon = class({
 	behave = function (self, delta, _1)
 		local owner = self._owner
 		if owner then
-			if self._shadowed then
+			if self._isDual then
 				self._facing = -owner._facing
 			else
 				self._facing = owner._facing
@@ -173,7 +177,7 @@ Weapon = class({
 	end,
 	update = function (self, delta)
 		-- Process throwing.
-		if self._throwing ~= nil and not self._shadowed then
+		if self._throwing ~= nil and not self._isDual then
 			local step = self._throwing * delta * self._throwingSpeed
 			local forward = self:_move(step)
 			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
@@ -210,7 +214,7 @@ Weapon = class({
 				sprite,
 				dstX + 2, dstY + 2, dstW, dstH,
 				0, nil,
-				Color.new(0, 0, 0, 200)
+				COLOR_SHADOW
 			)
 		end
 
@@ -218,7 +222,7 @@ Weapon = class({
 		Object.update(self, delta)
 
 		-- Draw information text.
-		if self._game.state.playing and not self._shadowed then
+		if self._game.state.playing and not self._isDual then
 			if not owner and not self._throwing then
 				font(FONT_NORMAL_TEXT)
 				local txt = self._name

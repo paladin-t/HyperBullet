@@ -595,7 +595,9 @@ Game = class({
 		-- Update objects and draw everything.
 		self.camera:prepare(delta)
 		map(self.background, self.backgroundOffsetX, self.backgroundOffsetY)
+		map(self.building, 4, 4, COLOR_SHADOW)
 		map(self.building, 0, 0)
+		map(self.foreground, 2, 2, COLOR_SHADOW)
 		map(self.foreground, 0, 0)
 		if self.state.playing then
 			for _, v in ipairs(self.objects) do

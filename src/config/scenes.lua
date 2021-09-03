@@ -176,7 +176,9 @@ Scenes = {
 					return false
 				end
 			},
-			--[[ Clear colors.          ]] nil,
+			--[[ Clear colors.          ]] {
+				Color.new(80, 80, 80)
+			},
 			--[[ Effects.               ]] nil
 		)
 	end,
@@ -348,7 +350,9 @@ Scenes = {
 					return false
 				end
 			},
-			--[[ Clear colors.          ]] nil,
+			--[[ Clear colors.          ]] {
+				Color.new(80, 80, 80)
+			},
 			--[[ Effects.               ]] nil
 		)
 	end

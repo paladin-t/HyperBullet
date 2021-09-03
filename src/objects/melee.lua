@@ -40,6 +40,11 @@ Melee = class({
 		return true
 	end,
 
+	interval = function (self)
+		return self._interval + self._preInterval + self._postInterval,
+			self._preInterval, self._interval, self._postInterval
+	end,
+
 	affecting = function (self)
 		if not self._affecting then
 			return false, nil

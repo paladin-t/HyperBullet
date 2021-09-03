@@ -26,10 +26,10 @@ Gun = class({
 		self._recoil = cfg['recoil']
 		self._capacity = cfg['capacity']
 
-		if cfg['dual'] and not options.shadow then
-			self._shadow = Gun.new(isBlocked, merge(options, { shadow = true }))
-				:setShadowed(true)
-			self._shadow
+		if cfg['dual'] and not options.dual then
+			self._dual = Gun.new(isBlocked, merge(options, { dual = true }))
+				:setIsDual(true)
+			self._dual
 				:play('picked')
 		end
 	end,
@@ -41,6 +41,11 @@ Gun = class({
 	end,
 
 	--[[ Methods. ]]
+
+	interval = function (self)
+		return self._interval,
+			0, self._interval, 0
+	end,
 
 	capacity = function (self)
 		return self._capacity
