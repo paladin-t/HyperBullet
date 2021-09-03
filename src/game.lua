@@ -17,7 +17,7 @@ Game = class({
 	background = nil, building = nil, foreground = nil,
 	backgroundOffsetX = 0, backgroundOffsetY = 0,
 	sceneWidth = 0, sceneHeight = 0,
-	isHeroBlocked = nil, isEnvironmentBlocked = nil, isBulletBlocked = nil,
+	isHeroBlocked = nil, isEnemyBlocked = nil, isWeaponBlocked = nil, isBulletBlocked = nil,
 	raycaster = nil,
 	camera = nil,
 
@@ -40,12 +40,12 @@ Game = class({
 
 	_options = nil,
 
-	ctor = function (self, co, isHeroBlocked, isEnvironmentBlocked, isBulletBlocked)
+	ctor = function (self, co)
 		self.co = co
 		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
-		self.isHeroBlocked, self.isEnvironmentBlocked, self.isBulletBlocked =
+		self.isHeroBlocked, self.isEnemyBlocked, self.isWeaponBlocked, self.isBulletBlocked =
 			function (pos) -- Is hero blocked?
 				local cel = mget(self.building, pos.x, pos.y)
 				if cel ~= WALKABLE_CEL then
@@ -60,7 +60,7 @@ Game = class({
 
 				return false
 			end,
-			function (pos) -- Is environment blocked?
+			function (pos) -- Is enemy blocked?
 				local cel = mget(self.building, pos.x, pos.y)
 				if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
 					return true
@@ -74,9 +74,17 @@ Game = class({
 
 				return false
 			end,
-			function (pos) -- Is bullet blocked?
+			function (pos) -- Is weapon blocked?
 				local cel = mget(self.building, pos.x, pos.y)
 				if cel ~= WALKABLE_CEL then
+					return true
+				end
+
+				return false
+			end,
+			function (pos) -- Is bullet blocked?
+				local cel = mget(self.building, pos.x, pos.y)
+				if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
 					return true
 				end
 
@@ -192,7 +200,7 @@ Game = class({
 	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, clearColors, effects)
 		return {
 			background = background, building = building, foreground = foreground,
-			wave = function (isBlocked, isBulletBlocked)
+			wave = function ()
 				-- Prepare.
 				local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
 				local WEAPON_VECTOR = Vec2.new(100, 0)
@@ -200,7 +208,7 @@ Game = class({
 				local initialWeaponsAngle = options.initialWeaponsAngle or (math.pi * 0.07)
 				forEach(initialWeapons, function (w, i)
 					local weapon = (w.class == 'Gun' and Gun or Melee).new(
-						self.isEnvironmentBlocked,
+						self.isWeaponBlocked,
 						{
 							type = w.type,
 							game = self,
@@ -273,7 +281,7 @@ Game = class({
 							local enemy = Enemy.new(
 								Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
 								cfg['box'],
-								isBlocked, isBulletBlocked,
+								self.isEnemyBlocked, self.isBulletBlocked,
 								{
 									game = self,
 									hp = cfg['hp'],
@@ -317,7 +325,7 @@ Game = class({
 							if cfg['weapon'] ~= nil then
 								local weaponCfg = Weapons[cfg['weapon']]
 								local weapon = (weaponCfg['class'] == 'Gun' and Gun or Melee).new(
-									isBlocked,
+									self.isBulletBlocked,
 									{
 										type = cfg['weapon'],
 										game = self,
@@ -437,10 +445,7 @@ Game = class({
 			local wave = coroutine.create(self.room.wave)
 			self.co
 				:clear()
-				:start(
-					wave,
-					self.isEnvironmentBlocked, self.isBulletBlocked
-				)
+				:start(wave)
 		end
 
 		-- Finish.
@@ -514,10 +519,7 @@ Game = class({
 		local wave = coroutine.create(self.room.wave)
 		self.co
 			:clear()
-			:start(
-				wave,
-				self.isEnvironmentBlocked, self.isBulletBlocked
-			)
+			:start(wave)
 
 		-- Finish.
 		collectgarbage()
@@ -597,7 +599,7 @@ Game = class({
 		map(self.background, self.backgroundOffsetX, self.backgroundOffsetY)
 		map(self.building, 4, 4, COLOR_SHADOW)
 		map(self.building, 0, 0)
-		map(self.foreground, 2, 2, COLOR_SHADOW)
+		map(self.foreground, 3, 3, COLOR_SHADOW)
 		map(self.foreground, 0, 0)
 		if self.state.playing then
 			for _, v in ipairs(self.objects) do

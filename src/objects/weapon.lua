@@ -25,7 +25,7 @@ Weapon = class({
 	_interval = 0.25, _timestamp = nil,
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
 	_offset = 0,
-	_dual = nil, _isDual = false,
+	_secondary = nil, _isSecondary = false,
 	_effect = nil,
 
 	--[[ Constructor. ]]
@@ -80,21 +80,20 @@ Weapon = class({
 			self:trigger('picked', owner)
 		end
 
-		if self._dual ~= nil then
-			self._dual:setOwner(owner)
+		if self._secondary ~= nil then
+			self._secondary:setOwner(owner)
 		end
 
 		return self
 	end,
-
 	ownerGroup = function (self)
 		return self._ownerGroup
 	end,
 	setOwnerGroup = function (self, ownerGroup)
 		self._ownerGroup = ownerGroup
 
-		if self._dual ~= nil then
-			self._dual:setOwnerGroup(ownerGroup)
+		if self._secondary ~= nil then
+			self._secondary:setOwnerGroup(ownerGroup)
 		end
 
 		return self
@@ -111,9 +110,19 @@ Weapon = class({
 	interval = function (self)
 		error('Implement me.')
 	end,
+	affecting = function (self)
+		return false, nil
+	end,
 
 	accuracy = function (self)
 		return self._accuracy
+	end,
+
+	capacity = function (self)
+		return nil
+	end,
+	setCapacity = function (self, capacity)
+		return self
 	end,
 
 	throwing = function (self)
@@ -129,25 +138,14 @@ Weapon = class({
 		return self
 	end,
 
-	affecting = function (self)
-		return false, nil
+	secondary = function (self)
+		return self._secondary
 	end,
-
-	capacity = function (self)
-		return nil
+	isSecondary = function (self)
+		return self._isSecondary
 	end,
-	setCapacity = function (self, capacity)
-		return self
-	end,
-
-	dual = function (self)
-		return self._dual
-	end,
-	isDual = function (self)
-		return self._isDual
-	end,
-	setIsDual = function (self, isDual)
-		self._isDual = isDual
+	setIsSecondary = function (self, isSecondary)
+		self._isSecondary = isSecondary
 
 		return self
 	end,
@@ -159,7 +157,7 @@ Weapon = class({
 	behave = function (self, delta, _1)
 		local owner = self._owner
 		if owner then
-			if self._isDual then
+			if self._isSecondary then
 				self._facing = -owner._facing
 			else
 				self._facing = owner._facing
@@ -177,7 +175,7 @@ Weapon = class({
 	end,
 	update = function (self, delta)
 		-- Process throwing.
-		if self._throwing ~= nil and not self._isDual then
+		if self._throwing ~= nil and not self._isSecondary then
 			local step = self._throwing * delta * self._throwingSpeed
 			local forward = self:_move(step)
 			if (step.x ~= 0 and forward.x == 0) or (step.y ~= 0 and forward.y == 0) then -- Intersects with tile.
@@ -208,21 +206,14 @@ Weapon = class({
 		-- Draw shadow effect.
 		local owner = self._owner
 		if owner == nil then
-			local dstX, dstY, dstW, dstH = self:_build()
-			local sprite = self._sprite
-			spr(
-				sprite,
-				dstX + 2, dstY + 2, dstW, dstH,
-				0, nil,
-				COLOR_SHADOW
-			)
+			self:shadow(delta, 3, 3) -- Draw shadow effect.
 		end
 
 		-- Base update.
 		Object.update(self, delta)
 
 		-- Draw information text.
-		if self._game.state.playing and not self._isDual then
+		if self._game.state.playing and not self._isSecondary then
 			if not owner and not self._throwing then
 				font(FONT_NORMAL_TEXT)
 				local txt = self._name

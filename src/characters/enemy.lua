@@ -40,7 +40,6 @@ Enemy = class({
 
 		return self
 	end,
-
 	lookAtTarget = function (self)
 		return self._lookAtTarget
 	end,

@@ -213,6 +213,12 @@ Object = class({
 		return self
 	end,
 
+	raycast = function (self, pos, dir)
+		local pos, idx = self._raycaster:solve(pos, dir, self._isBlocked)
+
+		return pos, idx
+	end,
+
 	reset = function (self)
 		self._tweens = nil
 
@@ -384,6 +390,35 @@ Object = class({
 		end
 	end,
 
+	shadow = function (self, delta, offsetX, offsetY)
+		local dstX, dstY, dstW, dstH = self:_build()
+		local angle = self._spriteAngle
+		if self.angleOffset ~= nil then
+			angle = angle + self.angleOffset
+		end
+		local sprite = self._sprite
+		spr(
+			sprite,
+			dstX + (offsetX or 2), dstY + (offsetY or 2), dstW, dstH,
+			angle, nil,
+			COLOR_SHADOW
+		)
+
+		return self
+	end,
+
+	_build = function (self)
+		local dstX, dstY, dstW, dstH =
+			self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - (self.box:yMin() + self.box:height() * 0.5),
+			self._spriteWidth, self._spriteHeight
+		self._collider = Recti.new(
+			dstX + self.box:xMin(), dstY + self.box:yMin(),
+			dstX + self.box:xMax(), dstY + self.box:yMax()
+		)
+
+		return dstX, dstY, dstW, dstH
+	end,
+
 	_move = function (self, step)
 		local newDir = Vec2.new(0, 0)
 		local stepLength = step:normalize()
@@ -410,24 +445,6 @@ Object = class({
 		end
 
 		return newDir
-	end,
-
-	_build = function (self)
-		local dstX, dstY, dstW, dstH =
-			self.x - (self.box:xMin() + self.box:width() * 0.5), self.y - (self.box:yMin() + self.box:height() * 0.5),
-			self._spriteWidth, self._spriteHeight
-		self._collider = Recti.new(
-			dstX + self.box:xMin(), dstY + self.box:yMin(),
-			dstX + self.box:xMax(), dstY + self.box:yMax()
-		)
-
-		return dstX, dstY, dstW, dstH
-	end,
-
-	_raycast = function (self, pos, dir)
-		local pos, idx = self._raycaster:solve(pos, dir, self._isBlocked)
-
-		return pos, idx
 	end,
 
 	_emit = function (self, emitter, interval)

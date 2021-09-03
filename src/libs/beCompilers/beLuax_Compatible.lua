@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
--- [[ Math. ]]
+--[[ Math. ]]
 
 local cos = function (x)
 	return math.cos(x * -math.pi * 2)
@@ -40,7 +40,7 @@ local time = function ()
 	return DateTime.toSeconds(DateTime.ticks())
 end
 
--- [[ List. ]]
+--[[ List. ]]
 
 local add = function (lst, elem, index)
 	if index == nil then

@@ -184,7 +184,7 @@ Behaviours = {
 				end
 
 				-- Attack.
-				local pos, idx = this:_raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
+				local pos, idx = this:raycast(src, Vec2.new(hero.x, hero.y) - src) -- Sight intersects with tile.
 				if pos == nil and not hero:dead() then
 					if limit == nil or count < limit then
 						local accuracy = nil

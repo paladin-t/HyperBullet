@@ -46,7 +46,7 @@ Camera = class({
 				math.random(-100, 100) / 100 * 5, math.random(-100, 100) / 100 * 5
 		end
 
-		if offsetX ~= nil then
+		if offsetX ~= nil --[[ or offsetY ~= nil ]] then
 			camera(self.x + offsetX, self.y + offsetY)
 		else
 			camera(self.x, self.y)

@@ -123,7 +123,7 @@ Pool = class({
 			)
 			obj.x, obj.y = x, y
 
-			return obj
+			return obj -- Return ahead.
 		else
 			error('Unknown effect: ' .. type .. '.')
 		end
@@ -151,6 +151,7 @@ Pool = class({
 		return obj
 	end,
 
+	-- Collect objects in the pool.
 	collect = function (self, deep)
 		if deep then
 			self._bullets = nil

@@ -103,7 +103,7 @@ Character = class({
 				:reset()
 				:play('picked')
 			weapon.xOffset, weapon.yOffset = nil, nil
-			if weapon:dual() == nil then
+			if weapon:secondary() == nil then
 				self:play('picked')
 			else
 				self:play('picked_dual')
@@ -129,7 +129,6 @@ Character = class({
 
 		return self
 	end,
-
 	weight = function (self)
 		return self._weight
 	end,
@@ -137,10 +136,6 @@ Character = class({
 		self._weight = weight
 
 		return self
-	end,
-
-	facing = function (self)
-		return self._facing
 	end,
 
 	moveLeft = function (self, delta)
@@ -162,6 +157,9 @@ Character = class({
 		self._moving.y = delta * self._moveSpeed / self._weight
 
 		return self
+	end,
+	facing = function (self)
+		return self._facing
 	end,
 	lookAt = function (self, x, y)
 		if isNaN(x) --[[ or isNaN(y) ]] then
@@ -194,9 +192,9 @@ Character = class({
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
 			end
 
-			local dual = weapon:dual()
-			if dual ~= nil then
-				dual:attack(-self._facing, nil, accuracy)
+			local secondary = weapon:secondary()
+			if secondary ~= nil then
+				secondary:attack(-self._facing, nil, accuracy)
 			end
 
 			if weapon:isMelee() then
@@ -207,6 +205,7 @@ Character = class({
 
 		return bullet
 	end,
+
 	reset = function (self)
 		return self
 	end,
@@ -216,9 +215,9 @@ Character = class({
 		if weapon ~= nil then
 			weapon:behave(delta, hero)
 
-			local dual = weapon:dual()
-			if dual ~= nil then
-				dual:behave(delta, hero)
+			local secondary = weapon:secondary()
+			if secondary ~= nil then
+				secondary:behave(delta, hero)
 			end
 		end
 
@@ -246,10 +245,10 @@ Character = class({
 
 		-- Calculate weapon priority.
 		local weapon = self:weapon()
-		local dual = nil
+		local secondary = nil
 		local before, after = false, false
 		if weapon ~= nil then
-			dual = weapon:dual()
+			secondary = weapon:secondary()
 			if weapon:isMelee() then
 				before = true
 			else
@@ -265,12 +264,12 @@ Character = class({
 					self.x - self._spriteLegsWidth * 0.5, self.y - self._spriteLegsHeight * 0.5,
 					self._spriteLegsWidth, self._spriteLegsHeight
 				local angle = self._spriteAngle + math.pi * 0.5
-				if dual ~= nil then
+				if secondary ~= nil then
 					angle = angle + math.pi * 0.5
 				end
 				spr( -- Draw shadow effect.
 					spriteLegs,
-					dstX + 2, dstY + 2, dstW, dstH,
+					dstX + 3, dstY + 3, dstW, dstH,
 					angle, nil,
 					COLOR_SHADOW
 				)
@@ -283,11 +282,16 @@ Character = class({
 		end
 
 		-- Update and draw.
+		if weapon ~= nil then
+			weapon:shadow(delta, 3, 3) -- Draw shadow effect.
+		end
+		self:shadow(delta, 3, 3) -- Draw shadow effect.
+
 		if before then
 			weapon:update(delta)
 		end
-		if dual ~= nil and before then
-			dual:update(delta)
+		if secondary ~= nil and before then
+			secondary:update(delta)
 		end
 
 		Object.update(self, delta)
@@ -295,8 +299,8 @@ Character = class({
 		if after then
 			weapon:update(delta)
 		end
-		if dual ~= nil and after then
-			dual:update(delta)
+		if secondary ~= nil and after then
+			secondary:update(delta)
 		end
 	end
 }, Object)

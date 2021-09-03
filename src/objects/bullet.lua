@@ -16,12 +16,12 @@ Bullet = class({
 	_ownerGroup = nil,
 
 	_box = nil, _maxBox = nil,
-	_direction = nil,
-	_moveSpeed = 0,
-	_lifetime = 1, _ticks = 0,
 	_penetrable = false,
 	_bouncy = false,
 	_explosive = false,
+	_direction = nil,
+	_moveSpeed = 0,
+	_lifetime = 1, _ticks = 0,
 
 	--[[ Constructor. ]]
 
@@ -54,27 +54,11 @@ Bullet = class({
 
 	--[[ Methods. ]]
 
-	revive = function (self)
-		Object.revive(self)
-		self._ticks = 0
-
-		return self
-	end,
-
 	ownerGroup = function (self)
 		return self._ownerGroup
 	end,
 	setOwnerGroup = function (self, ownerGroup)
 		self._ownerGroup = ownerGroup
-
-		return self
-	end,
-
-	direction = function (self)
-		return self._direction
-	end,
-	setDirection = function (self, dir)
-		self._direction = dir
 
 		return self
 	end,
@@ -87,6 +71,22 @@ Bullet = class({
 	end,
 	explosive = function (self)
 		return self._explosive
+	end,
+
+	direction = function (self)
+		return self._direction
+	end,
+	setDirection = function (self, dir)
+		self._direction = dir
+
+		return self
+	end,
+
+	revive = function (self)
+		Object.revive(self)
+		self._ticks = 0
+
+		return self
 	end,
 
 	behave = function (self, delta, _1)
@@ -163,23 +163,6 @@ Bullet = class({
 		end
 	end,
 
-	_place = function (self)
-		local mine = Mine.new(
-			Resources.load('assets/sprites/objects/bullets/mines.spr'), self._isBlocked,
-			{
-				game = self._game,
-				atk = self.atk,
-				box = self.box,
-				lifetime = 2
-			}
-		)
-		mine.x, mine.y = self.x, self.y
-		mine:play('placed', true, true)
-		table.insert(self._game.pending, mine)
-
-		return self
-	end,
-
 	_build = function (self, dstX, dstY, dstW, dstH)
 		local dstX, dstY, dstW, dstH = nil, nil, nil, nil
 		local sprite, shapeSprites, shapeLine, shapeLines =
@@ -207,5 +190,22 @@ Bullet = class({
 		)
 
 		return dstX, dstY, dstW, dstH
+	end,
+
+	_place = function (self)
+		local mine = Mine.new(
+			Resources.load('assets/sprites/objects/bullets/mines.spr'), self._isBlocked,
+			{
+				game = self._game,
+				atk = self.atk,
+				box = self.box,
+				lifetime = 2
+			}
+		)
+		mine.x, mine.y = self.x, self.y
+		mine:play('placed', true, true)
+		table.insert(self._game.pending, mine)
+
+		return self
 	end
 }, Object)

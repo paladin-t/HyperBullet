@@ -26,10 +26,10 @@ Gun = class({
 		self._recoil = cfg['recoil']
 		self._capacity = cfg['capacity']
 
-		if cfg['dual'] and not options.dual then
-			self._dual = Gun.new(isBlocked, merge(options, { dual = true }))
-				:setIsDual(true)
-			self._dual
+		if cfg['dual'] and not options.secondary then
+			self._secondary = Gun.new(isBlocked, merge(options, { secondary = true }))
+				:setIsSecondary(true)
+			self._secondary
 				:play('picked')
 		end
 	end,
@@ -85,7 +85,7 @@ Gun = class({
 		local owner = self._owner
 		local ownerPos = Vec2.new(owner.x, owner.y)
 		local emitPos = self._facing * self._offset * 1.5
-		local hit = owner:_raycast(ownerPos, emitPos)
+		local hit = owner:raycast(ownerPos, emitPos)
 		if hit ~= nil then
 			return true, nil, false, self._recoil
 		end

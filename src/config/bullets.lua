@@ -13,7 +13,7 @@ Bullets = {
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 400,
-		['lifetime'] = 5,
+		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
@@ -23,7 +23,7 @@ Bullets = {
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 400,
-		['lifetime'] = 5,
+		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
@@ -47,7 +47,7 @@ Bullets = {
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
-		['lifetime'] = 8,
+		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
@@ -57,7 +57,7 @@ Bullets = {
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 300,
-		['lifetime'] = 8,
+		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
@@ -67,7 +67,7 @@ Bullets = {
 		['atk'] = 1,
 		['box'] = Recti.byXYWH(3, 3, 10, 10), ['max_box'] = nil,
 		['move_speed'] = 600,
-		['lifetime'] = 10,
+		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false
