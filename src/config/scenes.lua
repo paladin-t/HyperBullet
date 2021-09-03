@@ -168,7 +168,14 @@ Scenes = {
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
 					if game.killingCount >= 10 then
-						game:play(true, false)
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
 
 						return true
 					end
@@ -342,7 +349,14 @@ Scenes = {
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
 					if game.killingCount >= 10 then
-						game:play(true, false)
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
 
 						return true
 					end

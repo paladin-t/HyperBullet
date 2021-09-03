@@ -22,13 +22,14 @@ Character = class({
 
 	_spriteLegs = nil,
 	_spriteLegsWidth = 0, _spriteLegsHeight = 0,
+	_spriteDead = nil,
 
 	_isBulletBlocked = nil,
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
-		Object.ctor(self, resource, box, isBlocked)
+	ctor = function (self, resources, box, isBlocked, isBulletBlocked, options)
+		Object.ctor(self, resources[1], box, isBlocked)
 
 		if options.hp then
 			self.maxHp = options.hp
@@ -39,10 +40,12 @@ Character = class({
 		end
 
 		self._spriteAngle = math.pi * 0.5
-		self._spriteLegs = legsResource
+		self._spriteLegs = resources[2]
 		self._spriteLegs:play('walk', false)
 		self._spriteLegsWidth, self._spriteLegsHeight =
 			self._spriteLegs.width, self._spriteLegs.height
+		self._spriteDead = resources[3]
+		self._spriteDead:play('idle', false)
 
 		self._game = options.game
 
@@ -76,6 +79,9 @@ Character = class({
 		Object.hurt(self, other)
 
 		return self
+	end,
+	corpse = function (self)
+		return self._spriteDead
 	end,
 
 	intersects = function (self, other)

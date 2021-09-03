@@ -14,8 +14,8 @@ Hero = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
-		Character.ctor(self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
+	ctor = function (self, resources, box, isBlocked, isBulletBlocked, options)
+		Character.ctor(self, resources, box, isBlocked, isBulletBlocked, options)
 	end,
 
 	--[[ Meta methods. ]]
@@ -73,7 +73,7 @@ Hero = class({
 						end
 
 						self:setWeapon(v)
-						v:kill('picked')
+						v:kill('picked', nil)
 
 						self._game.room.finished(self)
 					end
@@ -84,7 +84,7 @@ Hero = class({
 						local armour = self:armour()
 						if armour == nil then
 							self:setArmour(v)
-							v:kill('picked')
+							v:kill('picked', nil)
 
 							self._game.room.finished(self)
 						end
@@ -97,7 +97,7 @@ Hero = class({
 						local hadArmour = self:armour()
 						self:hurt(v)
 						if not v:penetrable() then
-							v:kill('killed')
+							v:kill('killed', self)
 						end
 						local weapon = self:weapon()
 						if weapon ~= nil and hadArmour == nil then

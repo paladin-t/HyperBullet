@@ -11,7 +11,8 @@ Enemies = {
 	['enemy1_pass_by_none'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -25,7 +26,8 @@ Enemies = {
 	['enemy1_chase_knife'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -39,7 +41,8 @@ Enemies = {
 	['enemy1_besiege_knife'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -53,7 +56,8 @@ Enemies = {
 	['enemy1_chase_pistol'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -67,7 +71,8 @@ Enemies = {
 	['enemy1_chase_dual_pistols'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -81,7 +86,8 @@ Enemies = {
 	['enemy1_chase_shotgun'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -95,7 +101,8 @@ Enemies = {
 	['enemy1_chase_submachine_gun'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -109,7 +116,8 @@ Enemies = {
 	['enemy2_chase_submachine_gun_body_armour'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy2.spr',
-			'assets/sprites/characters/legs2.spr'
+			'assets/sprites/characters/legs2.spr',
+			'assets/sprites/characters/enemy2_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -123,7 +131,8 @@ Enemies = {
 	['enemy1_chase_machine_gun'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -137,7 +146,8 @@ Enemies = {
 	['enemy2_chase_machine_gun_body_armour'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy2.spr',
-			'assets/sprites/characters/legs2.spr'
+			'assets/sprites/characters/legs2.spr',
+			'assets/sprites/characters/enemy2_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -151,7 +161,8 @@ Enemies = {
 	['enemy1_pass_by_rifle'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -165,7 +176,8 @@ Enemies = {
 	['enemy1_pass_by_laser'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -179,7 +191,8 @@ Enemies = {
 	['enemy1_chase_disc_gun'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -193,7 +206,8 @@ Enemies = {
 	['enemy1_chase_mines'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/legs1.spr'
+			'assets/sprites/characters/legs1.spr',
+			'assets/sprites/characters/enemy1_dead.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),

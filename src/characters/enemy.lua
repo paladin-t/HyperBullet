@@ -18,8 +18,8 @@ Enemy = class({
 
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
-		Character.ctor(self, resource, legsResource, box, isBlocked, isBulletBlocked, options)
+	ctor = function (self, resources, box, isBlocked, isBulletBlocked, options)
+		Character.ctor(self, resources, box, isBlocked, isBulletBlocked, options)
 
 		self._behaviours = transform(options.behaviours, function (b, _)
 			return Behaviours[b]()
@@ -104,7 +104,7 @@ Enemy = class({
 						end
 
 						self:setWeapon(v)
-						v:kill('picked')
+						v:kill('picked', nil)
 					end
 				end
 			elseif v.group == 'armour' then
@@ -116,7 +116,7 @@ Enemy = class({
 						local hadArmour = self:armour()
 						self:hurt(v)
 						if not v:penetrable() then
-							v:kill('killed')
+							v:kill('killed', self)
 						end
 						local weapon = self:weapon()
 						if weapon ~= nil and hadArmour == nil and self._game.state.playing then

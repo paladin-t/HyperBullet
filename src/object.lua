@@ -88,7 +88,7 @@ Object = class({
 	hurt = function (self, other)
 		self.hp = math.max(self.hp - other.atk, 0)
 		if self.hp == 0 then
-			self:kill('killed')
+			self:kill('killed', other)
 		end
 
 		return self
@@ -96,10 +96,10 @@ Object = class({
 	dead = function (self)
 		return self._dead
 	end,
-	kill = function (self, reason)
+	kill = function (self, reason, byWhom)
 		self._dead = true
 
-		self:trigger('dead', reason)
+		self:trigger('dead', reason, byWhom)
 
 		return self
 	end,
@@ -149,6 +149,14 @@ Object = class({
 		end
 
 		return success, duration
+	end,
+	angle = function (self)
+		return self._spriteAngle
+	end,
+	setAngle = function (self, angle)
+		self._spriteAngle = angle
+
+		return self
 	end,
 
 	tween = function (self, t)
@@ -276,7 +284,7 @@ Object = class({
 				self._disappearingTicks = self._disappearingTicks - INTERVAL
 				self._disappearing = self._disappearing - 1
 				if self._disappearing <= 0 then
-					self:kill('disappeared')
+					self:kill('disappeared', nil)
 					self._disappearing, self._disappearingTicks = nil, 0
 				end
 			end

@@ -142,7 +142,7 @@ Pool = class({
 			:play(
 				'idle', true, false,
 				autoRemove and function ()
-					obj:kill('disappeared')
+					obj:kill('disappeared', nil)
 				end or nil
 			)
 		obj.x, obj.y = x, y

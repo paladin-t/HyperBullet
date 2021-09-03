@@ -38,7 +38,14 @@ Tutorials = {
 				finishingCondition = function (game)
 					local weapon = game.hero:weapon()
 					if weapon ~= nil then
-						game:tutorial(game.tutorialIndex + 1)
+						game.state = States['wait'](
+							game,
+							1,
+							'OK',
+							function ()
+								game:tutorial(game.tutorialIndex + 1)
+							end
+						)
 
 						return true
 					end
@@ -109,7 +116,14 @@ Tutorials = {
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
 					if game.killingCount >= 3 then
-						game:tutorial(game.tutorialIndex + 1)
+						game.state = States['wait'](
+							game,
+							1,
+							'OK',
+							function ()
+								game:tutorial(game.tutorialIndex + 1)
+							end
+						)
 
 						return true
 					end
@@ -174,7 +188,14 @@ Tutorials = {
 				maxEnemyCount = 3,
 				finishingCondition = function (game)
 					if game.killingCount >= 3 then
-						game.state = States['tutorial_win'](game)
+						game.state = States['wait'](
+							game,
+							1,
+							'OK',
+							function ()
+								game.state = States['tutorial_win'](game)
+							end
+						)
 
 						return true
 					end

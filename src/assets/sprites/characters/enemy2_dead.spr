@@ -1,13 +1,13 @@
 {
   "width": 16,
-  "height": 16,
+  "height": 32,
   "count": 1,
   "data": [
     {
-      "x": 96,
-      "y": 288,
+      "x": 16,
+      "y": 192,
       "width": 16,
-      "height": 16,
+      "height": 32,
       "interval": 0.25,
       "key": "idle"
     }

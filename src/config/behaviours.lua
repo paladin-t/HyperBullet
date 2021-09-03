@@ -30,7 +30,7 @@ Behaviours = {
 					table.remove(this._goals, 1)
 
 					goto again
-				elseif goal == nil and l <= EPSILON * 4 then
+				elseif goal == nil and l <= EPSILON * 3 then
 					-- Do nothing.
 				else
 					if l >= EPSILON * 2 then
@@ -76,7 +76,7 @@ Behaviours = {
 					table.remove(this._goals, 1)
 
 					goto again
-				elseif goal == nil and l <= EPSILON * 4 then
+				elseif goal == nil and l <= EPSILON * 3 then
 					-- Do nothing.
 				else
 					if l >= EPSILON * 2 then
@@ -108,7 +108,7 @@ Behaviours = {
 				local goal = (this._goals ~= nil and #this._goals > 0) and this._goals[1] or nil
 				local dst = nil
 				if goal == nil then
-					this:kill('disappeared') -- Disappear.
+					this:kill('disappeared', nil) -- Disappear.
 
 					return src, dst
 				else
@@ -156,6 +156,10 @@ Behaviours = {
 				local lookAtTarget = this:lookAtTarget()
 				if lookAtTarget == 'hero' then
 					this:lookAt(hero.x, hero.y)
+				elseif lookAtTarget == 'vertical' then
+					this:lookAt(this.x, this._game.sceneHeight * 0.5)
+				elseif lookAtTarget == 'horizontal' then
+					this:lookAt(this._game.sceneWidth * 0.5, this.y)
 				else
 					this:lookAt(lookAtTarget.x, lookAtTarget.y)
 				end
@@ -195,7 +199,7 @@ Behaviours = {
 						local bullet = this:attack(nil, accuracy)
 						if bullet ~= nil then
 							bullet
-								:on('dead', function (sender, _)
+								:on('dead', function (sender, _2, _3)
 									count = count - 1
 								end)
 						end

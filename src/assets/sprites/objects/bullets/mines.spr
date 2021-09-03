@@ -4,24 +4,24 @@
   "count": 3,
   "data": [
     {
-      "x": 32,
-      "y": 320,
+      "x": 192,
+      "y": 288,
       "width": 16,
       "height": 16,
       "interval": 0.25,
       "key": "idle"
     },
     {
-      "x": 32,
-      "y": 320,
+      "x": 192,
+      "y": 288,
       "width": 16,
       "height": 16,
       "interval": 0.25,
       "key": "placed"
     },
     {
-      "x": 16,
-      "y": 288,
+      "x": 192,
+      "y": 304,
       "width": 16,
       "height": 16,
       "interval": 0.25,

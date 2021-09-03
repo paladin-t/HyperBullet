@@ -92,7 +92,7 @@ Mine = class({
 		if self._timeout then
 			self._ticks = self._ticks + delta
 			if self._ticks >= self._flashtime then
-				self:kill('disappeared')
+				self:kill('disappeared', nil)
 
 				return self
 			end

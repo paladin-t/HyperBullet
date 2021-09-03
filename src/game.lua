@@ -38,6 +38,7 @@ Game = class({
 	_blankImage = nil, _cursor = nil,
 	_clearColor = nil, _hudColor = nil,
 
+	_data = nil,
 	_options = nil,
 
 	ctor = function (self, co)
@@ -102,6 +103,9 @@ Game = class({
 
 		self.state = States['title'](self)
 
+		self._data = {
+			['highscore'] = 0
+		}
 		self._options = {
 			['audio/sfx/volume'] = 0.8,
 			['audio/bgm/volume'] = 0.8,
@@ -110,6 +114,16 @@ Game = class({
 		}
 	end,
 
+	-- Gets data of the specific key.
+	getData = function (self, key)
+		return self._data[key]
+	end,
+	-- Sets data of the specific key.
+	setData = function (self, key, val)
+		self._data[key] = val
+
+		return self
+	end,
 	-- Gets option value of the specific key.
 	getOption = function (self, key)
 		return self._options[key]
@@ -149,9 +163,15 @@ Game = class({
 	load = function (self)
 		local file = File.new()
 		if file:open(DATE_FILE, Stream.Read) then
-			local score = file:readLine()
-			self.highscore = tonumber(score)
+			local str = file:readString()
 			file:close()
+			local json = Json.new()
+			json:fromString(str)
+			self._data = json:toTable()
+			if type(self._data) ~= 'table' then
+				self._data = { }
+			end
+			self.highscore = self._data['highscore']
 		end
 
 		file = File.new()
@@ -161,6 +181,9 @@ Game = class({
 			local json = Json.new()
 			json:fromString(str)
 			self._options = json:toTable()
+			if not type(self._options) == 'table' then
+				self._options = { }
+			end
 		end
 
 		return self
@@ -169,7 +192,11 @@ Game = class({
 	save = function (self)
 		local file = File.new()
 		if file:open(DATE_FILE, Stream.Write) then
-			file:writeLine(tostring(self.highscore))
+			self._data['highscore'] = self.highscore
+			local json = Json.new()
+			json:fromTable(self._data)
+			local str = json:toString()
+			file:writeLine(str)
 			file:close()
 		end
 
@@ -221,7 +248,7 @@ Game = class({
 							remove(weapons, sender)
 							if owner == self.hero then
 								forEach(weapons, function (w, _)
-									w:kill()
+									w:kill('disappeared', nil)
 
 									local fx = self.pool:effect('disappearance', w.x, w.y, self)
 									table.insert(self.foregroundEffects, fx)
@@ -279,7 +306,9 @@ Game = class({
 							-- Create enemy.
 							local cfg = Enemies[type_]
 							local enemy = Enemy.new(
-								Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
+								transform(cfg['assets'], function (asset, _)
+									return Resources.load(asset)
+								end),
 								cfg['box'],
 								self.isEnemyBlocked, self.isBulletBlocked,
 								{
@@ -310,14 +339,38 @@ Game = class({
 							table.insert(self.foregroundEffects, fx)
 
 							-- Setup event handler.
-							enemy:on('dead', function (sender, reason)
+							enemy:on('dead', function (sender, reason, byWhom)
 								self.enemyCount = self.enemyCount - 1
 								if reason == 'killed' then
 									self:addKilling(1)
 									self:addScore(cfg['score'])
+									if self:getOption('gameplay/blood/show') then
+										local corpse = Corpse.new(
+											sender:corpse(),
+											Recti.byXYWH(0, 0, 16, 32)
+										)
+										corpse.x, corpse.y = sender.x, sender.y
+										corpse:setAngle(sender:angle() - math.pi * 0.5)
+										table.insert(self.backgroundEffects, corpse)
+										for i = 1, 3 do
+											local blood = Blood.new(
+												math.random() * 10 + 10,
+												{
+													game = self
+												}
+											)
+											blood.x, blood.y =
+												sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16
+											table.insert(self.backgroundEffects, 1, blood)
+										end
+									else
+										local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
+										table.insert(self.foregroundEffects, fx)
+									end
+								else
+									local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
+									table.insert(self.foregroundEffects, fx)
 								end
-								local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
-								table.insert(self.foregroundEffects, fx)
 							end)
 							self.enemyCount = self.enemyCount + 1
 
@@ -333,7 +386,7 @@ Game = class({
 								)
 									:float(2)
 								enemy:setWeapon(weapon)
-								weapon:kill('picked')
+								weapon:kill('picked', nil)
 							end
 
 							-- Equip with armour.
@@ -346,7 +399,7 @@ Game = class({
 									}
 								)
 								enemy:setArmour(armour)
-								armour:kill('picked')
+								armour:kill('picked', nil)
 							end
 
 							-- Finish.
@@ -397,7 +450,9 @@ Game = class({
 		if restart then
 			local cfg = Heroes['hero1']
 			local hero = Hero.new(
-				Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
+				transform(cfg['assets'], function (asset, _)
+					return Resources.load(asset)
+				end),
 				cfg['box'],
 				self.isHeroBlocked, self.isBulletBlocked,
 				{
@@ -414,12 +469,32 @@ Game = class({
 			local fx = self.pool:effect('appearance', pos.x, pos.y, self)
 			table.insert(self.foregroundEffects, fx)
 
-			hero:on('dead', function (sender, _)
+			hero:on('dead', function (sender, reason, byWhom)
 				self.state = States['gameover'](self)
 				self.co:clear()
-
-				local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
-				table.insert(self.foregroundEffects, fx)
+				if self:getOption('gameplay/blood/show') then
+					local corpse = Corpse.new(
+						sender:corpse(),
+						Recti.byXYWH(0, 0, 16, 32)
+					)
+					corpse.x, corpse.y = sender.x, sender.y
+					corpse:setAngle(sender:angle() - math.pi * 0.5)
+					table.insert(self.backgroundEffects, corpse)
+					for i = 1, 3 do
+						local blood = Blood.new(
+							math.random() * 10 + 10,
+							{
+								game = self
+							}
+						)
+						blood.x, blood.y =
+							sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16
+						table.insert(self.backgroundEffects, 1, blood)
+					end
+				else
+					local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
+					table.insert(self.foregroundEffects, fx)
+				end
 			end)
 
 			self.hero = hero
@@ -480,7 +555,9 @@ Game = class({
 		-- Load hero.
 		local cfg = Heroes['hero1']
 		local hero = Hero.new(
-			Resources.load(cfg['assets'][1]), Resources.load(cfg['assets'][2]),
+			transform(cfg['assets'], function (asset, _)
+				return Resources.load(asset)
+			end),
 			cfg['box'],
 			self.isHeroBlocked, self.isBulletBlocked,
 			{
@@ -496,14 +573,6 @@ Game = class({
 
 		local fx = self.pool:effect('appearance', pos.x, pos.y, self)
 		table.insert(self.foregroundEffects, fx)
-
-		hero:on('dead', function (sender, _)
-			self.state = States['tutorial_gameover'](self)
-			self.co:clear()
-
-			local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
-			table.insert(self.foregroundEffects, fx)
-		end)
 
 		self.hero = hero
 
@@ -597,6 +666,9 @@ Game = class({
 		-- Update objects and draw everything.
 		self.camera:prepare(delta)
 		map(self.background, self.backgroundOffsetX, self.backgroundOffsetY)
+		for _, v in ipairs(self.backgroundEffects) do
+			v:update(delta)
+		end
 		map(self.building, 4, 4, COLOR_SHADOW)
 		map(self.building, 0, 0)
 		map(self.foreground, 3, 3, COLOR_SHADOW)
@@ -605,9 +677,6 @@ Game = class({
 			for _, v in ipairs(self.objects) do
 				v:behave(delta, hero)
 			end
-		end
-		for _, v in ipairs(self.backgroundEffects) do
-			v:update(delta)
 		end
 		for _, v in ipairs(self.objects) do
 			v:update(delta)

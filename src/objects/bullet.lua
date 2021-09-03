@@ -95,7 +95,7 @@ Bullet = class({
 			if self._explosive then
 				self:_place()
 			end
-			self:kill('disappeared')
+			self:kill('disappeared', nil)
 
 			return self
 		end
@@ -155,7 +155,7 @@ Bullet = class({
 				if self._explosive then
 					self:_place()
 				end
-				self:kill('disappeared')
+				self:kill('disappeared', nil)
 			else
 				self.x = self.x + forward.x
 				self.y = self.y + forward.y

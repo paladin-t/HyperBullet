@@ -118,7 +118,7 @@ States = {
 		local theme = beTheme.default()
 		local widgets = beGUI.Widget.new()
 			:anchor(0.5, 1)
-			:put(P(50), 264)
+			:put(P(50), 230)
 			:resize(200, 60)
 			:addChild(
 				beGUI.Label.new('AUDIO', 'left', false, 'label', 'label_shadow')
@@ -202,9 +202,25 @@ States = {
 					end)
 			)
 			:addChild(
+				beGUI.Label.new('GAMEPLAY', 'left', false, 'label', 'label_shadow')
+					:anchor(0, 0)
+					:put(0, 102)
+					:resize(P(100), 16)
+			)
+			:addChild(
+				beGUI.Button.new('SHOW BLOOD: ' .. (game:getOption('gameplay/blood/show') and 'ON ' or 'OFF'))
+					:anchor(0, 0)
+					:put(0, 119)
+					:resize(P(100), 16)
+					:on('clicked', function (sender)
+						game:setOption('gameplay/blood/show', not game:getOption('gameplay/blood/show'))
+						sender:setValue('SHOW BLOOD: ' .. (game:getOption('gameplay/blood/show') and 'ON ' or 'OFF'))
+					end)
+			)
+			:addChild(
 				beGUI.Button.new('BACK')
 					:anchor(0, 0)
-					:put(0, 107)
+					:put(0, 141)
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
 						game:save()
@@ -246,6 +262,36 @@ States = {
 			end
 		}
 	end,
+	['wait'] = function (game, interval, txt, next)
+		local ticks = 0
+		clear(game.pending)
+
+		return {
+			playing = false,
+			update = function (self, delta)
+				if txt ~= nil then
+					local canvasWidth, canvasHeight = Canvas.main:size()
+
+					font(FONT_TITLE_TEXT)
+					local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
+					text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
+					text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
+					font(nil)
+				end
+
+				if ticks ~= nil then
+					ticks = ticks + delta
+					if ticks >= interval then
+						ticks = nil
+					end
+				else
+					next()
+				end
+
+				return self
+			end
+		}
+	end,
 
 	['playing'] = function (game)
 		return {
@@ -257,7 +303,6 @@ States = {
 	end,
 	['next'] = function (game)
 		local ticks = 0
-		clear(game.pending)
 
 		return {
 			playing = false,
@@ -368,7 +413,6 @@ States = {
 	end,
 	['tutorial_next'] = function (game)
 		local ticks = 0
-		clear(game.pending)
 
 		return {
 			playing = false,
