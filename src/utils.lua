@@ -65,6 +65,26 @@ function format(key, ...)
 	return fmt
 end
 
+function characters(str)
+	if not str then
+		return nil, nil, nil
+	end
+	local tbl = { }
+	for _, cp in utf8.codes(str) do
+		local ch = utf8.char(cp)
+		table.insert(tbl, ch)
+	end
+	local next_ = function (tbl, i)
+		i = i + 1
+		local v = tbl[i]
+		if v ~= nil then
+			return i, v
+		end
+	end
+
+	return next_, tbl, 0
+end
+
 --[[ List. ]]
 
 function car(lst)

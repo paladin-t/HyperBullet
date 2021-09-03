@@ -20,6 +20,7 @@ require 'utils'
 require 'class'
 require 'co'
 require 'tween'
+require 'stack'
 require 'probabilistic'
 require 'event'
 require 'object'
@@ -44,9 +45,10 @@ require 'objects/armour'
 require 'objects/body_armour'
 require 'objects/bullet'
 require 'objects/mine'
-require 'effects/blood'
-require 'effects/corpse'
+require 'objects/corpse'
 require 'effects/text'
+require 'effects/blood'
+require 'effects/tips'
 require 'states'
 require 'game'
 
@@ -62,7 +64,7 @@ DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawni
 FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
-COLOR_TITLE_TEXT = Color.new(200, 220, 210)
+COLOR_TITLE_TEXT = { Color.new(235, 117, 206), Color.new(10, 191, 150) }
 COLOR_NORMAL_TEXT = Color.new(200, 220, 210)
 COLOR_SHADOW = Color.new(0, 0, 0, 100)
 

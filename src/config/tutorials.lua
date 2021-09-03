@@ -58,19 +58,19 @@ Tutorials = {
 			},
 			--[[ Effects.               ]] {
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.3,
 					layer = 'background',
 					content = 'W/A/S/D to move'
 				},
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.35,
 					layer = 'background',
 					content = 'Move mouse to look around'
 				},
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.4,
 					layer = 'background',
 					content = 'Press R to pick an item'
@@ -136,13 +136,13 @@ Tutorials = {
 			},
 			--[[ Effects.               ]] {
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.3,
 					layer = 'background',
 					content = 'Equip a weapon'
 				},
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.35,
 					layer = 'background',
 					content = 'Aim and LMB to shoot'
@@ -208,19 +208,19 @@ Tutorials = {
 			},
 			--[[ Effects.               ]] {
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.3,
 					layer = 'background',
 					content = 'Equip a weapon'
 				},
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.35,
 					layer = 'background',
 					content = 'LMB to slash with a melee weapon'
 				},
 				{
-					type = 'text',
+					type = 'tips',
 					x = 0.5, y = 0.4,
 					layer = 'background',
 					content = 'RMB or F to throw any weapon to attack'

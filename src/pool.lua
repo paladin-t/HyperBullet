@@ -96,7 +96,7 @@ Pool = class({
 		end
 
 		-- Generate.
-		local autoRemove = false
+		local play, autoRemove = false, false
 		if type == 'appearance' then
 			if not cached then
 				obj = Object.new(
@@ -105,7 +105,7 @@ Pool = class({
 					nil
 				)
 			end
-			autoRemove = true
+			play, autoRemove = true, true
 		elseif type == 'disappearance' then
 			if not cached then
 				obj = Object.new(
@@ -114,9 +114,18 @@ Pool = class({
 					nil
 				)
 			end
-			autoRemove = true
-		elseif type == 'text' then
-			obj = Text.new(
+			play, autoRemove = true, true
+		elseif type == 'blood' then
+			if not cached then
+				obj = Blood.new(
+					{
+						game = game
+					}
+				)
+			end
+			obj:resize(math.random() * 10 + 10)
+		elseif type == 'tips' then
+			obj = Tips.new(
 				{
 					game = game
 				}
@@ -138,13 +147,15 @@ Pool = class({
 			end
 			table.insert(self._effects[type], obj)
 		end
-		obj
-			:play(
-				'idle', true, false,
-				autoRemove and function ()
-					obj:kill('disappeared', nil)
-				end or nil
-			)
+		if play then
+			obj
+				:play(
+					'idle', true, false,
+					autoRemove and function ()
+						obj:kill('disappeared', nil)
+					end or nil
+				)
+		end
 		obj.x, obj.y = x, y
 
 		-- Finish.

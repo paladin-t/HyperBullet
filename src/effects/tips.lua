@@ -7,13 +7,11 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-Blood = class({
+Tips = class({
 	--[[ Variables. ]]
 
 	_game = nil,
-
-	_r = 0,
-	_lifetime = 10, _ticks = 0,
+	_content = nil,
 
 	--[[ Constructor. ]]
 
@@ -21,20 +19,21 @@ Blood = class({
 		Object.ctor(self, nil, nil, nil)
 
 		self._game = options.game
-
-		self._color = Color.new(200, 30, 30)
 	end,
 
 	--[[ Meta methods. ]]
 
 	__tostring = function (self)
-		return 'Blood'
+		return 'Tips'
 	end,
 
 	--[[ Methods. ]]
 
-	resize = function (self, r)
-		self._r = r
+	content = function (self)
+		return self._content
+	end,
+	setContent = function (self, content)
+		self._content = content
 
 		return self
 	end,
@@ -43,18 +42,13 @@ Blood = class({
 		return self
 	end,
 	update = function (self, delta)
-		local fadeTime = self._lifetime * 0.8
-		if self._ticks < fadeTime then
-			circ(self.x, self.y, self._r, true, self._color)
-		else
-			local a = clamp((1 - (self._ticks - fadeTime) / (self._lifetime - fadeTime)) * 255, 0, 255)
-			circ(self.x, self.y, self._r, true, Color.new(self._color.r, self._color.g, self._color.b, a))
-		end
 		if self._game.state.playing then
-			self._ticks = self._ticks + delta
-			if self._ticks >= self._lifetime then
-				self:kill('disappeared', nil)
-			end
+			font(FONT_NORMAL_TEXT)
+			local txt = self._content
+			local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
+			text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
+			text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_NORMAL_TEXT)
+			font(nil)
 		end
 	end
 }, Object)

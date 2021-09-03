@@ -290,7 +290,7 @@ Game = class({
 				end)
 
 				-- Delay.
-				Coroutine.waitFor(1.5)
+				Coroutine.waitFor(3.5)
 
 				-- Spawn enemies.
 				local pointIndex = 1
@@ -353,15 +353,8 @@ Game = class({
 										corpse:setAngle(sender:angle() - math.pi * 0.5)
 										table.insert(self.backgroundEffects, corpse)
 										for i = 1, 3 do
-											local blood = Blood.new(
-												math.random() * 10 + 10,
-												{
-													game = self
-												}
-											)
-											blood.x, blood.y =
-												sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16
-											table.insert(self.backgroundEffects, 1, blood)
+											local fx = self.pool:effect('blood', sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16, self)
+											table.insert(self.backgroundEffects, 1, fx)
 										end
 									else
 										local fx = self.pool:effect('disappearance', sender.x, sender.y, self)
@@ -481,15 +474,8 @@ Game = class({
 					corpse:setAngle(sender:angle() - math.pi * 0.5)
 					table.insert(self.backgroundEffects, corpse)
 					for i = 1, 3 do
-						local blood = Blood.new(
-							math.random() * 10 + 10,
-							{
-								game = self
-							}
-						)
-						blood.x, blood.y =
-							sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16
-						table.insert(self.backgroundEffects, 1, blood)
+						local fx = self.pool:effect('blood', sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16, self)
+						table.insert(self.backgroundEffects, 1, fx)
 					end
 				else
 					local fx = self.pool:effect('disappearance', sender.x, sender.y, self)

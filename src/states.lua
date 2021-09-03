@@ -67,18 +67,21 @@ States = {
 						exit()
 					end)
 			)
+		local text_ = Text.new(
+			0.5, 0.3,
+			'Hyper Bullet',
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'Hyper Bullet'
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if navPrev() then
 					widgets:navigate('prev')
@@ -227,18 +230,21 @@ States = {
 						game.state = States['title'](game)
 					end)
 			)
+		local text_ = Text.new(
+			0.5, 0.3,
+			'Hyper Bullet',
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'Hyper Bullet'
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if navPrev() then
 					widgets:navigate('prev')
@@ -265,18 +271,22 @@ States = {
 	['wait'] = function (game, interval, txt, next)
 		local ticks = 0
 		clear(game.pending)
+		local text_ = txt and Text.new(
+			0.5, 0.3,
+			txt,
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		) or nil
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				if txt ~= nil then
-					local canvasWidth, canvasHeight = Canvas.main:size()
-
-					font(FONT_TITLE_TEXT)
-					local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-					text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-					text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-					font(nil)
+				if text_ ~= nil then
+					text_:update(delta)
 				end
 
 				if ticks ~= nil then
@@ -303,22 +313,25 @@ States = {
 	end,
 	['next'] = function (game)
 		local ticks = 0
+		local text_ = Text.new(
+			0.5, 0.3,
+			'LEVEL ' .. tostring(game.levelIndex),
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'LEVEL ' .. tostring(game.levelIndex)
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if ticks ~= nil then
 					ticks = ticks + delta
-					if ticks >= 1 then
+					if ticks >= 3 then
 						ticks = nil
 					end
 				else
@@ -357,18 +370,21 @@ States = {
 					end)
 			)
 		local ticks = 0
+		local text_ = Text.new(
+			0.5, 0.3,
+			'GAME OVER',
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'GAME OVER'
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if ticks ~= nil then
 					ticks = ticks + delta
@@ -413,22 +429,25 @@ States = {
 	end,
 	['tutorial_next'] = function (game)
 		local ticks = 0
+		local text_ = Text.new(
+			0.5, 0.3,
+			'TUTORIAL ' .. tostring(game.tutorialIndex),
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'TUTORIAL ' .. tostring(game.tutorialIndex)
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if ticks ~= nil then
 					ticks = ticks + delta
-					if ticks >= 1 then
+					if ticks >= 3 then
 						ticks = nil
 					end
 				else
@@ -457,22 +476,25 @@ States = {
 					end)
 			)
 		local ticks = 0
+		local text_ = Text.new(
+			0.5, 0.3,
+			'FINISH',
+			{
+				font = FONT_TITLE_TEXT,
+				color = COLOR_TITLE_TEXT,
+				pivot = Vec2.new(0.5, 0.5),
+				interval = 1
+			}
+		)
 
 		return {
 			playing = false,
 			update = function (self, delta)
-				local canvasWidth, canvasHeight = Canvas.main:size()
-
-				font(FONT_TITLE_TEXT)
-				local txt = 'FINISH'
-				local textWidth, textHeight = measure(txt, FONT_TITLE_TEXT)
-				text(txt, (canvasWidth - textWidth) * 0.5 + 2, (canvasHeight - textHeight) * 0.5 + 2 - 70, Color.new(0, 0, 0))
-				text(txt, (canvasWidth - textWidth) * 0.5, (canvasHeight - textHeight) * 0.5 - 70, COLOR_TITLE_TEXT)
-				font(nil)
+				text_:update(delta)
 
 				if ticks ~= nil then
 					ticks = ticks + delta
-					if ticks >= 1 then
+					if ticks >= 3 then
 						ticks = nil
 					end
 				else
