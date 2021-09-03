@@ -15,6 +15,7 @@ Object = class({
 
 	x = 0, y = 0,
 	xOffset = nil, yOffset = nil,
+	angleOffset = nil,
 	box = nil,
 
 	_dead = false,
@@ -160,7 +161,7 @@ Object = class({
 	end,
 	float = function (self, interval, val)
 		local up, down = nil, nil
-		up = Tween.new(interval, { y = 0 }, { y = val or -4 }, Tween.easing.linear)
+		up = Tween.new(interval * 0.5, { y = 0 }, { y = val or -4 }, Tween.easing.linear)
 			:on('changed', function (sender, val)
 				self.yOffset = val.y
 			end)
@@ -169,7 +170,7 @@ Object = class({
 				down:reset()
 				self:tween(down)
 			end)
-		down = Tween.new(interval, { y = val or -4 }, { y = 0 }, Tween.easing.linear)
+		down = Tween.new(interval * 0.5, { y = val or -4 }, { y = 0 }, Tween.easing.linear)
 			:on('changed', function (sender, val)
 				self.yOffset = val.y
 			end)
@@ -179,6 +180,35 @@ Object = class({
 				self:tween(up)
 			end)
 		self:tween(up)
+
+		return self
+	end,
+	slash = function (self, interval, val)
+		local left, right, middle = nil, nil, nil
+		left = Tween.new(interval * 0.2, { angle = 0 }, { angle = -(val or math.pi * 0.25) }, Tween.easing.linear)
+			:on('changed', function (sender, val)
+				self.angleOffset = val.angle
+			end)
+			:on('completed', function (sender, val)
+				remove(self._tweens, left)
+				self:tween(right)
+			end)
+		right = Tween.new(interval * 0.6, { angle = -(val or math.pi * 0.25) }, { angle = val or math.pi * 0.25 }, Tween.easing.linear)
+			:on('changed', function (sender, val)
+				self.angleOffset = val.angle
+			end)
+			:on('completed', function (sender, val)
+				remove(self._tweens, right)
+				self:tween(middle)
+			end)
+		middle = Tween.new(interval * 0.2, { angle = val or math.pi * 0.25 }, { angle = 0 }, Tween.easing.linear)
+			:on('changed', function (sender, val)
+				self.angleOffset = val.angle
+			end)
+			:on('completed', function (sender, val)
+				remove(self._tweens, middle)
+			end)
+		self:tween(left)
 
 		return self
 	end,
@@ -252,10 +282,14 @@ Object = class({
 		-- Draw if visible.
 		if visible then
 			if sprite ~= nil then
+				local angle = self._spriteAngle
+				if self.angleOffset ~= nil then
+					angle = angle + self.angleOffset
+				end
 				spr(
 					sprite,
 					dstX, dstY, dstW, dstH,
-					self._spriteAngle
+					angle
 				)
 			elseif shapeSprites ~= nil then
 				if self._shapeHeadPosition == nil then
@@ -263,9 +297,9 @@ Object = class({
 				end
 				local pos = Vec2.new(dstX, dstY)
 				local diff = pos - self._shapeHeadPosition
-				local n, a = shapeSprites['count'], shapeSprites['angle']
+				local n, angle = shapeSprites['count'], shapeSprites['angle']
 				for i = 1, n do
-					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * a)
+					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * angle)
 					spr(
 						shapeSprites['resource'],
 						p.x, p.y, self._spriteWidth, self._spriteHeight,
@@ -287,10 +321,10 @@ Object = class({
 				end
 				local pos = Vec2.new(dstX, dstY)
 				local diff = pos - self._shapeHeadPosition
-				local n, a = shapeLines['count'], shapeLines['angle']
+				local n, angle = shapeLines['count'], shapeLines['angle']
 				local c = shapeLines['color']
 				for i = 1, n do
-					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * a)
+					local p = self._shapeHeadPosition + diff:rotated((i - ((n - 1) * 0.5 + 1)) * angle)
 					line(
 						self._shapeHeadPosition.x, self._shapeHeadPosition.y,
 						p.x, p.y,

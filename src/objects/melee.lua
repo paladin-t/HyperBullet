@@ -36,6 +36,10 @@ Melee = class({
 
 	--[[ Methods. ]]
 
+	isMelee = function (self)
+		return true
+	end,
+
 	affecting = function (self)
 		if not self._affecting then
 			return false, nil

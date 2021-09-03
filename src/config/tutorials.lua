@@ -46,6 +46,9 @@ Tutorials = {
 					return false
 				end
 			},
+			--[[ Clear colors.          ]] {
+				Color.new(196, 197, 180)
+			},
 			--[[ Effects.               ]] {
 				{
 					type = 'text',
@@ -114,6 +117,9 @@ Tutorials = {
 					return false
 				end
 			},
+			--[[ Clear colors.          ]] {
+				Color.new(196, 197, 180)
+			},
 			--[[ Effects.               ]] {
 				{
 					type = 'text',
@@ -175,6 +181,9 @@ Tutorials = {
 
 					return false
 				end
+			},
+			--[[ Clear colors.          ]] {
+				Color.new(196, 197, 180)
 			},
 			--[[ Effects.               ]] {
 				{

@@ -29,6 +29,8 @@ Gun = class({
 		if cfg['dual'] and not options.shadow then
 			self._shadow = Gun.new(isBlocked, merge(options, { shadow = true }))
 				:setShadowed(true)
+			self._shadow
+				:play('picked')
 		end
 	end,
 

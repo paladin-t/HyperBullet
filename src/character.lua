@@ -91,8 +91,9 @@ Character = class({
 		if self._weapon ~= nil then
 			self._weapon
 				:setOwner(nil)
-				:float(1)
+				:float(2)
 				:play('idle')
+			self:play('idle')
 		end
 		if weapon ~= nil then
 			weapon
@@ -101,6 +102,11 @@ Character = class({
 				:reset()
 				:play('picked')
 			weapon.xOffset, weapon.yOffset = nil, nil
+			if weapon:shadow() == nil then
+				self:play('picked')
+			else
+				self:play('picked_dual')
+			end
 		end
 		self._weapon = weapon
 
@@ -190,6 +196,10 @@ Character = class({
 			if shadow ~= nil then
 				shadow:attack(-self._facing, nil, accuracy)
 			end
+
+			if weapon:isMelee() then
+				self:slash(0.4)
+			end
 		end
 
 		return bullet
@@ -252,7 +262,7 @@ Character = class({
 		local before, after = false, false
 		if weapon ~= nil then
 			shadow = weapon:shadow()
-			if self._spriteAngle < 0 then
+			if weapon:isMelee() then
 				before = true
 			else
 				after = true
@@ -263,7 +273,7 @@ Character = class({
 		if before then
 			weapon:update(delta)
 		end
-		if shadow ~= nil and after then
+		if shadow ~= nil and before then
 			shadow:update(delta)
 		end
 
@@ -272,7 +282,7 @@ Character = class({
 		if after then
 			weapon:update(delta)
 		end
-		if shadow ~= nil and before then
+		if shadow ~= nil and after then
 			shadow:update(delta)
 		end
 	end

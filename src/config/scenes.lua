@@ -176,6 +176,7 @@ Scenes = {
 					return false
 				end
 			},
+			--[[ Clear colors.          ]] nil,
 			--[[ Effects.               ]] nil
 		)
 	end,
@@ -347,6 +348,7 @@ Scenes = {
 					return false
 				end
 			},
+			--[[ Clear colors.          ]] nil,
 			--[[ Effects.               ]] nil
 		)
 	end

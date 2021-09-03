@@ -23,6 +23,7 @@ Game = class({
 
 	hero = nil,
 	objects = nil, pending = nil,
+	clearColors = nil,
 	backgroundEffects = nil, foregroundEffects = nil,
 	enemyCount = 0,
 	pool = nil,
@@ -188,7 +189,7 @@ Game = class({
 		return self
 	end,
 	-- Builds a scene.
-	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, effects)
+	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, clearColors, effects)
 		return {
 			background = background, building = building, foreground = foreground,
 			wave = function (isBlocked, isBulletBlocked)
@@ -206,7 +207,7 @@ Game = class({
 						}
 					)
 						:setDisappearable(false)
-						:float(1)
+						:float(2)
 						:on('picked', function (sender, owner)
 							sender:off('picked')
 							remove(weapons, sender)
@@ -236,7 +237,14 @@ Game = class({
 					table.insert(self.foregroundEffects, fx)
 				end)
 
-				forEach(effects, function (e, i)
+				forEach(clearColors, function (c, _)
+					table.insert(self.clearColors, c)
+				end)
+				if #self.clearColors == 1 then
+					self._clearColor = self.clearColors[1]
+				end
+
+				forEach(effects, function (e, _)
 					local fx = self.pool:effect(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self)
 						:setContent(e.content)
 					if e.layer == 'background' then
@@ -315,7 +323,7 @@ Game = class({
 										game = self,
 									}
 								)
-									:float(1)
+									:float(2)
 								enemy:setWeapon(weapon)
 								weapon:kill('picked')
 							end
@@ -372,6 +380,7 @@ Game = class({
 
 		-- Initialize objects.
 		self.objects, self.pending = { }, { }
+		self.clearColors = { }
 		self.backgroundEffects, self.foregroundEffects = { }, { }
 		self.enemyCount = 0
 		self.pool = Pool.new()
@@ -458,6 +467,7 @@ Game = class({
 
 		-- Initialize objects.
 		self.objects, self.pending = { }, { }
+		self.clearColors = { }
 		self.backgroundEffects, self.foregroundEffects = { }, { }
 		self.enemyCount = 0
 		self.pool = Pool.new()
@@ -588,7 +598,7 @@ Game = class({
 		map(self.building, 0, 0)
 		map(self.foreground, 0, 0)
 		if self.state.playing then
-			for i, v in ipairs(self.objects) do
+			for _, v in ipairs(self.objects) do
 				v:behave(delta, hero)
 			end
 		end

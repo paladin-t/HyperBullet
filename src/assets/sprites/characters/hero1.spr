@@ -1,7 +1,7 @@
 {
   "width": 16,
   "height": 16,
-  "count": 1,
+  "count": 3,
   "data": [
     {
       "x": 0,
@@ -10,6 +10,22 @@
       "height": 16,
       "interval": 0.25,
       "key": "idle"
+    },
+    {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "interval": 0.25,
+      "key": "picked"
+    },
+    {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "interval": 0.25,
+      "key": "picked_dual"
     }
   ],
   "ref": "assets/imgs/bank.png"

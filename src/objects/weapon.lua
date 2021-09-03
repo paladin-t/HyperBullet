@@ -100,6 +100,10 @@ Weapon = class({
 		return self
 	end,
 
+	isMelee = function (self)
+		return false
+	end,
+
 	name = function (self)
 		return self._name
 	end,
@@ -156,8 +160,12 @@ Weapon = class({
 			else
 				self._facing = owner._facing
 			end
-			self._spriteAngle = self._facing.angle
-			local pos = Vec2.new(owner.x, owner.y) + self._facing * self._offset
+			local facing = self._facing
+			if owner.angleOffset ~= nil then
+				facing = facing:rotated(owner.angleOffset)
+			end
+			self._spriteAngle = facing.angle
+			local pos = Vec2.new(owner.x, owner.y) + facing * self._offset
 			self.x, self.y = pos.x, pos.y
 		end
 
