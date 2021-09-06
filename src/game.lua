@@ -342,8 +342,24 @@ Game = class({
 							enemy:on('dead', function (sender, reason, byWhom)
 								self.enemyCount = self.enemyCount - 1
 								if reason == 'killed' then
+									local score = cfg['score']
 									self:addKilling(1)
-									self:addScore(cfg['score'])
+									self:addScore(score)
+									local fx = Text.new(
+										sender.x, sender.y - 16,
+										'+' .. tostring(score),
+										{
+											worldSpace = true,
+											font = FONT_NORMAL_TEXT,
+											color = COLOR_BLEEDING_TEXT,
+											pivot = Vec2.new(0.5, 0.5),
+											style = 'blink',
+											depth = 4,
+											lifetime = 1.5,
+											interval = 0.25
+										}
+									)
+									table.insert(self.foregroundEffects, fx)
 									if self:getOption('gameplay/blood/show') then
 										local corpse = Corpse.new(
 											sender:corpse(),
@@ -803,18 +819,18 @@ Game = class({
 		font(FONT_NORMAL_TEXT)
 
 		if self.levelIndex ~= nil then
-			text('LEVEL', 10, 7, COLOR_NORMAL_TEXT)
-			text(self.levelIndex, 70, 7, COLOR_NORMAL_TEXT)
+			text('LEVEL', 10, 7, COLOR_CLEAR_TEXT)
+			text(self.levelIndex, 70, 7, COLOR_CLEAR_TEXT)
 		elseif self.tutorialIndex ~= nil then
-			text('TUTORIAL', 10, 7, COLOR_NORMAL_TEXT)
-			text(self.tutorialIndex, 94, 7, COLOR_NORMAL_TEXT)
+			text('TUTORIAL', 10, 7, COLOR_CLEAR_TEXT)
+			text(self.tutorialIndex, 94, 7, COLOR_CLEAR_TEXT)
 		else
-			text('LEVEL', 10, 7, COLOR_NORMAL_TEXT)
-			text(0, 70, 7, COLOR_NORMAL_TEXT)
+			text('LEVEL', 10, 7, COLOR_CLEAR_TEXT)
+			text(0, 70, 7, COLOR_CLEAR_TEXT)
 		end
-		text('EQUIP.', 10, 26, COLOR_NORMAL_TEXT)
+		text('EQUIP.', 10, 26, COLOR_CLEAR_TEXT)
 		if weapon == nil and armour == nil then
-			text('NONE', 70, 26, COLOR_NORMAL_TEXT)
+			text('NONE', 70, 26, COLOR_CLEAR_TEXT)
 		else
 			local x = 70
 			if weapon ~= nil then
@@ -830,7 +846,7 @@ Game = class({
 					end
 				end
 				local weaponWidth, _ = measure(txt, FONT_NORMAL_TEXT)
-				text(txt, x, 26, COLOR_NORMAL_TEXT)
+				text(txt, x, 26, COLOR_CLEAR_TEXT)
 				x = x + weaponWidth + 8
 			end
 			if armour ~= nil then
@@ -844,11 +860,11 @@ Game = class({
 		local highscoreWidth, _ = measure(self.highscore, FONT_NORMAL_TEXT)
 		local maxScoreWidth = math.max(scoreWidth, highscoreWidth)
 		local textWidth, _ = measure('HIGHSCORE', FONT_NORMAL_TEXT)
-		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, COLOR_NORMAL_TEXT)
-		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or COLOR_NORMAL_TEXT)
+		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, COLOR_CLEAR_TEXT)
+		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or COLOR_CLEAR_TEXT)
 		textWidth, _ = measure('SCORE', FONT_NORMAL_TEXT)
-		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 22, COLOR_NORMAL_TEXT)
-		text(self.score, canvasWidth - maxScoreWidth - 10, 22, COLOR_NORMAL_TEXT)
+		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 22, COLOR_CLEAR_TEXT)
+		text(self.score, canvasWidth - maxScoreWidth - 10, 22, COLOR_CLEAR_TEXT)
 
 		if DEBUG_SHOW_WIREFRAME then
 			local txt = 'POS: ' .. tostring(math.floor(self.hero.x + 0.5)) .. ', ' .. tostring(math.floor(self.hero.y + 0.5))

@@ -220,6 +220,19 @@ Object = class({
 
 		return self
 	end,
+	bounce = function (self, interval, val)
+		local x, y =
+			self.x + (val or 10) * (math.random() * 2 - 1),
+			self.y + (val or 10) * (math.random() * 0.2 + 1)
+		self:tween(
+			Tween.new(interval, { x = self.x, y = self.y }, { x = x, y = y }, Tween.easing.outBounce)
+				:on('changed', function (sender, val)
+					self.x, self.y = val.x, val.y
+				end)
+		)
+
+		return self
+	end,
 
 	raycast = function (self, pos, dir)
 		local pos, idx = self._raycaster:solve(pos, dir, self._isBlocked)
@@ -238,25 +251,7 @@ Object = class({
 	end,
 	update = function (self, delta)
 		-- Update the tweenings.
-		if self._tweens ~= nil then
-			local dead = nil
-			for _, t in ipairs(self._tweens) do
-				if t:update(delta) then
-					if dead == nil then
-						dead = { }
-					end
-					table.insert(dead, t)
-				end
-			end
-			if dead ~= nil then
-				self._tweens = filter(self._tweens, function (t)
-					return not exists(dead, t)
-				end)
-				if #self._tweens == 0 then
-					self._tweens = nil
-				end
-			end
-		end
+		self:_tween(delta)
 
 		-- Call custom sprite update handler if it's set.
 		if self._spriteUpdater then
@@ -453,6 +448,30 @@ Object = class({
 		end
 
 		return newDir
+	end,
+
+	_tween = function (self, delta)
+		if self._tweens ~= nil then
+			local dead = nil
+			for _, t in ipairs(self._tweens) do
+				if t:update(delta) then
+					if dead == nil then
+						dead = { }
+					end
+					table.insert(dead, t)
+				end
+			end
+			if dead ~= nil then
+				self._tweens = filter(self._tweens, function (t)
+					return not exists(dead, t)
+				end)
+				if #self._tweens == 0 then
+					self._tweens = nil
+				end
+			end
+		end
+
+		return self
 	end,
 
 	_emit = function (self, emitter, interval)

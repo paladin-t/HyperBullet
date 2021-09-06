@@ -71,9 +71,13 @@ States = {
 			0.5, 0.3,
 			'Hyper Bullet',
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)
@@ -234,9 +238,13 @@ States = {
 			0.5, 0.3,
 			'Hyper Bullet',
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)
@@ -275,9 +283,13 @@ States = {
 			0.5, 0.3,
 			txt,
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		) or nil
@@ -317,9 +329,13 @@ States = {
 			0.5, 0.3,
 			'LEVEL ' .. tostring(game.levelIndex),
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)
@@ -374,9 +390,13 @@ States = {
 			0.5, 0.3,
 			'GAME OVER',
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)
@@ -433,9 +453,13 @@ States = {
 			0.5, 0.3,
 			'TUTORIAL ' .. tostring(game.tutorialIndex),
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)
@@ -480,9 +504,13 @@ States = {
 			0.5, 0.3,
 			'FINISH',
 			{
+				worldSpace = false,
 				font = FONT_TITLE_TEXT,
-				color = COLOR_TITLE_TEXT,
+				color = COLOR_NEON_TEXT,
 				pivot = Vec2.new(0.5, 0.5),
+				style = 'wave',
+				depth = 10,
+				lifetime = nil,
 				interval = 1
 			}
 		)

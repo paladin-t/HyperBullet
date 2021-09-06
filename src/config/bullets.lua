@@ -16,7 +16,12 @@ Bullets = {
 		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 1, ['height'] = 1,
+			['color'] = Color.new(33, 3, 5)
+		}
 	},
 	['dual_pistols'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/dual_pistols.spr'),
@@ -26,7 +31,12 @@ Bullets = {
 		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 1, ['height'] = 1,
+			['color'] = Color.new(33, 3, 5)
+		}
 	},
 	['shotgun'] = {
 		['resource'] = {
@@ -40,7 +50,12 @@ Bullets = {
 		['lifetime'] = 0.5,
 		['penetrable'] = true,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 2, ['height'] = 1,
+			['color'] = Color.new(200, 3, 5)
+		}
 	},
 	['submachine_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/submachine_gun.spr'),
@@ -50,7 +65,12 @@ Bullets = {
 		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 2, ['height'] = 1,
+			['color'] = Color.new(33, 3, 5)
+		}
 	},
 	['machine_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/machine_gun.spr'),
@@ -60,7 +80,12 @@ Bullets = {
 		['lifetime'] = 3,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 2, ['height'] = 1,
+			['color'] = Color.new(33, 3, 5)
+		}
 	},
 	['rifle'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/rifle.spr'),
@@ -70,7 +95,12 @@ Bullets = {
 		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = {
+			['type'] = 'rect',
+			['width'] = 2, ['height'] = 1,
+			['color'] = Color.new(33, 3, 5)
+		}
 	},
 	['laser'] = {
 		['resource'] = {
@@ -83,7 +113,8 @@ Bullets = {
 		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = nil
 	},
 	['disc_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/disc_gun.spr'),
@@ -93,7 +124,8 @@ Bullets = {
 		['lifetime'] = 2,
 		['penetrable'] = false,
 		['bouncy'] = true,
-		['explosive'] = false
+		['explosive'] = false,
+		['shell_case'] = nil
 	},
 	['mines'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/mines.spr'),
@@ -103,6 +135,7 @@ Bullets = {
 		['lifetime'] = 0.75,
 		['penetrable'] = false,
 		['bouncy'] = false,
-		['explosive'] = true
+		['explosive'] = true,
+		['shell_case'] = nil
 	}
 }

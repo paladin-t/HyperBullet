@@ -46,8 +46,9 @@ require 'objects/body_armour'
 require 'objects/bullet'
 require 'objects/mine'
 require 'objects/corpse'
-require 'effects/text'
 require 'effects/blood'
+require 'effects/shell_case'
+require 'effects/text'
 require 'effects/tips'
 require 'states'
 require 'game'
@@ -64,8 +65,9 @@ DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawni
 FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
-COLOR_TITLE_TEXT = { Color.new(235, 117, 206), Color.new(10, 191, 150) }
-COLOR_NORMAL_TEXT = Color.new(200, 220, 210)
+COLOR_NEON_TEXT = { Color.new(235, 117, 206), Color.new(10, 191, 150) }
+COLOR_BLEEDING_TEXT = { Color.new(226, 114, 196), Color.new(203, 94, 41) }
+COLOR_CLEAR_TEXT = Color.new(200, 220, 210)
 COLOR_SHADOW = Color.new(0, 0, 0, 100)
 
 Canvas.main:resize(DEBUG and 640 or 0, 360)

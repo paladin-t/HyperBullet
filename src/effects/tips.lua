@@ -47,7 +47,7 @@ Tips = class({
 			local txt = self._content
 			local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
 			text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
-			text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_NORMAL_TEXT)
+			text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_CLEAR_TEXT)
 			font(nil)
 		end
 	end

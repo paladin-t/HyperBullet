@@ -9,6 +9,7 @@ Engine page: https://paladin-t.github.io/bitty/
 
 Pool = class({
 	_bullets = nil,
+	_shellCases = nil,
 	_effects = nil,
 
 	ctor = function (self)
@@ -76,7 +77,55 @@ Pool = class({
 		-- Finish.
 		return obj
 	end,
+	-- Generates a shell case.
+	shellCase = function (self, type, x, y, game)
+		-- Prepare.
+		if type == nil then
+			return nil
+		end
+		local obj, cached = nil, false
+		if self._shellCases ~= nil and self._shellCases[type] ~= nil then
+			for _, b in ipairs(self._shellCases[type]) do
+				if b:dead() then
+					obj, cached = b, true
+					obj:revive()
 
+					break
+				end
+			end
+		end
+
+		-- Generate.
+		local cfg = Bullets[type]
+		if not cached then
+			obj = ShellCase.new(
+				cfg['shell_case'],
+				{
+					game = game,
+					lifetime = 1
+				}
+			)
+		end
+
+		-- Cache.
+		if not cached then
+			if self._shellCases == nil then
+				self._shellCases = { }
+			end
+			if self._shellCases[type] == nil then
+				self._shellCases[type] = { }
+			end
+			table.insert(self._shellCases[type], obj)
+		end
+		obj
+			:reset()
+		obj.x, obj.y = x, y
+		obj
+			:bounce(0.75, 10)
+
+		-- Finish.
+		return obj
+	end,
 	-- Generates an effect.
 	effect = function (self, type, x, y, game)
 		-- Prepare.
@@ -166,16 +215,22 @@ Pool = class({
 	collect = function (self, deep)
 		if deep then
 			self._bullets = nil
+			self._shellCases = nil
 			self._effects = nil
 		else
 			if self._bullets ~= nil then
-				for type, effects in pairs(self._bullets) do
-					self._bullets[type] = take(effects, 32)
+				for type, lst in pairs(self._bullets) do
+					self._bullets[type] = take(lst, 32)
+				end
+			end
+			if self._shellCases ~= nil then
+				for type, lst in pairs(self._shellCases) do
+					self._shellCases[type] = take(lst, 16)
 				end
 			end
 			if self._effects ~= nil then
-				for type, effects in pairs(self._effects) do
-					self._effects[type] = take(effects, 16)
+				for type, lst in pairs(self._effects) do
+					self._effects[type] = take(lst, 16)
 				end
 			end
 		end

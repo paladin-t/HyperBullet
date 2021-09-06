@@ -12,13 +12,17 @@ local STACK_SIZE = 5
 Text = class({
 	--[[ Variables. ]]
 
-	_x = nil, _y = nil, -- Relative position in screen space, normally from 0 to 1.
+	_worldSpace = false,
 	_content = nil,
 	_font = nil,
 	_color = nil,
 	_pivot = Vec2.new(0, 0), -- Relative position in local space, normally from 0 to 1.
+	_style = 'wave',
+	_depth = 10,
 	_interval = nil,
+	_lifetime = nil,
 
+	_phase = 0,
 	_ticks = 0,
 	_characters = nil,
 	_contentWidth = 0, _contentHeight = 0,
@@ -26,12 +30,18 @@ Text = class({
 	--[[ Constructor. ]]
 
 	ctor = function (self, x, y, content, options)
-		self._x, self._y = x, y
+		Object.ctor(self, nil, nil, nil)
+
+		self.x, self.y = x, y
+		self._worldSpace = options.worldSpace
 		self._content = content
 		self._font = options.font
 		self._color = options.color
 		self._pivot = options.pivot
+		self._style = options.style
+		self._depth = options.depth
 		self._interval = options.interval
+		self._lifetime = options.lifetime
 
 		local MARGIN = 1
 		self._characters = { }
@@ -73,49 +83,79 @@ Text = class({
 		return self
 	end,
 
+	behave = function (self, delta, _1)
+		return self
+	end,
 	update = function (self, delta)
-		local stackSize = 0
-		self._ticks = self._ticks + delta
-		if self._ticks >= self._interval then
-			self._ticks = self._ticks - self._interval
-		end
-		local c1, c2 = self._color[1], self._color[2]
-		for i, ch in ipairs(self._characters) do
-			local factor = math.sin((self._ticks / self._interval + i * 0.075) * math.pi * 2)
-			local f = (factor + 1) * 0.5
-			local col = Color.new(
-				lerp(c1.r, c2.r, f),
-				lerp(c1.g, c2.g, f),
-				lerp(c1.b, c2.b, f),
-				lerp(c1.a, c2.a, f)
-			)
-			ch.z:push(f)
-			ch.colorStack:push(col)
-			if ch.z:count() > stackSize then
-				stackSize = ch.z:count()
+		if self._lifetime ~= nil then
+			self._ticks = self._ticks + delta
+			if self._ticks >= self._lifetime then
+				self:kill('disappeared', nil)
 			end
 		end
 
-		local canvasWidth, canvasHeight = Canvas.main:size()
+		local stackSize = 0
+		self._phase = self._phase + delta
+		if self._phase >= self._interval then
+			self._phase = self._phase - self._interval
+		end
+		local c1, c2 = self._color[1], self._color[2]
+		for i, ch in ipairs(self._characters) do
+			if self._style == 'wave' then
+				local factor = math.sin((self._phase / self._interval + i * 0.075) * math.pi * 2)
+				local f = (factor + 1) * 0.5
+				local col = Color.new(
+					lerp(c1.r, c2.r, f),
+					lerp(c1.g, c2.g, f),
+					lerp(c1.b, c2.b, f),
+					lerp(c1.a, c2.a, f)
+				)
+				ch.z:push(f)
+				ch.colorStack:push(col)
+				if ch.z:count() > stackSize then
+					stackSize = ch.z:count()
+				end
+			elseif self._style == 'blink' then
+				local factor = math.sin((self._phase / self._interval) * math.pi * 2)
+				local f = (factor + 1) * 0.5
+				local col = Color.new(
+					lerp(c1.r, c2.r, f),
+					lerp(c1.g, c2.g, f),
+					lerp(c1.b, c2.b, f),
+					lerp(c1.a, c2.a, f)
+				)
+				ch.z:push(1)
+				ch.colorStack:push(col)
+				if ch.z:count() > stackSize then
+					stackSize = ch.z:count()
+				end
+			end
+		end
 
 		font(self._font)
-		local x, y =
-			canvasWidth * self._x - self._contentWidth * self._pivot.x,
-			canvasHeight * self._y - self._contentHeight * self._pivot.y
+		local x, y = nil, nil
+		if self._worldSpace then
+			x, y =
+				self.x - self._contentWidth * self._pivot.x,
+				self.y - self._contentHeight * self._pivot.y
+		else
+			local canvasWidth, canvasHeight = Canvas.main:size()
+			x, y =
+				canvasWidth * self.x - self._contentWidth * self._pivot.x,
+				canvasHeight * self.y - self._contentHeight * self._pivot.y
+		end
 		for k = 1, stackSize do
 			for _, ch in ipairs(self._characters) do
-				local z = -ch.z:get(k) * 10 * ((k - 1) / (STACK_SIZE - 1))
+				local z = -ch.z:get(k) * self._depth * ((k - 1) / (STACK_SIZE - 1))
 				local col = ch.colorStack:get(k)
-				local a = col.a * (k / STACK_SIZE)
-				if k == stackSize then
-					text(ch.character, x + ch.x - 1, y + ch.y + z, Color.new(0, 0, 0, 100))
-					text(ch.character, x + ch.x + 1, y + ch.y + z, Color.new(0, 0, 0, 100))
-					text(ch.character, x + ch.x, y + ch.y + z - 1, Color.new(0, 0, 0, 100))
-					text(ch.character, x + ch.x, y + ch.y + z + 1, Color.new(0, 0, 0, 100))
-				end
-				text(ch.character, x + ch.x, y + ch.y + z, Color.new(col.r, col.g, col.b, a))
+				local f = k / STACK_SIZE
+				local r = col.r * f
+				local g = col.g * f
+				local b = col.b * f
+				local a = col.a
+				text(ch.character, x + ch.x, y + ch.y + z, Color.new(r, g, b, a))
 			end
 		end
 		font(nil)
 	end
-})
+}, Object)

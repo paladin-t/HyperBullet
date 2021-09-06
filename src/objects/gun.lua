@@ -106,6 +106,14 @@ Gun = class({
 			owner._isBulletBlocked
 		)
 		table.insert(owner._game.pending, bullet)
+		if Bullets[self._bullet]['shell_case'] ~= nil then
+			local shellCase = self._game.pool:shellCase(
+				self._bullet,
+				pos.x - dir.x * 8, pos.y - dir.y * 8,
+				self._game
+			)
+			table.insert(owner._game.backgroundEffects, shellCase)
+		end
 
 		-- Add effect.
 		if self._effect ~= nil then
