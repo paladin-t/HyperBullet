@@ -63,6 +63,7 @@ DEBUG_IMMORTAL       = DEBUG and false           -- Enable to make the hero unki
 DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawning.
 
 FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
+FONT_SUBTITLE_TEXT = Font.new('assets/fonts/college.ttf', 24)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
 COLOR_NEON_TEXT = { Color.new(235, 117, 206), Color.new(10, 191, 150) }

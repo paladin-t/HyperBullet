@@ -343,6 +343,12 @@ Game = class({
 								self.enemyCount = self.enemyCount - 1
 								if reason == 'killed' then
 									local score = cfg['score']
+									if self.state.scored ~= nil then
+										self.state:scored()
+									end
+									if self.state.combo ~= nil then
+										score = score * self.state.combo
+									end
 									self:addKilling(1)
 									self:addScore(score)
 									local fx = Text.new(
@@ -608,7 +614,7 @@ Game = class({
 		-- Update all coroutines.
 		self.co:update(delta)
 
-		-- Game logic.
+		-- Update camera.
 		local canvasWidth, canvasHeight = Canvas.main:size()
 		local screenHalfWidth, screenHalfHeight = canvasWidth * 0.5, canvasHeight * 0.5
 		local targetX, targetY = nil, nil
@@ -641,6 +647,7 @@ Game = class({
 			end
 		end
 
+		-- Game logic.
 		local x, y, lmb, rmb, mmb = mouse()
 		if self.state.playing then
 			if key(beInput.KeyCode.W) then
@@ -697,6 +704,7 @@ Game = class({
 			:_mouse(x, y)
 			:_hud(delta)
 
+		-- Update and draw state.
 		self.state:update(delta)
 	end,
 

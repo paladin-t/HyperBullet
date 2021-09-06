@@ -154,7 +154,7 @@ Weapon = class({
 		error('Implement me.')
 	end,
 
-	behave = function (self, delta, _1)
+	follow = function (self, delta)
 		local owner = self._owner
 		if owner then
 			if self._isSecondary then
@@ -171,6 +171,10 @@ Weapon = class({
 			self.x, self.y = pos.x, pos.y
 		end
 
+		return self
+	end,
+
+	behave = function (self, delta, _1)
 		return self
 	end,
 	update = function (self, delta)

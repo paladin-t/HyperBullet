@@ -316,9 +316,51 @@ States = {
 	end,
 
 	['playing'] = function (game)
+		local ticks = nil
+		local text_ = nil
+
 		return {
 			playing = true,
+			combo = nil,
+			scored = function (self)
+				if self.combo == nil then
+					self.combo = 1
+					ticks = 0
+				else
+					self.combo = self.combo + 1
+					ticks = 0
+					text_ = Text.new(
+						0.98, 0.15,
+						'COMBO x' .. tostring(self.combo),
+						{
+							worldSpace = false,
+							font = FONT_SUBTITLE_TEXT,
+							color = COLOR_BLEEDING_TEXT,
+							pivot = Vec2.new(1, 0),
+							style = 'blink',
+							depth = 5,
+							lifetime = nil,
+							interval = 1
+						}
+					)
+				end
+
+				return self
+			end,
 			update = function (self, delta)
+				if text_ ~= nil then
+					text_:update(delta)
+				end
+
+				if ticks ~= nil then
+					ticks = ticks + delta
+					if ticks >= 1 then
+						self.combo = nil
+						ticks = nil
+						text_ = nil
+					end
+				end
+
 				return self
 			end
 		}

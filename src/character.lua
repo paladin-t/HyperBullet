@@ -220,7 +220,6 @@ Character = class({
 		local weapon = self:weapon()
 		if weapon ~= nil then
 			weapon:behave(delta, hero)
-
 			local secondary = weapon:secondary()
 			if secondary ~= nil then
 				secondary:behave(delta, hero)
@@ -249,7 +248,7 @@ Character = class({
 			self._moving = Vec2.new(0, 0)
 		end
 
-		-- Calculate weapon priority.
+		-- Update weapon and calculate priority.
 		local weapon = self:weapon()
 		local secondary = nil
 		local before, after = false, false
@@ -260,9 +259,13 @@ Character = class({
 			else
 				after = true
 			end
+			weapon:follow(delta)
+			if secondary ~= nil then
+				secondary:follow(delta)
+			end
 		end
 
-		-- Updated and draw legs.
+		-- Update and draw legs.
 		local spriteLegs = self._spriteLegs
 		if spriteLegs ~= nil then
 			if movementLength ~= 0 then
@@ -287,7 +290,7 @@ Character = class({
 			end
 		end
 
-		-- Update and draw.
+		-- Update and draw this character and weapon.
 		if weapon ~= nil then
 			weapon:shadow(delta, 3, 3) -- Draw shadow effect.
 		end

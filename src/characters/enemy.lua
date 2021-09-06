@@ -66,7 +66,7 @@ Enemy = class({
 				if weapon ~= nil then
 					local affecting, shape = weapon:affecting()
 					if affecting then
-						if v:intersectsWithShape(shape) then -- Hero intersects with enemy's melee.
+						if not DEBUG_IMMORTAL and v:intersectsWithShape(shape) then -- Hero intersects with enemy's melee.
 							local hadArmour = v:armour()
 							v:hurt(weapon)
 							local weapon = v:weapon()
