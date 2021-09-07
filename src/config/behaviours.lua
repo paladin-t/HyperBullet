@@ -7,13 +7,44 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
+local function toIndex(pos)
+	local x, y = math.floor(pos.x / 16), math.floor(pos.y / 16)
+
+	return Vec2.new(x, y)
+end
+
+local function fromIndex(idx)
+	local x, y = (idx.x + 0.5) * 16, (idx.y + 0.5) * 16
+
+	return Vec2.new(x, y)
+end
+
+local function redirect(this, delta, hero, src, dst)
+	if this._moving.length == 0 then
+		return
+	end
+	local m = this:_move(this._moving)
+	if m.length ~= 0 then
+		return
+	end
+	local dst = Vec2.new(hero.x, hero.y)
+	local path = this:findpath(toIndex(src), toIndex(dst))
+	for i, idx in ipairs(path) do
+		table.insert(this._goals, fromIndex(idx))
+		if i >= 6 then
+			break
+		end
+	end
+end
+
 Behaviours = {
 	['chase'] = function ()
 		return {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::again::
-				local goal = (this._goals ~= nil and #this._goals > 0) and this._goals[1] or nil
+				local empty = this._goals == nil or #this._goals == 0
+				local goal = not empty and this._goals[1] or nil
 				local dst = nil
 				if goal == nil then
 					dst = Vec2.new(hero.x, hero.y) -- Chase.
@@ -47,6 +78,9 @@ Behaviours = {
 					else
 						this._moving = diff
 					end
+					if empty then
+						redirect(this, delta, hero, src, dst)
+					end
 				end
 
 				-- Finish.
@@ -59,10 +93,11 @@ Behaviours = {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::again::
-				local goal = (this._goals ~= nil and #this._goals > 0) and this._goals[1] or nil
+				local empty = this._goals == nil or #this._goals == 0
+				local goal = not empty and this._goals[1] or nil
 				local dst = nil
 				if goal == nil then
-					dst = Vec2.new(hero.x, hero.y) - hero:facing() * 32 -- Besiege.
+					dst = Vec2.new(hero.x, hero.y) - hero:facing() * 16 -- Besiege.
 				else
 					dst = goal
 				end
@@ -93,6 +128,9 @@ Behaviours = {
 					else
 						this._moving = diff
 					end
+					if empty then
+						redirect(this, delta, hero, src, dst)
+					end
 				end
 
 				-- Finish.
@@ -105,7 +143,8 @@ Behaviours = {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::again::
-				local goal = (this._goals ~= nil and #this._goals > 0) and this._goals[1] or nil
+				local empty = this._goals == nil or #this._goals == 0
+				local goal = not empty and this._goals[1] or nil
 				local dst = nil
 				if goal == nil then
 					this:kill('disappeared', nil) -- Disappear.

@@ -36,6 +36,7 @@ Object = class({
 
 	_walker = nil,
 	_raycaster = nil,
+	_pathfinder = nil,
 	_isBlocked = nil,
 	_slidable = 5,
 
@@ -235,9 +236,10 @@ Object = class({
 	end,
 
 	raycast = function (self, pos, dir)
-		local pos, idx = self._raycaster:solve(pos, dir, self._isBlocked)
-
-		return pos, idx
+		return self._raycaster:solve(pos, dir, self._isBlocked)
+	end,
+	findpath = function (self, pos, dst)
+		return self._pathfinder:solve(pos, dst)
 	end,
 
 	reset = function (self)

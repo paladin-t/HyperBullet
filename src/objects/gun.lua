@@ -85,7 +85,7 @@ Gun = class({
 		local owner = self._owner
 		local ownerPos = Vec2.new(owner.x, owner.y)
 		local emitPos = self._facing * self._offset * 1.5
-		local hit = owner:raycast(ownerPos, emitPos)
+		local hit, _ = owner:raycast(ownerPos, emitPos)
 		if hit ~= nil then
 			return true, nil, false, self._recoil
 		end

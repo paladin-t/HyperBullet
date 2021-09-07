@@ -54,6 +54,7 @@ Character = class({
 		self._facing = Vec2.new(1, 0)
 
 		self._raycaster = self._game.raycaster
+		self._pathfinder = self._game.pathfinder
 		self._isBulletBlocked = isBulletBlocked
 	end,
 

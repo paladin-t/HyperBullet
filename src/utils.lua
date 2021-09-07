@@ -27,6 +27,14 @@ function sign(val)
 	end
 end
 
+function round(val)
+	if val >= 0 then
+		return math.floor(val + 0.5)
+	else
+		return math.ceil(val - 0.5)
+	end
+end
+
 function clamp(val, min, max)
 	if val < min then
 		val = min

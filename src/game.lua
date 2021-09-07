@@ -19,6 +19,7 @@ Game = class({
 	sceneWidth = 0, sceneHeight = 0,
 	isHeroBlocked = nil, isEnemyBlocked = nil, isWeaponBlocked = nil, isBulletBlocked = nil,
 	raycaster = nil,
+	pathfinder = nil,
 	camera = nil,
 
 	hero = nil,
@@ -91,8 +92,6 @@ Game = class({
 
 				return false
 			end
-		self.raycaster = Raycaster.new()
-		self.raycaster.tileSize = Vec2.new(16, 16)
 		self.camera = Camera.new()
 
 		self._blankImage = Image.new()
@@ -453,6 +452,18 @@ Game = class({
 			(self.building.width - self.background.width) * 0.5 * 16, (self.building.height - self.background.height) * 0.5 * 16
 		self.sceneWidth, self.sceneHeight =
 			self.building.width * 16, self.building.height * 16
+		self.raycaster = Raycaster.new()
+		self.raycaster.tileSize = Vec2.new(16, 16)
+		self.pathfinder = Pathfinder.new(-1, -1, self.building.width, self.building.height)
+		for j = -1, self.building.height do
+			for i = -1, self.building.width do
+				local pos = Vec2.new(i, j)
+				local blk = self.isEnemyBlocked(pos)
+				if blk then
+					self.pathfinder:set(pos, -1)
+				end
+			end
+		end
 
 		-- Initialize objects.
 		self.objects, self.pending = { }, { }
@@ -552,6 +563,18 @@ Game = class({
 			(self.building.width - self.background.width) * 0.5 * 16, (self.building.height - self.background.height) * 0.5 * 16
 		self.sceneWidth, self.sceneHeight =
 			self.building.width * 16, self.building.height * 16
+		self.raycaster = Raycaster.new()
+		self.raycaster.tileSize = Vec2.new(16, 16)
+		self.pathfinder = Pathfinder.new(-1, -1, self.building.width, self.building.height)
+		for j = -1, self.building.height do
+			for i = -1, self.building.width do
+				local pos = Vec2.new(i, j)
+				local blk = self.isEnemyBlocked(pos)
+				if blk then
+					self.pathfinder:set(pos, -1)
+				end
+			end
+		end
 
 		-- Initialize objects.
 		self.objects, self.pending = { }, { }
