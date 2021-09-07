@@ -311,5 +311,17 @@ Character = class({
 		if secondary ~= nil and after then
 			secondary:update(delta)
 		end
+	end,
+
+	_repulse = function (self, other)
+		local EPSILON = 16
+		local diff = Vec2.new(self.x, self.y) - Vec2.new(other.x, other.y)
+		local l = diff:normalize()
+		if l > EPSILON then
+			return Vec2.new(0, 0)
+		end
+		local FORCE = 10
+
+		return diff * (1 - l / EPSILON) * FORCE
 	end
 }, Object)

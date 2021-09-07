@@ -31,6 +31,8 @@ Hero = class({
 		Character.behave(self, delta, _1)
 
 		-- Interact with objects.
+		local EPSILON = 1
+		local repulse = Vec2.new(0, 0)
 		for _, v in ipairs(self._game.objects) do
 			if v.group == 'enemy' then
 				local weapon = self:weapon()
@@ -49,6 +51,7 @@ Hero = class({
 						end
 					end
 				end
+				repulse = repulse + self:_repulse(v)
 			elseif v.group == 'weapon' then
 				if v:throwing() then
 					if v:ownerGroup() ~= 'hero' and self:intersects(v) then -- Hero intersects with a weapon which is being thrown.
@@ -108,6 +111,10 @@ Hero = class({
 					end
 				end
 			end
+		end
+		local l = repulse.length
+		if l > EPSILON then
+			self._moving = self._moving + repulse
 		end
 
 		-- Process picking and throwing.
