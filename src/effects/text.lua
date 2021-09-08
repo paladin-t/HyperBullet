@@ -19,11 +19,8 @@ Text = class({
 	_pivot = Vec2.new(0, 0), -- Relative position in local space, normally from 0 to 1.
 	_style = 'wave',
 	_depth = 10,
-	_interval = nil,
-	_lifetime = nil,
-
-	_phase = 0,
-	_ticks = 0,
+	_interval = nil, _phase = 0,
+	_lifetime = nil, _ticks = 0,
 	_characters = nil,
 	_contentWidth = 0, _contentHeight = 0,
 
@@ -42,7 +39,6 @@ Text = class({
 		self._depth = options.depth
 		self._interval = options.interval
 		self._lifetime = options.lifetime
-
 		local MARGIN = 1
 		self._characters = { }
 		local x, y = 0, 0

@@ -184,7 +184,9 @@ Scenes = {
 				end
 			},
 			--[[ Clear colors.          ]] {
-				Color.new(80, 80, 80)
+				Color.new(235, 117, 206),
+				Color.new(10, 191, 150),
+				Color.new(203, 94, 41)
 			},
 			--[[ Effects.               ]] nil
 		)
@@ -365,7 +367,9 @@ Scenes = {
 				end
 			},
 			--[[ Clear colors.          ]] {
-				Color.new(80, 80, 80)
+				Color.new(235, 117, 206),
+				Color.new(10, 191, 150),
+				Color.new(203, 94, 41)
 			},
 			--[[ Effects.               ]] nil
 		)

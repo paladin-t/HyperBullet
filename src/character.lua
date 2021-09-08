@@ -23,6 +23,7 @@ Character = class({
 	_spriteLegs = nil,
 	_spriteLegsWidth = 0, _spriteLegsHeight = 0,
 	_spriteDead = nil,
+	_spriteSplitted1 = nil, _spriteSplitted2 = nil,
 
 	_isBulletBlocked = nil,
 
@@ -45,7 +46,7 @@ Character = class({
 		self._spriteLegsWidth, self._spriteLegsHeight =
 			self._spriteLegs.width, self._spriteLegs.height
 		self._spriteDead = resources[3]
-		self._spriteDead:play('idle', false)
+		self._spriteSplitted1, self._spriteSplitted2 = resources[4], resources[5]
 
 		self._game = options.game
 
@@ -81,8 +82,12 @@ Character = class({
 
 		return self
 	end,
-	corpse = function (self)
-		return self._spriteDead
+	corpse = function (self, splitted)
+		if splitted then
+			return self._spriteSplitted1, self._spriteSplitted2
+		else
+			return self._spriteDead
+		end
 	end,
 
 	intersects = function (self, other)

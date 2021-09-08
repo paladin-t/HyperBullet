@@ -12,7 +12,9 @@ Heroes = {
 		['assets'] = {
 			'assets/sprites/characters/hero1.spr',
 			'assets/sprites/characters/legs1.spr',
-			'assets/sprites/characters/hero1_dead.spr'
+			'assets/sprites/characters/hero1_dead.spr',
+			'assets/sprites/characters/hero1_split1.spr',
+			'assets/sprites/characters/hero1_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),

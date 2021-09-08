@@ -1,0 +1,16 @@
+{
+  "width": 16,
+  "height": 32,
+  "count": 1,
+  "data": [
+    {
+      "x": 16,
+      "y": 224,
+      "width": 16,
+      "height": 32,
+      "interval": 0.25,
+      "key": "idle"
+    }
+  ],
+  "ref": "assets/imgs/bank.png"
+}
