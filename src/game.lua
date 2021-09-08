@@ -45,7 +45,7 @@ Game = class({
 
 	ctor = function (self, co)
 		self.co = co
-		self.bgm = Resources.load('assets/bgms/bgm.ogg', Music)
+		self.bgm = Resources.load('assets/bgm/bgm.ogg', Music)
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnemyBlocked, self.isWeaponBlocked, self.isBulletBlocked =
