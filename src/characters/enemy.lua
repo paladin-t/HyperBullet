@@ -71,16 +71,16 @@ Enemy = class({
 						if not DEBUG_IMMORTAL and v:intersectsWithShape(shape) then -- Hero intersects with enemy's melee.
 							local hadArmour = v:armour()
 							v:hurt(weapon)
-							local weapon = v:weapon()
-							if weapon ~= nil then
+							local weapon_ = v:weapon()
+							if weapon_ ~= nil then
 								if hadArmour == nil then
 									v:setWeapon(nil)
-									weapon:revive()
-									table.insert(self._game.pending, weapon)
+									weapon_:revive()
+									table.insert(self._game.pending, weapon_)
 								end
-
-								self._game:playSfx(weapon:sfxs()['attack'])
 							end
+
+							self._game:playSfx(weapon:sfxs()['attack'])
 						end
 					end
 				end
@@ -103,9 +103,9 @@ Enemy = class({
 								weapon:revive()
 								table.insert(self._game.pending, weapon)
 							end
-
-							self._game:playSfx(weapon:sfxs()['attack'])
 						end
+
+						self._game:playSfx(v:sfxs()['attack'])
 					end
 				elseif self._picking then
 					if self:intersects(v) then -- Enemy intersects with weapon for picking.

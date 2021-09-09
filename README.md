@@ -22,13 +22,13 @@ This project is still under early development.
 
 ## Operations
 
-| | Mouse | Keyboard | Controller (not implemented yet) |
+| | Mouse | Keyboard | Controller |
 |---|---|---|---|
 | Move | - | W/A/S/D | ◄/►/▲/▼, ⦿ |
 | Look at | move | - | 〇 |
 | Pick | MMB | R | A |
-| Throw | RMB | F | L |
-| Attack | LMB | - | R |
+| Throw | RMB | F | Y, L |
+| Attack | LMB | - | X, R |
 
 # Get Hyper Bullet
 

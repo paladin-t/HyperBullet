@@ -109,7 +109,7 @@ Weapon = class({
 		return false
 	end,
 	isBlade = function (self)
-		return self
+		return false
 	end,
 
 	interval = function (self)

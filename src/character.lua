@@ -178,6 +178,9 @@ Character = class({
 			return self
 		end
 
+		if x == self.x and y == self.y then
+			y = y + 1
+		end
 		self._facing = Vec2.new(x - self.x, y - self.y).normalized
 		self._spriteAngle = self._facing.angle
 

@@ -66,4 +66,11 @@ Camera = class({
 
 		return self
 	end,
+
+	toWorld = function (self, x, y)
+		return x + self.x, y + self.y
+	end,
+	fromWorld = function (self, x, y)
+		return x - self.x, y - self.y
+	end
 })

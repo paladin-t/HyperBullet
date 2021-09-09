@@ -36,6 +36,9 @@ Game = class({
 	highscore = 0, newHighscore = false,
 	state = nil,
 
+	_controlling = nil,
+	_mousePosition = nil,
+	_axisValue = nil, _axisAngle = nil,
 	_blankImage = nil, _cursor = nil,
 	_hudColor = nil,
 
@@ -205,6 +208,9 @@ Game = class({
 	end,
 	-- Plays the specific SFX.
 	playSfx = function (self, keyOrKeys)
+		if keyOrKeys == nil then
+			return self
+		end
 		local key = nil
 		if type(keyOrKeys) == 'string' then
 			key = keyOrKeys
@@ -221,6 +227,9 @@ Game = class({
 	end,
 	-- Plays the specific BGM.
 	playBgm = function (self, keyOrIndex)
+		if keyOrIndex == nil then
+			return self
+		end
 		local index = nil
 		if type(keyOrIndex) == 'string' then
 			local _ = nil
@@ -597,6 +606,10 @@ Game = class({
 		end
 		self.camera:reset()
 
+		self._controlling = nil
+		self._mousePosition = nil
+		self._axisValue, self._axisAngle = Vec2.new(0, 0), 0
+
 		-- Start a wave.
 		if toGame then
 			local wave = coroutine.create(self.room.wave)
@@ -687,6 +700,10 @@ Game = class({
 		self.state = States['tutorial_next'](self)
 		self.camera:reset()
 
+		self._controlling = nil
+		self._mousePosition = nil
+		self._axisValue, self._axisAngle = Vec2.new(0, 0), 0
+
 		-- Start a wave.
 		local wave = coroutine.create(self.room.wave)
 		self.co
@@ -743,26 +760,28 @@ Game = class({
 		end
 
 		-- Game logic.
-		local x, y, lmb, rmb, mmb = mouse()
+		local x, y = nil, nil
 		if self.state.playing then
-			if key(beInput.KeyCode.W) then
+			local x_, y_, up, down, left, right, attack, pick, throw = self:_input()
+			x, y = x_, y_
+			if up then
 				hero:moveUp(delta)
-			elseif key(beInput.KeyCode.S) then
+			elseif down then
 				hero:moveDown(delta)
 			end
-			if key(beInput.KeyCode.A) then
+			if left then
 				hero:moveLeft(delta)
-			elseif key(beInput.KeyCode.D) then
+			elseif right then
 				hero:moveRight(delta)
 			end
 			local cameraX, cameraY = self.camera:get()
 			hero:lookAt(x + cameraX, y + cameraY)
-			if lmb then
+			if attack then
 				hero:attack(1, nil)
 			end
-			if mmb or keyp(beInput.KeyCode.R) then
+			if pick then
 				hero:pick()
-			elseif rmb or keyp(beInput.KeyCode.F) then
+			elseif throw then
 				hero:throw()
 			end
 		end
@@ -796,7 +815,7 @@ Game = class({
 			:_commitPendingObjects()
 
 		self
-			:_mouse(x, y)
+			:_lookAt(x, y)
 			:_hud(delta)
 
 		-- Update and draw state.
@@ -879,8 +898,62 @@ Game = class({
 		return self
 	end,
 
+	-- Retrieves input data.
+	_input = function (self)
+		-- Prepare.
+		local hero = self.hero
+
+		-- Retrieve mouse and right axis data.
+		local x, y, lmb, rmb, mmb = mouse()
+		if isNaN(x) --[[ or isNaN(y) ]] and self._mousePosition == nil then
+			x, y = self.camera:fromWorld(hero.x, hero.y + 64)
+		end
+		local axisRightX, axisRightY = btn(beInput.Controller.AxisRightX, beInput.Controller.first),
+			btn(beInput.Controller.AxisRightY, beInput.Controller.first)
+		local axisPosition = Vec2.new(axisRightX, axisRightY)
+
+		-- Calculate look at data.
+		local DEAD_ZONE, DIFF_ZONE = 5000, 500
+		if self._mousePosition == nil or (not isNaN(x) and (x ~= self._mousePosition.x or y ~= self._mousePosition.y)) then
+			self._controlling = 'mouse'
+			self._mousePosition = Vec2.new(x, y)
+		elseif axisPosition.length > DEAD_ZONE and (self._axisValue - axisPosition).length > DIFF_ZONE then
+			self._controlling = 'axis'
+			self._axisValue = axisPosition
+			self._axisAngle = self._axisValue.angle
+		end
+		if self._controlling == 'axis' then
+			local pos = Vec2.new(hero.x, hero.y) + Vec2.new(100, 0):rotated(self._axisAngle)
+			x, y = self.camera:fromWorld(pos.x, pos.y)
+		end
+
+		-- Retrieve and calculate moving and action data.
+		local up = key(beInput.KeyCode.W) or
+			btn(beInput.Controller.DpadUp, beInput.Controller.first) or
+			axis(beInput.Controller.AxisLeftY, -1)
+		local down = key(beInput.KeyCode.S) or
+			btn(beInput.Controller.DpadDown, beInput.Controller.first) or
+			axis(beInput.Controller.AxisLeftY, 1)
+		local left = key(beInput.KeyCode.A) or
+			btn(beInput.Controller.DpadLeft, beInput.Controller.first) or
+			axis(beInput.Controller.AxisLeftX, -1)
+		local right = key(beInput.KeyCode.D) or
+			btn(beInput.Controller.DpadRight, beInput.Controller.first) or
+			axis(beInput.Controller.AxisLeftX, 1)
+		local attack = lmb or
+			btnp(beInput.Controller.X, beInput.Controller.first) or
+			btnp(beInput.Controller.RightShoulder, beInput.Controller.first)
+		local pick = mmb or keyp(beInput.KeyCode.R) or
+			btnp(beInput.Controller.A, beInput.Controller.first)
+		local throw = rmb or keyp(beInput.KeyCode.F) or
+			btnp(beInput.Controller.Y, beInput.Controller.first) or
+			btnp(beInput.Controller.LeftShoulder, beInput.Controller.first)
+
+		-- Finish.
+		return x, y, up, down, left, right, attack, pick, throw
+	end,
 	-- Refreshes and draws front signt or regular mouse cursor.
-	_mouse = function (self, x, y)
+	_lookAt = function (self, x, y)
 		-- Prepare.
 		local hero = self.hero
 		local weapon = hero:weapon()
