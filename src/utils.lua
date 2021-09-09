@@ -299,7 +299,7 @@ function filter(lst, pred)
 	return result
 end
 
-function only(lst, pred, proc)
+function find(lst, pred, proc)
 	if not lst then
 		return nil, nil
 	end

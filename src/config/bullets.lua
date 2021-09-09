@@ -21,7 +21,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 1, ['height'] = 1,
 			['color'] = Color.new(33, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['dual_pistols'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/dual_pistols.spr'),
@@ -36,7 +37,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 1, ['height'] = 1,
 			['color'] = Color.new(33, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['shotgun'] = {
 		['resource'] = {
@@ -55,7 +57,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 2, ['height'] = 1,
 			['color'] = Color.new(200, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['submachine_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/submachine_gun.spr'),
@@ -70,7 +73,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 2, ['height'] = 1,
 			['color'] = Color.new(33, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['machine_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/machine_gun.spr'),
@@ -85,7 +89,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 2, ['height'] = 1,
 			['color'] = Color.new(33, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['rifle'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/rifle.spr'),
@@ -100,7 +105,8 @@ Bullets = {
 			['type'] = 'rect',
 			['width'] = 2, ['height'] = 1,
 			['color'] = Color.new(33, 3, 5)
-		}
+		},
+		['sfxs'] = nil
 	},
 	['laser'] = {
 		['resource'] = {
@@ -114,7 +120,8 @@ Bullets = {
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = false,
-		['shell_case'] = nil
+		['shell_case'] = nil,
+		['sfxs'] = nil
 	},
 	['disc_gun'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/disc_gun.spr'),
@@ -125,7 +132,8 @@ Bullets = {
 		['penetrable'] = false,
 		['bouncy'] = true,
 		['explosive'] = false,
-		['shell_case'] = nil
+		['shell_case'] = nil,
+		['sfxs'] = nil
 	},
 	['mines'] = {
 		['resource'] = Resources.load('assets/sprites/objects/bullets/mines.spr'),
@@ -136,6 +144,9 @@ Bullets = {
 		['penetrable'] = false,
 		['bouncy'] = false,
 		['explosive'] = true,
-		['shell_case'] = nil
+		['shell_case'] = nil,
+		['sfxs'] = {
+			['explode'] = 'explode/mines1'
+		}
 	}
 }

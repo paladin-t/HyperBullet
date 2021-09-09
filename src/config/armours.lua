@@ -12,6 +12,9 @@ Armours = {
 		['name'] = 'Body Armour',
 		['entry'] = 'assets/sprites/objects/armours/body_armour.spr',
 		['hp'] = 1,
-		['box'] = Recti.byXYWH(0, 0, 16, 16)
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['sfxs'] = {
+			['pick'] = nil
+		}
 	}
 }

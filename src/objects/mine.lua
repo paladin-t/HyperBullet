@@ -18,6 +18,7 @@ Mine = class({
 	_lifetime = 1,
 	_flashtime = 0.25,
 	_ticks = 0, _timeout = false, _affected = false,
+	_sfxs = nil,
 
 	--[[ Constructor. ]]
 
@@ -34,6 +35,7 @@ Mine = class({
 
 		self._box = options.box
 		self._lifetime = options.lifetime or 1
+		self._sfxs = options.sfxs
 	end,
 
 	--[[ Meta methods. ]]
@@ -102,6 +104,8 @@ Mine = class({
 				self._timeout = true
 				self._ticks = 0
 				self._game.camera:shock(0.25)
+
+				self._game:playSfx(self._sfxs['explode'])
 			end
 		end
 

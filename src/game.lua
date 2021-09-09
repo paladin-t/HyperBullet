@@ -13,7 +13,7 @@ local HUD_HEIGHT = 40
 
 Game = class({
 	co = nil,
-	bgm = nil,
+	sfxs = nil, bgms = nil,
 	background = nil, building = nil, foreground = nil,
 	backgroundOffsetX = 0, backgroundOffsetY = 0,
 	sceneWidth = 0, sceneHeight = 0,
@@ -45,7 +45,44 @@ Game = class({
 
 	ctor = function (self, co)
 		self.co = co
-		self.bgm = Resources.load('assets/bgm/bgm.ogg', Music)
+		self.sfxs = {
+			['attack/disc_gun1'] = Resources.load('assets/sfx/attack/disc_gun1.wav', Sfx),
+			['attack/knife1'] = Resources.load('assets/sfx/attack/knife1.wav', Sfx),
+			['attack/knife2'] = Resources.load('assets/sfx/attack/knife2.wav', Sfx),
+			['attack/laser1'] = Resources.load('assets/sfx/attack/laser1.wav', Sfx),
+			['attack/laser2'] = Resources.load('assets/sfx/attack/laser2.wav', Sfx),
+			['attack/machine_gun1'] = Resources.load('assets/sfx/attack/machine_gun1.wav', Sfx),
+			['attack/machine_gun2'] = Resources.load('assets/sfx/attack/machine_gun2.wav', Sfx),
+			['attack/machine_gun3'] = Resources.load('assets/sfx/attack/machine_gun3.wav', Sfx),
+			['attack/mines1'] = Resources.load('assets/sfx/attack/mines1.wav', Sfx),
+			['attack/pistol1'] = Resources.load('assets/sfx/attack/pistol1.wav', Sfx),
+			['attack/pistol2'] = Resources.load('assets/sfx/attack/pistol2.wav', Sfx),
+			['attack/pistol3'] = Resources.load('assets/sfx/attack/pistol3.wav', Sfx),
+			['attack/rifle1'] = Resources.load('assets/sfx/attack/rifle1.wav', Sfx),
+			['attack/rifle2'] = Resources.load('assets/sfx/attack/rifle2.wav', Sfx),
+			['attack/rifle3'] = Resources.load('assets/sfx/attack/rifle3.wav', Sfx),
+			['attack/shotgun1'] = Resources.load('assets/sfx/attack/shotgun1.wav', Sfx),
+			['attack/shotgun2'] = Resources.load('assets/sfx/attack/shotgun2.wav', Sfx),
+			['attack/shotgun3'] = Resources.load('assets/sfx/attack/shotgun3.wav', Sfx),
+			['attack/submachine_gun1'] = Resources.load('assets/sfx/attack/submachine_gun1.wav', Sfx),
+			['explode/mines1'] = Resources.load('assets/sfx/explode/mines1.wav', Sfx),
+			['gui/ok'] = Resources.load('assets/sfx/gui/ok.wav', Sfx),
+			['gui/play'] = Resources.load('assets/sfx/gui/play.wav', Sfx),
+			['gui/tutorial'] = Resources.load('assets/sfx/gui/tutorial.wav', Sfx),
+			['pick/firearm1'] = Resources.load('assets/sfx/pick/firearm1.wav', Sfx),
+			['pick/firearm2'] = Resources.load('assets/sfx/pick/firearm2.wav', Sfx),
+			['pick/firearm3'] = Resources.load('assets/sfx/pick/firearm3.wav', Sfx),
+			['pick/firearm4'] = Resources.load('assets/sfx/pick/firearm4.wav', Sfx),
+			['pick/knife1'] = Resources.load('assets/sfx/pick/knife1.wav', Sfx),
+			['pick/knife2'] = Resources.load('assets/sfx/pick/knife2.wav', Sfx),
+			['gameover'] = Resources.load('assets/sfx/gameover.wav', Sfx)
+		}
+		self.bgms = {
+			{
+				name = 'bgm',
+				resource = Resources.load('assets/bgm/bgm.ogg', Music)
+			}
+		}
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnemyBlocked, self.isWeaponBlocked, self.isBulletBlocked =
@@ -166,6 +203,37 @@ Game = class({
 
 		return self
 	end,
+	-- Plays the specific SFX.
+	playSfx = function (self, keyOrKeys)
+		local key = nil
+		if type(keyOrKeys) == 'string' then
+			key = keyOrKeys
+		else
+			key = any(keyOrKeys)
+		end
+		local resource = self.sfxs[key]
+		if resource == nil then
+			return self
+		end
+		play(resource)
+
+		return self
+	end,
+	-- Plays the specific BGM.
+	playBgm = function (self, keyOrIndex)
+		local index = nil
+		if type(keyOrIndex) == 'string' then
+			local _ = nil
+			_, index = find(self.bgms, function (bgm, _)
+				return bgm.name == keyOrIndex
+			end)
+		else
+			index = keyOrIndex
+		end
+		play(self.bgms[index].resource, true, 2)
+
+		return self
+	end,
 
 	-- Loads game data.
 	load = function (self)
@@ -225,7 +293,7 @@ Game = class({
 		local sfxVol, bgmVol =
 			self:getOption('audio/sfx/volume') or 0.8, self:getOption('audio/bgm/volume') or 0.8
 		volume(sfxVol, bgmVol)
-		play(self.bgm, true, 2)
+		self:playBgm('bgm')
 
 		self:play(false, true)
 
@@ -914,9 +982,10 @@ Game = class({
 		return self
 	end,
 
+	-- Handles character's death.
 	_onCharacterDead = function (self, sender, reason, byWhom)
 		if self:getOption('gameplay/blood/show') then
-			if byWhom ~= nil and byWhom.isMelee ~= nil and byWhom:isMelee() then
+			if byWhom ~= nil and byWhom.isBlade ~= nil and byWhom:isBlade() then
 				local sprite1, sprite2 = sender:corpse(true)
 				sprite1, sprite2 = Resources.load(sprite1), Resources.load(sprite2)
 				sprite1:play('idle', false)

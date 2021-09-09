@@ -43,10 +43,14 @@ Hero = class({
 							local hadArmour = v:armour()
 							v:hurt(weapon)
 							local weapon = v:weapon()
-							if weapon ~= nil and hadArmour == nil then
-								v:setWeapon(nil)
-								weapon:revive()
-								table.insert(self._game.pending, weapon)
+							if weapon ~= nil then
+								if hadArmour == nil then
+									v:setWeapon(nil)
+									weapon:revive()
+									table.insert(self._game.pending, weapon)
+								end
+
+								self._game:playSfx(weapon:sfxs()['attack'])
 							end
 						end
 					end
@@ -60,10 +64,14 @@ Hero = class({
 						local hadArmour = self:armour()
 						self:hurt(v)
 						local weapon = self:weapon()
-						if weapon ~= nil and hadArmour == nil then
-							self:setWeapon(nil)
-							weapon:revive()
-							table.insert(self._game.pending, weapon)
+						if weapon ~= nil then
+							if hadArmour == nil then
+								self:setWeapon(nil)
+								weapon:revive()
+								table.insert(self._game.pending, weapon)
+							end
+
+							self._game:playSfx(weapon:sfxs()['attack'])
 						end
 					end
 				elseif self._picking then
@@ -79,6 +87,8 @@ Hero = class({
 						v:kill('picked', nil)
 
 						self._game.room.finished(self)
+
+						self._game:playSfx(v:sfxs()['pick'])
 					end
 				end
 			elseif v.group == 'armour' then
@@ -90,6 +100,8 @@ Hero = class({
 							v:kill('picked', nil)
 
 							self._game.room.finished(self)
+
+							self._game:playSfx(v:sfxs()['pick'])
 						end
 					end
 				end

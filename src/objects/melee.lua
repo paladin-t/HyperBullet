@@ -11,6 +11,7 @@ Melee = class({
 	--[[ Variables. ]]
 
 	_shape = nil, _affecting = false,
+	_isBlade = false,
 	_preInterval = 0.05, _postInterval = 0.05,
 
 	--[[ Constructor. ]]
@@ -24,6 +25,7 @@ Melee = class({
 		self._name = cfg['name']
 
 		self._shape = cfg['shape']
+		self._isBlade = cfg['blade']
 		self._preInterval, self._postInterval = cfg['pre_interval'], cfg['post_interval']
 		self._interval = cfg['interval']
 	end,
@@ -38,6 +40,9 @@ Melee = class({
 
 	isMelee = function (self)
 		return true
+	end,
+	isBlade = function (self)
+		return self._isBlade
 	end,
 
 	interval = function (self)

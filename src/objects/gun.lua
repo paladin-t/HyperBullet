@@ -125,6 +125,9 @@ Gun = class({
 			end
 		end
 
+		-- Play SFX.
+		self._game:playSfx(self:sfxs()['attack'])
+
 		-- Finish.
 		return true, bullet, false, self._recoil
 	end,

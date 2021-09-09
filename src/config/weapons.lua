@@ -32,15 +32,21 @@ Weapons = {
 		['atk'] = 1,
 		['accuracy'] = nil,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['blade'] = true,
 		['pre_interval'] = 0.05, ['post_interval'] = 0.05,
 		['interval'] = 0.15,
 		['throwing_speed'] = 550, ['throwing_interval'] = nil,
 		['offset'] = 12,
+		['dual'] = false,
 		['shape'] = {
 			['type'] = 'circle',
 			['r'] = 8
 		},
-		['effect'] = nil
+		['effect'] = nil,
+		['sfxs'] = {
+			['pick'] = { 'pick/knife1', 'pick/knife2' },
+			['attack'] = { 'attack/knife1', 'attack/knife2' }
+		}
 	},
 
 	['pistol'] = {
@@ -56,6 +62,7 @@ Weapons = {
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 8, 20)
@@ -74,7 +81,10 @@ Weapons = {
 
 			return emitter, 0.8
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm2',
+			['attack'] = { 'attack/pistol1', 'attack/pistol2', 'attack/pistol3' }
+		}
 	},
 	['dual_pistols'] = {
 		['class'] = 'Gun',
@@ -89,6 +99,7 @@ Weapons = {
 		['interval'] = 0.25,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = true,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 8, 20)
@@ -107,7 +118,10 @@ Weapons = {
 
 			return emitter, 0.8
 		end,
-		['dual'] = true
+		['sfxs'] = {
+			['pick'] = 'pick/firearm2',
+			['attack'] = { 'attack/pistol1', 'attack/pistol2', 'attack/pistol3' }
+		}
 	},
 	['shotgun'] = {
 		['class'] = 'Gun',
@@ -122,6 +136,7 @@ Weapons = {
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.4,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 8, 20)
@@ -142,7 +157,10 @@ Weapons = {
 
 			return emitter, 1
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm3',
+			['attack'] = { 'attack/shotgun1', 'attack/shotgun2', 'attack/shotgun3' }
+		}
 	},
 	['submachine_gun'] = {
 		['class'] = 'Gun',
@@ -157,6 +175,7 @@ Weapons = {
 		['interval'] = 0.15,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.4,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 4, 20)
@@ -176,7 +195,10 @@ Weapons = {
 
 			return emitter, 0.3
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm4',
+			['attack'] = 'attack/submachine_gun1'
+		}
 	},
 	['machine_gun'] = {
 		['class'] = 'Gun',
@@ -191,6 +213,7 @@ Weapons = {
 		['interval'] = 0.05,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 8, 40)
@@ -210,7 +233,10 @@ Weapons = {
 
 			return emitter, 0.3
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm4',
+			['attack'] = { 'attack/machine_gun1', 'attack/machine_gun2', 'attack/machine_gun3' }
+		}
 	},
 	['rifle'] = {
 		['class'] = 'Gun',
@@ -225,6 +251,7 @@ Weapons = {
 		['interval'] = 0.75,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 8, 20)
@@ -245,7 +272,10 @@ Weapons = {
 
 			return emitter, 0.6
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm1',
+			['attack'] = { 'attack/rifle1', 'attack/rifle2', 'attack/rifle3' }
+		}
 	},
 	['laser'] = {
 		['class'] = 'Gun',
@@ -260,10 +290,14 @@ Weapons = {
 		['interval'] = 0.65,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			return nil, nil
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm4',
+			['attack'] = { 'attack/laser1', 'attack/laser2' }
+		}
 	},
 	['disc_gun'] = {
 		['class'] = 'Gun',
@@ -278,6 +312,7 @@ Weapons = {
 		['interval'] = 0.45,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.4,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
 			local emitter = beParticles.emitter.create(x, y, 84, 60)
@@ -297,7 +332,10 @@ Weapons = {
 
 			return emitter, 0.6
 		end,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm3',
+			['attack'] = 'attack/disc_gun1'
+		}
 	},
 	['mines'] = {
 		['class'] = 'Gun',
@@ -312,7 +350,11 @@ Weapons = {
 		['interval'] = 0.55,
 		['throwing_speed'] = 450, ['throwing_interval'] = 0.3,
 		['offset'] = 12,
+		['dual'] = false,
 		['effect'] = nil,
-		['dual'] = false
+		['sfxs'] = {
+			['pick'] = 'pick/firearm4',
+			['attack'] = 'attack/mines1'
+		}
 	}
 }

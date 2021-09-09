@@ -16,19 +16,17 @@ Bullet = class({
 	_ownerGroup = nil,
 
 	_box = nil, _maxBox = nil,
+	_moveSpeed = 0, _direction = nil,
+	_lifetime = 1, _ticks = 0,
 	_penetrable = false,
 	_bouncy = false,
 	_explosive = false,
-	_direction = nil,
-	_moveSpeed = 0,
-	_lifetime = 1, _ticks = 0,
+	_sfxs = nil,
 
 	--[[ Constructor. ]]
 
 	ctor = function (self, resource, isBlocked, options)
 		Object.ctor(self, resource, options.box, isBlocked)
-
-		self._color = Color.new(255, 0, 0)
 
 		if options.atk then
 			self.atk = options.atk
@@ -42,7 +40,9 @@ Bullet = class({
 		self._penetrable = options.penetrable
 		self._bouncy = options.bouncy
 		self._explosive = options.explosive
+		self._sfxs = options.sfxs
 
+		self._color = Color.new(255, 0, 0)
 		self._slidable = 0
 	end,
 
@@ -199,7 +199,8 @@ Bullet = class({
 				game = self._game,
 				atk = self.atk,
 				box = self.box,
-				lifetime = 2
+				lifetime = 2,
+				sfxs = self._sfxs
 			}
 		)
 		mine.x, mine.y = self.x, self.y

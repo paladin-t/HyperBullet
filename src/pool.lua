@@ -51,7 +51,8 @@ Pool = class({
 					lifetime = cfg['lifetime'],
 					penetrable = cfg['penetrable'],
 					bouncy = cfg['bouncy'],
-					explosive = cfg['explosive']
+					explosive = cfg['explosive'],
+					sfxs = cfg['sfxs']
 				}
 			)
 		end

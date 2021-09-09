@@ -19,6 +19,8 @@ Armour = class({
 	_owner = nil,
 	_name = nil,
 
+	_sfxs = nil,
+
 	--[[ Constructor. ]]
 
 	ctor = function (self, options)
@@ -35,6 +37,8 @@ Armour = class({
 
 		self._game = options.game
 		self._name = cfg['name']
+
+		self._sfxs = cfg['sfxs']
 	end,
 
 	--[[ Meta methods. ]]
@@ -61,6 +65,10 @@ Armour = class({
 
 	name = function (self)
 		return self._name
+	end,
+
+	sfxs = function (self)
+		return self._sfxs
 	end,
 
 	behave = function (self, delta, _1)

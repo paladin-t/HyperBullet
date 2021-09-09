@@ -44,6 +44,8 @@ States = {
 							:resize(P(100), 16)
 							:on('clicked', function (sender)
 								game:play(true, true)
+
+								game:playSfx('gui/play')
 							end)
 					)
 					:addChild(
@@ -53,6 +55,8 @@ States = {
 							:resize(P(100), 16)
 							:on('clicked', function (sender)
 								game:tutorial(1)
+
+								game:playSfx('gui/tutorial')
 							end)
 					)
 					:addChild(
@@ -62,6 +66,8 @@ States = {
 							:resize(P(100), 16)
 							:on('clicked', function (sender)
 								game.state = States['options'](game)
+
+								game:playSfx('gui/ok')
 							end)
 					)
 					:addChild(
@@ -70,6 +76,8 @@ States = {
 							:put(0, 51)
 							:resize(P(100), 16)
 							:on('clicked', function (sender)
+								game:playSfx('gui/ok')
+
 								exit()
 							end)
 					)
@@ -134,6 +142,8 @@ States = {
 				elseif navConfirm() then
 					if widgets.context and widgets.context.focus == nil then
 						game:play(true, true)
+
+						game:playSfx('gui/play')
 					else
 						widgets:navigate('press')
 					end
@@ -184,6 +194,8 @@ States = {
 							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
 						volume(sfxVol, bgmVol)
 						sender:setValue('SFX: ' .. (numberOptionToBoolean('audio/sfx/volume') and 'ON ' or 'OFF'))
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -197,6 +209,8 @@ States = {
 							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
 						volume(sfxVol, bgmVol)
 						sender:setValue('BGM: ' .. (numberOptionToBoolean('audio/bgm/volume') and 'ON ' or 'OFF'))
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -214,6 +228,8 @@ States = {
 						local w, h = 640, 360
 						Application.resize(w, h)
 						game:setOption('video/canvas/scale', 1)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -225,6 +241,8 @@ States = {
 						local w, h = 640, 360
 						Application.resize(w * 2, h * 2)
 						game:setOption('video/canvas/scale', 2)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -236,6 +254,8 @@ States = {
 						local w, h = 640, 360
 						Application.resize(w * 3, h * 3)
 						game:setOption('video/canvas/scale', 3)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -246,6 +266,8 @@ States = {
 					:on('clicked', function (sender)
 						Application.resize('fullscreen')
 						game:setOption('video/canvas/scale', 'full')
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -262,6 +284,8 @@ States = {
 					:on('clicked', function (sender)
 						game:setOption('gameplay/blood/show', not game:getOption('gameplay/blood/show'))
 						sender:setValue('SHOW BLOOD: ' .. (game:getOption('gameplay/blood/show') and 'ON ' or 'OFF'))
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -272,6 +296,8 @@ States = {
 					:on('clicked', function (sender)
 						game:save()
 						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 		local text_ = Text.new(
@@ -303,6 +329,8 @@ States = {
 				elseif navCancel() then
 					if widgets.context and widgets.context.focus == nil then
 						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
 					else
 						game:save()
 						widgets:navigate('cancel')
@@ -455,6 +483,8 @@ States = {
 					:on('clicked', function (sender)
 						game:save()
 						game:play(true, true)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
@@ -465,6 +495,8 @@ States = {
 					:on('clicked', function (sender)
 						game:save()
 						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 		local ticks = 0
@@ -483,6 +515,8 @@ States = {
 			}
 		)
 
+		game:playSfx('gameover')
+
 		return {
 			playing = false,
 			update = function (self, delta)
@@ -497,6 +531,8 @@ States = {
 					if restart() then
 						game:save()
 						game:play(true, true)
+
+						game:playSfx('gui/ok')
 					elseif navPrev() then
 						widgets:navigate('prev')
 					elseif navNext() then
@@ -505,6 +541,8 @@ States = {
 						if widgets.context and widgets.context.focus == nil then
 							game:save()
 							game:play(true, true)
+
+							game:playSfx('gui/ok')
 						else
 							widgets:navigate('press')
 						end
@@ -579,6 +617,8 @@ States = {
 					:on('clicked', function (sender)
 						game:save()
 						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
 					end)
 			)
 		local ticks = 0
@@ -611,6 +651,8 @@ States = {
 					if restart() then
 						game:save()
 						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
 					elseif navPrev() then
 						widgets:navigate('prev')
 					elseif navNext() then
@@ -619,6 +661,8 @@ States = {
 						if widgets.context and widgets.context.focus == nil then
 							game:save()
 							game.state = States['title'](game)
+
+							game:playSfx('gui/ok')
 						else
 							widgets:navigate('press')
 						end

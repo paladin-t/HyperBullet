@@ -27,6 +27,7 @@ Weapon = class({
 	_offset = 0,
 	_secondary = nil, _isSecondary = false,
 	_effect = nil,
+	_sfxs = nil,
 
 	--[[ Constructor. ]]
 
@@ -54,6 +55,7 @@ Weapon = class({
 			cfg['throwing_speed'], cfg['throwing_interval'], 0
 		self._offset = cfg['offset']
 		self._effect = cfg['effect']
+		self._sfxs = cfg['sfxs']
 	end,
 
 	--[[ Meta methods. ]]
@@ -106,6 +108,9 @@ Weapon = class({
 	isMelee = function (self)
 		return false
 	end,
+	isBlade = function (self)
+		return self
+	end,
 
 	interval = function (self)
 		error('Implement me.')
@@ -148,6 +153,10 @@ Weapon = class({
 		self._isSecondary = isSecondary
 
 		return self
+	end,
+
+	sfxs = function (self)
+		return self._sfxs
 	end,
 
 	attack = function (self, dir, consumption, accuracy)
