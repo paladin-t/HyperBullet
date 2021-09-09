@@ -2,12 +2,11 @@
 
 Hyper Bullet is a top-down shoot'em up game.
 
-**Mockup**
+**Prototype**
 
-![Mockup](https://user-images.githubusercontent.com/2062224/131307693-1b2949b7-fe54-406d-89f3-bde197da81b8.png)
+![Prototype](https://user-images.githubusercontent.com/2062224/132652060-02ddb696-0c16-4b82-87a0-ea38bd58b287.png)
 
-![Mockup](https://user-images.githubusercontent.com/2062224/131307542-198bcf88-75a7-45be-a0af-7052bb729420.gif)
-
+![Prototype](https://user-images.githubusercontent.com/2062224/132652072-78ab152d-821b-4786-9275-adb08c4611fe.gif)
 
 # About this game
 
