@@ -11,6 +11,86 @@ Scenes = {
 	['room1'] = function (game, index)
 		print('Build room1 for level ' .. tostring(index) .. '.')
 
+		local weaponCandidates = nil
+		if index == 1 then
+			weaponCandidates = {
+				{
+					class = 'Gun',
+					type = 'pistol',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'dual_pistols',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'shotgun',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'submachine_gun',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'machine_gun',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'rifle',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'laser',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'disc_gun',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Gun',
+					type = 'mines',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Melee',
+					type = 'knife',
+					capacity = nil,
+					position = nil
+				}
+			}
+		else
+			weaponCandidates = {
+				{
+					class = 'Gun',
+					type = 'pistol',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Melee',
+					type = 'knife',
+					capacity = nil,
+					position = nil
+				}
+			}
+		end
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
 		if index == 1 then
 			enemyCandidates
@@ -93,7 +173,49 @@ Scenes = {
 					Vec2.new(-32, 160)
 				}
 			},
-			--[[ Initial weapons.       ]] {
+			--[[ Initial weapons.       ]] weaponCandidates,
+			--[[ Enemy sequence.        ]] coroutine.create(
+				function ()
+					while true do
+						local data, _ = enemyCandidates:next()
+						coroutine.yield(data.type)
+					end
+				end
+			),
+			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
+				maxEnemyCount = 3,
+				finishingCondition = function (game)
+					if game.killingCount >= 10 then
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
+
+						return true
+					end
+
+					return false
+				end
+			},
+			--[[ Clear colors.          ]] {
+				Color.new(235, 117, 206),
+				Color.new(10, 191, 150),
+				Color.new(203, 94, 41)
+			},
+			--[[ Effects.               ]] nil
+		)
+	end,
+	['room2'] = function (game, index)
+		print('Build room2 for level ' .. tostring(index) .. '.')
+
+		local weaponCandidates = nil
+		if index == 1 then
+			weaponCandidates = {
 				{
 					class = 'Gun',
 					type = 'pistol',
@@ -154,46 +276,23 @@ Scenes = {
 					capacity = nil,
 					position = nil
 				}
-			},
-			--[[ Enemy sequence.        ]] coroutine.create(
-				function ()
-					while true do
-						local data, _ = enemyCandidates:next()
-						coroutine.yield(data.type)
-					end
-				end
-			),
-			--[[ Other options.         ]] {
-				initialWeaponsAngle = nil,
-				maxEnemyCount = 3,
-				finishingCondition = function (game)
-					if game.killingCount >= 10 then
-						game.state = States['wait'](
-							game,
-							1,
-							nil,
-							function ()
-								game:play(true, false)
-							end
-						)
-
-						return true
-					end
-
-					return false
-				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(235, 117, 206),
-				Color.new(10, 191, 150),
-				Color.new(203, 94, 41)
-			},
-			--[[ Effects.               ]] nil
-		)
-	end,
-	['room2'] = function (game, index)
-		print('Build room2 for level ' .. tostring(index) .. '.')
-
+			}
+		else
+			weaponCandidates = {
+				{
+					class = 'Gun',
+					type = 'pistol',
+					capacity = nil,
+					position = nil
+				},
+				{
+					class = 'Melee',
+					type = 'knife',
+					capacity = nil,
+					position = nil
+				}
+			}
+		end
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
 		if index == 1 then
 			enemyCandidates
@@ -276,68 +375,7 @@ Scenes = {
 					Vec2.new(-32, 160)
 				}
 			},
-			--[[ Initial weapons.       ]] {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'dual_pistols',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'shotgun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'submachine_gun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'machine_gun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'rifle',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'laser',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'disc_gun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'mines',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil
-				}
-			},
+			--[[ Initial weapons.       ]] weaponCandidates,
 			--[[ Enemy sequence.        ]] coroutine.create(
 				function ()
 					while true do

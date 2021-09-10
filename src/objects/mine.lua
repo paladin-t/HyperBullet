@@ -57,7 +57,7 @@ Mine = class({
 		-- Interact with objects.
 		if self._timeout and not self._affected then
 			for _, v in ipairs(self._game.objects) do
-				if v.group == 'hero' then
+				if not DEBUG_IMMORTAL and v.group == 'hero' then
 					if v:intersects(self) then -- Hero intersects with mine.
 						local hadArmour = v:armour()
 						v:hurt(self)

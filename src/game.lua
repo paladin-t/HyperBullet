@@ -304,7 +304,6 @@ Game = class({
 							game = self,
 						}
 					)
-						:setDisappearable(false)
 						:float(2)
 						:on('picked', function (sender, owner)
 							sender:off('picked')
@@ -318,6 +317,9 @@ Game = class({
 								end)
 							end
 						end)
+					if self.levelIndex == 1 then
+						weapon:setDisappearable(false)
+					end
 					if w.capacity ~= nil then
 						weapon:setCapacity(w.capacity)
 					end
