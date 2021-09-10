@@ -19,6 +19,7 @@ Object = class({
 	box = nil,
 
 	_dead = false,
+	_invincible = nil, _invincibleColor = nil,
 	_disappearable = true, _disappearing = nil, _disappearingTicks = 0,
 	_collider = nil,
 
@@ -92,7 +93,7 @@ Object = class({
 			self:kill('killed', other)
 		end
 
-		return self
+		return true
 	end,
 	dead = function (self)
 		return self._dead
@@ -108,6 +109,14 @@ Object = class({
 		self._dead = false
 		self._disappearing, self._disappearingTicks = nil, 0
 		self._shapeHeadPosition = nil
+
+		return self
+	end,
+	invincible = function (self)
+		return self._invincible, self._invincibleColor
+	end,
+	setInvincible = function (self, invincible)
+		self._invincible = invincible
 
 		return self
 	end,
@@ -293,15 +302,35 @@ Object = class({
 		-- Draw if visible.
 		if visible then
 			if sprite ~= nil then
+				if self._invincible ~= nil then
+					if math.floor(self._invincible * 15) % 2 == 1 then
+						self._invincibleColor = Color.new(255, 255, 255, 16)
+					else
+						self._invincibleColor = nil
+					end
+					self._invincible = self._invincible - delta
+					if self._invincible <= 0 then
+						self._invincible, self._invincibleColor = nil, nil
+					end
+				end
 				local angle = self._spriteAngle
 				if self.angleOffset ~= nil then
 					angle = angle + self.angleOffset
 				end
-				spr(
-					sprite,
-					dstX, dstY, dstW, dstH,
-					angle
-				)
+				if self._invincibleColor == nil then
+					spr(
+						sprite,
+						dstX, dstY, dstW, dstH,
+						angle
+					)
+				else
+					spr(
+						sprite,
+						dstX, dstY, dstW, dstH,
+						angle, nil,
+						self._invincibleColor
+					)
+				end
 			elseif shapeSprites ~= nil then
 				if self._shapeHeadPosition == nil then
 					self._shapeHeadPosition = Vec2.new(dstX, dstY)

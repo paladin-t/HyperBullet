@@ -40,18 +40,7 @@ Hero = class({
 					local affecting, shape = weapon:affecting()
 					if affecting then
 						if v:intersectsWithShape(shape) then -- Enemy intersects with hero's melee.
-							local hadArmour = v:armour()
-							v:hurt(weapon)
-							local weapon_ = v:weapon()
-							if weapon_ ~= nil then
-								if hadArmour == nil then
-									v:setWeapon(nil)
-									weapon_:revive()
-									table.insert(self._game.pending, weapon_)
-								end
-							end
-
-							self._game:playSfx(weapon:sfxs()['attack'])
+							self._game:hurtWithWeapon(weapon, v)
 						end
 					end
 				end
@@ -61,65 +50,31 @@ Hero = class({
 					if v:ownerGroup() ~= 'hero' and self:intersects(v) then -- Hero intersects with a weapon which is being thrown.
 						v:throw(nil)
 
-						local hadArmour = self:armour()
-						self:hurt(v)
-						local weapon = self:weapon()
-						if weapon ~= nil then
-							if hadArmour == nil then
-								self:setWeapon(nil)
-								weapon:revive()
-								table.insert(self._game.pending, weapon)
-							end
-						end
-
-						self._game:playSfx(v:sfxs()['attack'])
+						self._game:hurtWithWeapon(v, self)
 					end
 				elseif self._picking then
 					if self:intersects(v) then -- Hero intersects with weapon for picking.
-						local weapon = self:weapon()
-						if weapon ~= nil then
-							self:setWeapon(nil)
-							weapon:revive()
-							table.insert(self._game.pending, weapon)
+						if self._game:pickWeapon(self, v) then
+							self._game.room.finished(self)
 						end
-
-						self:setWeapon(v)
-						v:kill('picked', nil)
-
-						self._game.room.finished(self)
-
-						self._game:playSfx(v:sfxs()['pick'])
 					end
 				end
 			elseif v.group == 'armour' then
 				if self._picking then
 					if self:intersects(v) then -- Hero intersects with armour for picking.
-						local armour = self:armour()
-						if armour == nil then
-							self:setArmour(v)
-							v:kill('picked', nil)
-
+						if self._game:pickArmour(self, v) then
 							self._game.room.finished(self)
-
-							self._game:playSfx(v:sfxs()['pick'])
 						end
 					end
 				end
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'hero' then
-					if not DEBUG_IMMORTAL and self:intersects(v) then -- Hero intersects with bullet.
-						local hadArmour = self:armour()
-						self:hurt(v)
+					if not DEBUG_IMMORTAL and not v:explosive() and self:intersects(v) then -- Hero intersects with bullet.
 						if not v:penetrable() then
 							v:kill('killed', self)
 						end
-						local weapon = self:weapon()
-						if weapon ~= nil and hadArmour == nil then
-							self:setWeapon(nil)
-							weapon:revive()
-							table.insert(self._game.pending, weapon)
-						end
+						self._game:hurtWithBullet(v, self)
 					end
 				end
 			end

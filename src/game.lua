@@ -149,6 +149,76 @@ Game = class({
 		return self
 	end,
 
+	-- Hurts the specific character with weapon.
+	hurtWithWeapon = function (self, weapon, character)
+		local hadArmour = character:armour()
+		local hurt = character:hurt(weapon)
+		local weapon_ = character:weapon()
+		if hurt and weapon_ ~= nil and hadArmour == nil then
+			character:setWeapon(nil)
+			weapon_:revive()
+			table.insert(self.pending, weapon_)
+		end
+
+		self:playSfx(weapon:sfxs()['attack'])
+
+		return true
+	end,
+	-- Hurts the specific character with bullet.
+	hurtWithBullet = function (self, bullet, character)
+		local hadArmour = character:armour()
+		local hurt = character:hurt(bullet)
+		local weapon_ = character:weapon()
+		if hurt and weapon_ ~= nil and hadArmour == nil then
+			character:setWeapon(nil)
+			weapon_:revive()
+			table.insert(self.pending, weapon_)
+		end
+
+		return true
+	end,
+	-- Hurts the specific character with mine.
+	hurtWithMine = function (self, mine, character)
+		local hadArmour = character:armour()
+		local hurt = character:hurt(mine)
+		local weapon_ = character:weapon()
+		if hurt and weapon_ ~= nil and hadArmour == nil then
+			character:setWeapon(nil)
+			weapon_:revive()
+			table.insert(self.pending, weapon_)
+		end
+
+		return true
+	end,
+	-- Picks the specific weapon.
+	pickWeapon = function (self, character, weapon)
+		local weapon_ = character:weapon()
+		if weapon_ ~= nil then
+			character:setWeapon(nil)
+			weapon_:revive()
+			table.insert(self.pending, weapon_)
+		end
+
+		character:setWeapon(weapon)
+		weapon:kill('picked', nil)
+
+		self:playSfx(weapon:sfxs()['pick'])
+
+		return true
+	end,
+	-- Picks the specific armour.
+	pickArmour = function (self, character, armour)
+		local armour_ = character:armour()
+		if armour_ ~= nil then
+			return false
+		end
+		character:setArmour(armour)
+		armour:kill('picked', nil)
+
+		self:playSfx(armour:sfxs()['pick'])
+
+		return true
+	end,
 	-- Adds the specific number of killing to the current game.
 	addKilling = function (self, num)
 		if num == nil then
@@ -172,12 +242,32 @@ Game = class({
 
 		return self
 	end,
-	-- Draws the acronym background at the specific position.
-	acronymBackground = function (self, x, y)
+	-- Draws the acronym background at the specific position for gun.
+	acronymGunBackground = function (self, x, y)
 		tex(
 			self._bank,
 			x - 8, y - 8, 16, 16,
 			3 * 16, 28 * 16, 16, 16
+		)
+
+		return self
+	end,
+	-- Draws the acronym background at the specific position for melee.
+	acronymMeleeBackground = function (self, x, y)
+		tex(
+			self._bank,
+			x - 8, y - 8, 16, 16,
+			4 * 16, 28 * 16, 16, 16
+		)
+
+		return self
+	end,
+	-- Draws the acronym background at the specific position for armour.
+	acronymArmourBackground = function (self, x, y)
+		tex(
+			self._bank,
+			x - 8, y - 8, 16, 16,
+			5 * 16, 28 * 16, 16, 16
 		)
 
 		return self
@@ -840,7 +930,7 @@ Game = class({
 	end,
 	-- Removes all dead objects from the objects collection.
 	_removeDeadObjects = function (self)
-		local weaponAndArmourCount, firstWeapon = 0, nil
+		local weaponAndArmourCount, firstWeaponOrArmour = 0, nil
 		local dead = nil
 		for i = 1, #self.objects do
 			local obj = self.objects[i]
@@ -851,13 +941,13 @@ Game = class({
 				table.insert(dead, 1, i)
 			elseif obj.group == 'weapon' or obj.group == 'armour' then
 				weaponAndArmourCount = weaponAndArmourCount + 1
-				if firstWeapon == nil and obj:disappearable() then
-					firstWeapon = obj
+				if firstWeaponOrArmour == nil and obj:disappearable() then
+					firstWeaponOrArmour = obj
 				end
 			end
 		end
-		if weaponAndArmourCount > 5 and firstWeapon ~= nil then -- Up to 5.
-			firstWeapon:disappear()
+		if weaponAndArmourCount > 5 and firstWeaponOrArmour ~= nil then -- Up to 5.
+			firstWeaponOrArmour:disappear()
 		end
 		if dead ~= nil then
 			for _, idx in ipairs(dead) do

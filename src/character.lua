@@ -68,6 +68,12 @@ Character = class({
 	--[[ Methods. ]]
 
 	hurt = function (self, other)
+		local invincible, _ = self:invincible()
+		if invincible then
+			return false
+		end
+		self:setInvincible(1.5)
+
 		local armour = self:armour()
 		if armour ~= nil then
 			armour.hp = math.max(armour.hp - other.atk, 0)
@@ -78,12 +84,10 @@ Character = class({
 				table.insert(self._game.pending, armour)
 			end
 
-			return self
+			return false
 		end
 
-		Object.hurt(self, other)
-
-		return self
+		return Object.hurt(self, other)
 	end,
 	corpse = function (self, splitted)
 		if splitted then
@@ -279,6 +283,7 @@ Character = class({
 		end
 
 		-- Update and draw legs.
+		local _, invincibleCol = self:invincible()
 		local spriteLegs = self._spriteLegs
 		if spriteLegs ~= nil then
 			if movementLength ~= 0 then
@@ -289,25 +294,36 @@ Character = class({
 				if secondary ~= nil then
 					angle = angle + math.pi * 0.5
 				end
-				spr( -- Draw shadow effect.
-					spriteLegs,
-					dstX + 3, dstY + 3, dstW, dstH,
-					angle, nil,
-					COLOR_SHADOW
-				)
-				spr(
-					spriteLegs,
-					dstX, dstY, dstW, dstH,
-					angle
-				)
+				if invincibleCol == nil then
+					spr( -- Draw shadow effect.
+						spriteLegs,
+						dstX + 3, dstY + 3, dstW, dstH,
+						angle, nil,
+						COLOR_SHADOW
+					)
+					spr(
+						spriteLegs,
+						dstX, dstY, dstW, dstH,
+						angle
+					)
+				else
+					spr(
+						spriteLegs,
+						dstX, dstY, dstW, dstH,
+						angle, nil,
+						invincibleCol
+					)
+				end
 			end
 		end
 
 		-- Update and draw this character and weapon.
-		if weapon ~= nil then
-			weapon:shadow(delta, 3, 3) -- Draw shadow effect.
+		if invincibleCol == nil then
+			if weapon ~= nil then
+				weapon:shadow(delta, 3, 3) -- Draw shadow effect.
+			end
+			self:shadow(delta, 3, 3) -- Draw shadow effect.
 		end
-		self:shadow(delta, 3, 3) -- Draw shadow effect.
 
 		if before then
 			weapon:update(delta)

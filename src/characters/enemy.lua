@@ -79,18 +79,7 @@ Enemy = class({
 					local affecting, shape = weapon:affecting()
 					if affecting then
 						if not DEBUG_IMMORTAL and v:intersectsWithShape(shape) then -- Hero intersects with enemy's melee.
-							local hadArmour = v:armour()
-							v:hurt(weapon)
-							local weapon_ = v:weapon()
-							if weapon_ ~= nil then
-								if hadArmour == nil then
-									v:setWeapon(nil)
-									weapon_:revive()
-									table.insert(self._game.pending, weapon_)
-								end
-							end
-
-							self._game:playSfx(weapon:sfxs()['attack'])
+							self._game:hurtWithWeapon(weapon, v)
 						end
 					end
 				end
@@ -104,32 +93,11 @@ Enemy = class({
 					if v:ownerGroup() ~= 'enemy' and self:intersects(v) then -- Enemy intersects with a weapon which is being thrown.
 						v:throw(nil)
 
-						local hadArmour = self:armour()
-						self:hurt(v)
-						local weapon = self:weapon()
-						if weapon ~= nil then
-							if hadArmour == nil then
-								self:setWeapon(nil)
-								weapon:revive()
-								table.insert(self._game.pending, weapon)
-							end
-						end
-
-						self._game:playSfx(v:sfxs()['attack'])
+						self._game:hurtWithWeapon(v, self)
 					end
 				elseif self._picking then
 					if self:intersects(v) then -- Enemy intersects with weapon for picking.
-						local weapon = self:weapon()
-						if weapon ~= nil then
-							self:setWeapon(nil)
-							weapon:revive()
-							table.insert(self._game.pending, weapon)
-						end
-
-						self:setWeapon(v)
-						v:kill('picked', nil)
-
-						self._game:playSfx(v:sfxs()['pick'])
+						self._game:pickWeapon(self, v)
 					end
 				end
 			elseif v.group == 'armour' then
@@ -137,18 +105,11 @@ Enemy = class({
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'enemy' then
-					if self:intersects(v) then -- Enemy intersects with bullet.
-						local hadArmour = self:armour()
-						self:hurt(v)
+					if not v:explosive() and self:intersects(v) then -- Enemy intersects with bullet.
 						if not v:penetrable() then
 							v:kill('killed', self)
 						end
-						local weapon = self:weapon()
-						if weapon ~= nil and hadArmour == nil and self._game.state.playing then
-							self:setWeapon(nil)
-							weapon:revive()
-							table.insert(self._game.pending, weapon)
-						end
+						self._game:hurtWithBullet(v, self)
 					end
 				end
 			end

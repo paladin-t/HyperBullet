@@ -17,7 +17,7 @@ Armour = class({
 
 	_game = nil,
 	_owner = nil,
-	_name = nil,
+	_name = nil, _acronym = nil,
 
 	_sfxs = nil,
 
@@ -36,7 +36,7 @@ Armour = class({
 		self.maxHp, self.hp = cfg['hp'], cfg['hp']
 
 		self._game = options.game
-		self._name = cfg['name']
+		self._name, self._acronym = cfg['name'], cfg['acronym']
 
 		self._sfxs = cfg['sfxs']
 	end,
@@ -66,6 +66,9 @@ Armour = class({
 	name = function (self)
 		return self._name
 	end,
+	acronym = function (self)
+		return self._acronym
+	end,
 
 	sfxs = function (self)
 		return self._sfxs
@@ -85,8 +88,16 @@ Armour = class({
 		Object.update(self, delta)
 
 		-- Draw information text.
-		if self._game.state.playing then
-			if not self._owner then
+		if not owner then
+			if self._acronym ~= nil then
+				self._game:acronymArmourBackground(self.x, self.y - 20)
+				font(FONT_NORMAL_TEXT)
+				local txt = self._acronym
+				local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
+				text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
+				text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_CLEAR_TEXT)
+				font(nil)
+			elseif self._game.state.playing then
 				font(FONT_NORMAL_TEXT)
 				local txt = self._name
 				local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
