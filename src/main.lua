@@ -68,7 +68,7 @@ FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
 FONT_SUBTITLE_TEXT = Font.new('assets/fonts/college.ttf', 24)
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
-COLOR_NEON_TEXT = { Color.new(235, 117, 206), Color.new(10, 191, 150) }
+COLOR_NEON_TEXT = { Color.new(10, 191, 150), Color.new(235, 117, 206) }
 COLOR_BLEEDING_TEXT = { Color.new(226, 114, 196), Color.new(203, 94, 41) }
 COLOR_CLEAR_TEXT = Color.new(200, 220, 210)
 COLOR_SHADOW = Color.new(0, 0, 0, 100)
