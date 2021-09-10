@@ -48,44 +48,8 @@ Game = class({
 
 	ctor = function (self, co)
 		self.co = co
-		self.sfxs = {
-			['attack/disc_gun1'] = Resources.load('assets/sfx/attack/disc_gun1.wav', Sfx),
-			['attack/knife1'] = Resources.load('assets/sfx/attack/knife1.wav', Sfx),
-			['attack/knife2'] = Resources.load('assets/sfx/attack/knife2.wav', Sfx),
-			['attack/laser1'] = Resources.load('assets/sfx/attack/laser1.wav', Sfx),
-			['attack/laser2'] = Resources.load('assets/sfx/attack/laser2.wav', Sfx),
-			['attack/machine_gun1'] = Resources.load('assets/sfx/attack/machine_gun1.wav', Sfx),
-			['attack/machine_gun2'] = Resources.load('assets/sfx/attack/machine_gun2.wav', Sfx),
-			['attack/machine_gun3'] = Resources.load('assets/sfx/attack/machine_gun3.wav', Sfx),
-			['attack/mines1'] = Resources.load('assets/sfx/attack/mines1.wav', Sfx),
-			['attack/pistol1'] = Resources.load('assets/sfx/attack/pistol1.wav', Sfx),
-			['attack/pistol2'] = Resources.load('assets/sfx/attack/pistol2.wav', Sfx),
-			['attack/pistol3'] = Resources.load('assets/sfx/attack/pistol3.wav', Sfx),
-			['attack/rifle1'] = Resources.load('assets/sfx/attack/rifle1.wav', Sfx),
-			['attack/rifle2'] = Resources.load('assets/sfx/attack/rifle2.wav', Sfx),
-			['attack/rifle3'] = Resources.load('assets/sfx/attack/rifle3.wav', Sfx),
-			['attack/shotgun1'] = Resources.load('assets/sfx/attack/shotgun1.wav', Sfx),
-			['attack/shotgun2'] = Resources.load('assets/sfx/attack/shotgun2.wav', Sfx),
-			['attack/shotgun3'] = Resources.load('assets/sfx/attack/shotgun3.wav', Sfx),
-			['attack/submachine_gun1'] = Resources.load('assets/sfx/attack/submachine_gun1.wav', Sfx),
-			['explode/mines1'] = Resources.load('assets/sfx/explode/mines1.wav', Sfx),
-			['gui/ok'] = Resources.load('assets/sfx/gui/ok.wav', Sfx),
-			['gui/play'] = Resources.load('assets/sfx/gui/play.wav', Sfx),
-			['gui/tutorial'] = Resources.load('assets/sfx/gui/tutorial.wav', Sfx),
-			['pick/firearm1'] = Resources.load('assets/sfx/pick/firearm1.wav', Sfx),
-			['pick/firearm2'] = Resources.load('assets/sfx/pick/firearm2.wav', Sfx),
-			['pick/firearm3'] = Resources.load('assets/sfx/pick/firearm3.wav', Sfx),
-			['pick/firearm4'] = Resources.load('assets/sfx/pick/firearm4.wav', Sfx),
-			['pick/knife1'] = Resources.load('assets/sfx/pick/knife1.wav', Sfx),
-			['pick/knife2'] = Resources.load('assets/sfx/pick/knife2.wav', Sfx),
-			['gameover'] = Resources.load('assets/sfx/gameover.wav', Sfx)
-		}
-		self.bgms = {
-			{
-				name = 'bgm',
-				resource = Resources.load('assets/bgm/bgm.ogg', Music)
-			}
-		}
+		self.sfxs = Audio['sfxs']
+		self.bgms = Audio['bgms']
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnemyBlocked, self.isWeaponBlocked, self.isBulletBlocked =
@@ -234,12 +198,13 @@ Game = class({
 		if type(keyOrIndex) == 'string' then
 			local _ = nil
 			_, index = find(self.bgms, function (bgm, _)
-				return bgm.name == keyOrIndex
+				return bgm['name'] == keyOrIndex
 			end)
 		else
 			index = keyOrIndex
 		end
-		play(self.bgms[index].resource, true, 2)
+		local resource = Resources.load(self.bgms[index]['asset'], Music)
+		play(resource, true, 2)
 
 		return self
 	end,
@@ -406,6 +371,7 @@ Game = class({
 									hp = cfg['hp'],
 									behaviours = cfg['behaviours'],
 									lookAtTarget = cfg['look_at_target'],
+									attackTempo = cfg['attack_tempo'],
 									moveSpeed = cfg['move_speed']
 								}
 							)
@@ -777,7 +743,7 @@ Game = class({
 			local cameraX, cameraY = self.camera:get()
 			hero:lookAt(x + cameraX, y + cameraY)
 			if attack then
-				hero:attack(1, nil)
+				hero:attack(1, nil, true)
 			end
 			if pick then
 				hero:pick()

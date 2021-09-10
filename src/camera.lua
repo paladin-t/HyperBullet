@@ -10,7 +10,7 @@ Engine page: https://paladin-t.github.io/bitty/
 Camera = class({
 	x = nil, y = nil,
 
-	_shocking = nil,
+	_shockingInterval = nil, _shockingAmplitude = nil,
 
 	ctor = function (self)
 	end,
@@ -33,17 +33,19 @@ Camera = class({
 		return self
 	end,
 
-	shock = function (self, interval)
-		self._shocking = interval
+	shock = function (self, interval, amplitude)
+		self._shockingInterval, self._shockingAmplitude =
+			interval, amplitude or 5
 
 		return self
 	end,
 
 	prepare = function (self, delta)
 		local offsetX, offsetY = nil, nil
-		if self._shocking ~= nil then
+		if self._shockingInterval ~= nil then
 			offsetX, offsetY =
-				math.random(-100, 100) / 100 * 5, math.random(-100, 100) / 100 * 5
+				math.random(-100, 100) / 100 * self._shockingAmplitude,
+				math.random(-100, 100) / 100 * self._shockingAmplitude
 		end
 
 		if offsetX ~= nil --[[ or offsetY ~= nil ]] then
@@ -57,10 +59,10 @@ Camera = class({
 	finish = function (self, delta)
 		camera()
 
-		if self._shocking ~= nil then
-			self._shocking = self._shocking - delta
-			if self._shocking <= 0 then
-				self._shocking = nil
+		if self._shockingInterval ~= nil then
+			self._shockingInterval = self._shockingInterval - delta
+			if self._shockingInterval <= 0 then
+				self._shockingInterval = nil
 			end
 		end
 

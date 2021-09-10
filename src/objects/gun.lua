@@ -14,6 +14,7 @@ Gun = class({
 
 	_recoil = nil,
 	_capacity = nil,
+	_shocking = nil,
 
 	--[[ Constructor. ]]
 
@@ -25,6 +26,7 @@ Gun = class({
 
 		self._recoil = cfg['recoil']
 		self._capacity = cfg['capacity']
+		self._shocking = cfg['shocking']
 
 		if cfg['dual'] and not options.secondary then
 			self._secondary = Gun.new(isBlocked, merge(options, { secondary = true }))
@@ -58,7 +60,7 @@ Gun = class({
 
 	-- Emits bullet.
 	-- returns success, emitted bullet, out of bullet, recoil.
-	attack = function (self, dir, consumption, accuracy)
+	attack = function (self, dir, consumption, accuracy, shock)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then
@@ -123,6 +125,12 @@ Gun = class({
 			if fx ~= nil then
 				self:_emit(fx, interval)
 			end
+		end
+
+		-- Shock the camera.
+		if shock and self._shocking ~= nil then
+			local interval, amplitude = self._shocking['interval'], self._shocking['amplitude']
+			self._game.camera:shock(interval, amplitude)
 		end
 
 		-- Play SFX.

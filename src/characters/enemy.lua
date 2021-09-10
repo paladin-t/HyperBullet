@@ -15,6 +15,7 @@ Enemy = class({
 	_behaviours = nil,
 	_goals = nil,
 	_lookAtTarget = nil,
+	_attackTempo = nil,
 
 	--[[ Constructor. ]]
 
@@ -25,6 +26,7 @@ Enemy = class({
 			return Behaviours[b]()
 		end)
 		self._lookAtTarget = options.lookAtTarget
+		self._attackTempo = options.attackTempo
 	end,
 
 	--[[ Meta methods. ]]
@@ -45,6 +47,14 @@ Enemy = class({
 	end,
 	setLookAtTarget = function (self, lookAtTarget)
 		self._lookAtTarget = lookAtTarget
+
+		return self
+	end,
+	attackTempo = function (self)
+		return self._attackTempo
+	end,
+	setAttackTempo = function (self, attackTempo)
+		self._attackTempo = attackTempo
 
 		return self
 	end,

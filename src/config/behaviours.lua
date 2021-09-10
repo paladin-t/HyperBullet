@@ -42,7 +42,7 @@ Behaviours = {
 		return {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
-				::again::
+				::consume::
 				local empty = this._goals == nil or #this._goals == 0
 				local goal = not empty and this._goals[1] or nil
 				local dst = nil
@@ -60,7 +60,7 @@ Behaviours = {
 				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
-					goto again
+					goto consume
 				elseif goal == nil and l <= EPSILON * 3 then
 					-- Do nothing.
 				else
@@ -92,7 +92,7 @@ Behaviours = {
 		return {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
-				::again::
+				::consume::
 				local empty = this._goals == nil or #this._goals == 0
 				local goal = not empty and this._goals[1] or nil
 				local dst = nil
@@ -110,7 +110,7 @@ Behaviours = {
 				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
-					goto again
+					goto consume
 				elseif goal == nil and l <= EPSILON * 3 then
 					-- Do nothing.
 				else
@@ -142,7 +142,7 @@ Behaviours = {
 		return {
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
-				::again::
+				::consume::
 				local empty = this._goals == nil or #this._goals == 0
 				local goal = not empty and this._goals[1] or nil
 				local dst = nil
@@ -162,7 +162,7 @@ Behaviours = {
 				if goal ~= nil and l <= EPSILON then
 					table.remove(this._goals, 1)
 
-					goto again
+					goto consume
 				elseif goal == nil and l <= EPSILON * 4 then
 					-- Do nothing.
 				else
@@ -210,6 +210,7 @@ Behaviours = {
 	end,
 
 	['attack'] = function ()
+		local ticks = 0
 		local count = 0
 
 		return {
@@ -219,9 +220,23 @@ Behaviours = {
 					return src, dst
 				end
 
+				-- Check attack rest.
+				local weapon = this:weapon()
+				local attackTempo = this:attackTempo()
+				if attackTempo ~= nil then
+					local active, rest = attackTempo['active'], attackTempo['rest']
+					local total = active + rest
+					ticks = ticks + delta
+					if ticks >= total then
+						ticks = ticks - total
+					end
+					if ticks >= active then
+						return src, dst
+					end
+				end
+
 				-- Check interval.
 				local limit = nil
-				local weapon = this:weapon()
 				if weapon ~= nil and weapon.type == 'mines' then
 					limit = 1
 				end
@@ -235,7 +250,7 @@ Behaviours = {
 						if weapon ~= nil then
 							accuracy = weapon:accuracy()
 						end
-						local bullet = this:attack(nil, accuracy)
+						local bullet = this:attack(nil, accuracy, false)
 						if bullet ~= nil then
 							bullet
 								:on('dead', function (sender, _2, _3)

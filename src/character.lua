@@ -73,6 +73,9 @@ Character = class({
 			armour.hp = math.max(armour.hp - other.atk, 0)
 			if armour.hp == 0 then
 				self:setArmour(nil)
+				armour.x, armour.y = self.x, self.y
+				armour:revive()
+				table.insert(self._game.pending, armour)
 			end
 
 			return self
@@ -132,6 +135,7 @@ Character = class({
 		if self._armour ~= nil then
 			self._armour
 				:setOwner(nil)
+				:float(2)
 		end
 		if armour ~= nil then
 			armour
@@ -196,12 +200,12 @@ Character = class({
 
 		return self
 	end,
-	attack = function (self, consumption, accuracy)
+	attack = function (self, consumption, accuracy, shock)
 		local weapon = self:weapon()
 		if weapon == nil then
 			return nil
 		end
-		local success, bullet, empty, recoil = weapon:attack(self._facing, consumption, accuracy)
+		local success, bullet, empty, recoil = weapon:attack(self._facing, consumption, accuracy, shock)
 		if success then
 			if recoil ~= nil and recoil > 0 then
 				self._movingByRecoil = -self._facing * (self._moveSpeed / self._weight * recoil)
@@ -209,7 +213,7 @@ Character = class({
 
 			local secondary = weapon:secondary()
 			if secondary ~= nil then
-				secondary:attack(-self._facing, nil, accuracy)
+				secondary:attack(-self._facing, nil, accuracy, false)
 			end
 
 			if weapon:isMelee() then

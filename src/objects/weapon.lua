@@ -159,7 +159,7 @@ Weapon = class({
 		return self._sfxs
 	end,
 
-	attack = function (self, dir, consumption, accuracy)
+	attack = function (self, dir, consumption, accuracy, shock)
 		error('Implement me.')
 	end,
 

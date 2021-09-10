@@ -75,6 +75,12 @@ Armour = class({
 		return self
 	end,
 	update = function (self, delta)
+		-- Draw shadow effect.
+		local owner = self._owner
+		if owner == nil then
+			self:shadow(delta, 3, 3) -- Draw shadow effect.
+		end
+
 		-- Base update.
 		Object.update(self, delta)
 

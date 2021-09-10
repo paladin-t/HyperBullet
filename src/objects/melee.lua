@@ -64,7 +64,7 @@ Melee = class({
 
 	-- Attacks with this melee itself.
 	-- returns success, emitted bullet (always nil), out of bullet (always false), recoil (always nil).
-	attack = function (self, dir, _3, _4)
+	attack = function (self, dir, _3, _4, _5)
 		-- Check for cooldown interval.
 		local now = DateTime.ticks()
 		if self._timestamp ~= nil then

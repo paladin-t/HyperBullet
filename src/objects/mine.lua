@@ -103,7 +103,7 @@ Mine = class({
 			if self._ticks >= self._lifetime then
 				self._timeout = true
 				self._ticks = 0
-				self._game.camera:shock(0.25)
+				self._game.camera:shock(0.25, 5)
 
 				self._game:playSfx(self._sfxs['explode'])
 			end

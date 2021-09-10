@@ -1,0 +1,56 @@
+{
+  "width": 16,
+  "height": 32,
+  "count": 6,
+  "data": [
+    {
+      "x": 48,
+      "y": 96,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": "walk"
+    },
+    {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": ""
+    },
+    {
+      "x": 48,
+      "y": 96,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": ""
+    },
+    {
+      "x": 48,
+      "y": 160,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": ""
+    },
+    {
+      "x": 48,
+      "y": 128,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": ""
+    },
+    {
+      "x": 48,
+      "y": 160,
+      "width": 16,
+      "height": 32,
+      "interval": 0.10000000149011612,
+      "key": ""
+    }
+  ],
+  "ref": "assets/imgs/bank.png"
+}

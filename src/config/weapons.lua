@@ -43,6 +43,7 @@ Weapons = {
 			['r'] = 8
 		},
 		['effect'] = nil,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = { 'pick/knife1', 'pick/knife2' },
 			['attack'] = { 'attack/knife1', 'attack/knife2' }
@@ -81,6 +82,7 @@ Weapons = {
 
 			return emitter, 0.8
 		end,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm2',
 			['attack'] = { 'attack/pistol1', 'attack/pistol2', 'attack/pistol3' }
@@ -118,6 +120,7 @@ Weapons = {
 
 			return emitter, 0.8
 		end,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm2',
 			['attack'] = { 'attack/pistol1', 'attack/pistol2', 'attack/pistol3' }
@@ -157,6 +160,10 @@ Weapons = {
 
 			return emitter, 1
 		end,
+		['shocking'] = {
+			['interval'] = 0.05,
+			['amplitude'] = 2
+		},
 		['sfxs'] = {
 			['pick'] = 'pick/firearm3',
 			['attack'] = { 'attack/shotgun1', 'attack/shotgun2', 'attack/shotgun3' }
@@ -170,7 +177,7 @@ Weapons = {
 		['atk'] = 1,
 		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['recoil'] = 0.06,
+		['recoil'] = 0.04,
 		['capacity'] = 45,
 		['interval'] = 0.15,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.4,
@@ -195,6 +202,7 @@ Weapons = {
 
 			return emitter, 0.3
 		end,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm4',
 			['attack'] = 'attack/submachine_gun1'
@@ -208,7 +216,7 @@ Weapons = {
 		['atk'] = 1,
 		['accuracy'] = 0.1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
-		['recoil'] = 0.07,
+		['recoil'] = 0.04,
 		['capacity'] = 55,
 		['interval'] = 0.05,
 		['throwing_speed'] = 350, ['throwing_interval'] = 0.3,
@@ -233,6 +241,10 @@ Weapons = {
 
 			return emitter, 0.3
 		end,
+		['shocking'] = {
+			['interval'] = 0.05,
+			['amplitude'] = 1
+		},
 		['sfxs'] = {
 			['pick'] = 'pick/firearm4',
 			['attack'] = { 'attack/machine_gun1', 'attack/machine_gun2', 'attack/machine_gun3' }
@@ -272,6 +284,10 @@ Weapons = {
 
 			return emitter, 0.6
 		end,
+		['shocking'] = {
+			['interval'] = 0.05,
+			['amplitude'] = 2
+		},
 		['sfxs'] = {
 			['pick'] = 'pick/firearm1',
 			['attack'] = { 'attack/rifle1', 'attack/rifle2', 'attack/rifle3' }
@@ -294,6 +310,7 @@ Weapons = {
 		['effect'] = function (this, x, y, dir, angle)
 			return nil, nil
 		end,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm4',
 			['attack'] = { 'attack/laser1', 'attack/laser2' }
@@ -332,6 +349,7 @@ Weapons = {
 
 			return emitter, 0.6
 		end,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm3',
 			['attack'] = 'attack/disc_gun1'
@@ -352,6 +370,7 @@ Weapons = {
 		['offset'] = 12,
 		['dual'] = false,
 		['effect'] = nil,
+		['shocking'] = nil,
 		['sfxs'] = {
 			['pick'] = 'pick/firearm4',
 			['attack'] = 'attack/mines1'
