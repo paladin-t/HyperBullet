@@ -39,6 +39,7 @@ Game = class({
 	_controlling = nil,
 	_mousePosition = nil,
 	_axisValue = nil, _axisAngle = nil,
+	_bank = nil,
 	_blankImage = nil, _cursor = nil,
 	_hudColor = nil,
 
@@ -99,6 +100,7 @@ Game = class({
 			end
 		self.camera = Camera.new()
 
+		self._bank = Resources.load('assets/imgs/bank.png', Texture)
 		self._blankImage = Image.new()
 		self._blankImage:resize(1, 1)
 		self._blankImage:set(0, 0, Color.new(255, 255, 255, 1))
@@ -167,6 +169,16 @@ Game = class({
 		end
 
 		self.room.finished(self)
+
+		return self
+	end,
+	-- Draws the acronym background at the specific position.
+	acronymBackground = function (self, x, y)
+		tex(
+			self._bank,
+			x - 8, y - 8, 16, 16,
+			3 * 16, 28 * 16, 16, 16
+		)
 
 		return self
 	end,

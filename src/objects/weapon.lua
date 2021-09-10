@@ -18,7 +18,7 @@ Weapon = class({
 
 	_game = nil,
 	_owner = nil, _ownerGroup = nil,
-	_name = nil,
+	_name = nil, _acronym = nil,
 
 	_accuracy = nil,
 	_facing = nil,
@@ -26,6 +26,7 @@ Weapon = class({
 	_throwing = nil, _throwingSpeed = 550, _throwingInterval = nil, _throwingTicks = 0,
 	_offset = 0,
 	_secondary = nil, _isSecondary = false,
+	_ownerChanged = false,
 	_effect = nil,
 	_sfxs = nil,
 
@@ -46,7 +47,7 @@ Weapon = class({
 		self.atk = cfg['atk']
 
 		self._game = options.game
-		self._name = cfg['name']
+		self._name, self._acronym = cfg['name'], cfg['acronym']
 
 		self._accuracy = cfg['accuracy']
 		self._facing = Vec2.new(1, 0)
@@ -77,6 +78,7 @@ Weapon = class({
 		self._throwingTicks = 0
 		self._disappearing, self._disappearingTicks = nil, 0
 		self._spriteAngle = 0
+		self._ownerChanged = true
 
 		if owner ~= nil then
 			self:trigger('picked', owner)
@@ -103,6 +105,9 @@ Weapon = class({
 
 	name = function (self)
 		return self._name
+	end,
+	acronym = function (self)
+		return self._acronym
 	end,
 
 	isMelee = function (self)
@@ -228,12 +233,22 @@ Weapon = class({
 		-- Draw information text.
 		if self._game.state.playing and not self._isSecondary then
 			if not owner and not self._throwing then
-				font(FONT_NORMAL_TEXT)
-				local txt = self._name
-				local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
-				text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
-				text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_CLEAR_TEXT)
-				font(nil)
+				if self._ownerChanged and self._acronym ~= nil then
+					self._game:acronymBackground(self.x, self.y - 20)
+					font(FONT_NORMAL_TEXT)
+					local txt = self._acronym
+					local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
+					text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
+					text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_CLEAR_TEXT)
+					font(nil)
+				else
+					font(FONT_NORMAL_TEXT)
+					local txt = self._name
+					local textWidth, textHeight = measure(txt, FONT_NORMAL_TEXT)
+					text(txt, self.x - textWidth * 0.5 + 1, self.y - textHeight - 15, Color.new(0, 0, 0))
+					text(txt, self.x - textWidth * 0.5, self.y - textHeight - 16, COLOR_CLEAR_TEXT)
+					font(nil)
+				end
 			end
 		end
 	end,

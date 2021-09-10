@@ -22,12 +22,10 @@ Melee = class({
 		self._color = Color.new(255, 0, 0)
 
 		local cfg = Weapons[options.type]
-		self._name = cfg['name']
 
 		self._shape = cfg['shape']
 		self._isBlade = cfg['blade']
 		self._preInterval, self._postInterval = cfg['pre_interval'], cfg['post_interval']
-		self._interval = cfg['interval']
 	end,
 
 	--[[ Meta methods. ]]

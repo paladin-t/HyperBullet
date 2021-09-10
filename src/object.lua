@@ -235,8 +235,8 @@ Object = class({
 		return self
 	end,
 
-	raycast = function (self, pos, dir)
-		return self._raycaster:solve(pos, dir, self._isBlocked)
+	raycast = function (self, pos, dir, isBlocked)
+		return self._raycaster:solve(pos, dir, isBlocked or self._isBlocked)
 	end,
 	findpath = function (self, pos, dst)
 		return self._pathfinder:solve(pos, dst)
