@@ -99,13 +99,22 @@ Mine = class({
 		return self
 	end,
 	update = function (self, delta)
+		-- Draw shadow effect.
+		local owner = self._owner
+		if owner == nil then
+			self:shadow(delta, 3, 3) -- Draw shadow effect.
+		end
+
+		-- Call custom sprite update handler if it's set.
 		if self._spriteUpdater then
 			self._spriteUpdater(delta)
 		end
 
+		-- Calculate basic information.
 		local sprite = self._sprite
 		local dstX, dstY, dstW, dstH = self:_build()
 
+		-- Draw the mine object.
 		if self._timeout then
 			local a = (1 - self._ticks / self._flashtime) * 255
 			local col = Color.new(255, 255, 255, a)

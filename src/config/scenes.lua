@@ -15,7 +15,7 @@ local function modulate(index)
 			return 0, pingpong * 160
 		end,
 		scale = function (delta, factor)
-			local pingpong = (math.sin((factor * 10) * math.pi * 2) + 1) * 0.5
+			local pingpong = (math.sin((factor * 8) * math.pi * 2) + 1) * 0.5
 
 			return pingpong < 0.5 and 1 or 0.8
 		end,
@@ -23,12 +23,12 @@ local function modulate(index)
 			return (factor * 2) * math.pi * 2
 		end,
 		shadow1 = function (delta, factor)
-			local pingpong = math.sin((factor * 20) * math.pi * 2)
+			local pingpong = math.sin((factor * 16) * math.pi * 2)
 
 			return pingpong * 2, pingpong * 2, Color.new(10, 191, 150, 128)
 		end,
 		shadow2 = function (delta, factor)
-			local pingpong = math.sin((factor * 20) * math.pi * 2)
+			local pingpong = math.sin((factor * 16) * math.pi * 2)
 
 			return pingpong * -2, pingpong * -2, Color.new(235, 117, 206, 128)
 		end
@@ -238,13 +238,37 @@ Scenes = {
 			--[[ Clips.                 ]] {
 				{
 					type = 'clip',
+					x = -0.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/steps1.png'),
+					options = {
+						anchor = Vec2.new(0.85, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
+					x = 1.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/steps2.png'),
+					options = {
+						anchor = Vec2.new(0.15, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
 					x = -0.07, y = 0.5,
 					layer = 'background',
 					content = Resources.load('assets/imgs/clips/sculpture1.png'),
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(1)
 					}
 				},
@@ -256,7 +280,7 @@ Scenes = {
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(2)
 					}
 				}
@@ -466,13 +490,37 @@ Scenes = {
 			--[[ Clips.                 ]] {
 				{
 					type = 'clip',
+					x = -0.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/carpet1.png'),
+					options = {
+						anchor = Vec2.new(0.85, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
+					x = 1.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/carpet1.png'),
+					options = {
+						anchor = Vec2.new(0.15, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
 					x = -0.07, y = 0.5,
 					layer = 'background',
 					content = Resources.load('assets/imgs/clips/beer1.png'),
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(1)
 					}
 				},
@@ -484,7 +532,7 @@ Scenes = {
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(2)
 					}
 				}
@@ -694,13 +742,37 @@ Scenes = {
 			--[[ Clips.                 ]] {
 				{
 					type = 'clip',
+					x = -0.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/floor1.png'),
+					options = {
+						anchor = Vec2.new(0.85, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
+					x = 1.0, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/floor1.png'),
+					options = {
+						anchor = Vec2.new(0.15, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
+				},
+				{
+					type = 'clip',
 					x = -0.07, y = 0.5,
 					layer = 'background',
 					content = Resources.load('assets/imgs/clips/painting1.png'),
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(1)
 					}
 				},
@@ -712,7 +784,7 @@ Scenes = {
 					options = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
-						interval = 10.0,
+						interval = 8.0,
 						modulators = modulate(2)
 					}
 				}

@@ -75,11 +75,14 @@ Clip = class({
 			end
 		end
 
-		local factor = self._ticks / self._interval
+		local factor = 0
+		if self._interval ~= nil then
+			factor = self._ticks / self._interval
 
-		self._ticks = self._ticks + delta * self._speed
-		if self._ticks >= self._interval then
-			self._ticks = self._ticks - self._interval
+			self._ticks = self._ticks + delta * self._speed
+			if self._ticks >= self._interval then
+				self._ticks = self._ticks - self._interval
+			end
 		end
 
 		local scale = self._scale or Vec2.new(1, 1)
