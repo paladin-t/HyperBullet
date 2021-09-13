@@ -105,7 +105,7 @@ Enemy = class({
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'enemy' then
-					if not v:explosive() and self:intersects(v) then -- Enemy intersects with bullet.
+					if not v:dead() and not v:explosive() and self:intersects(v) then -- Enemy intersects with bullet.
 						if not v:penetrable() then
 							v:kill('killed', self)
 						end

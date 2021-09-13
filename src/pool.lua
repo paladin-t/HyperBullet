@@ -127,6 +127,34 @@ Pool = class({
 		-- Finish.
 		return obj
 	end,
+	-- Generates a clip, note clip is not cached.
+	clip = function (self, type, x, y, game, options)
+		-- Prepare.
+		if type == nil then
+			return nil
+		end
+		local obj = nil
+
+		-- Generate.
+		if type == 'clip' then
+			obj = Clip.new(
+				merge(
+					options,
+					{
+						game = game
+					}
+				)
+			)
+		else
+			error('Unknown effect: ' .. type .. '.')
+		end
+
+		-- Cache.
+		obj.x, obj.y = x, y
+
+		-- Finish.
+		return obj
+	end,
 	-- Generates an effect.
 	effect = function (self, type, x, y, game)
 		-- Prepare.

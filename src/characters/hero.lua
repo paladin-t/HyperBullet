@@ -70,7 +70,7 @@ Hero = class({
 			elseif v.group == 'bullet' then
 				local ownerGroup = v:ownerGroup()
 				if ownerGroup ~= 'hero' then
-					if not DEBUG_IMMORTAL and not v:explosive() and self:intersects(v) then -- Hero intersects with bullet.
+					if not DEBUG_IMMORTAL and not v:dead() and not v:explosive() and self:intersects(v) then -- Hero intersects with bullet.
 						if not v:penetrable() then
 							v:kill('killed', self)
 						end

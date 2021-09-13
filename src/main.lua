@@ -48,6 +48,7 @@ require 'objects/bullet'
 require 'objects/mine'
 require 'objects/corpse'
 require 'effects/painter'
+require 'effects/clip'
 require 'effects/shell_case'
 require 'effects/blood'
 require 'effects/tips'
@@ -91,7 +92,6 @@ end
 
 function setup()
 	beParticles.setup()
-
 	game = Game.new(Coroutine.new())
 		:load()
 		:setup()
@@ -99,9 +99,7 @@ end
 
 function update(delta)
 	delta = math.min(delta, 0.02)
-
 	beInput.update(delta)
 	beParticles.update_time()
-
 	game:update(delta)
 end

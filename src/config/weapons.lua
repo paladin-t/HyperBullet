@@ -14,11 +14,26 @@ local function refreshParticles(emitter)
 		if x == nil --[[ or y == nil ]] then
 			x, y = that.x, that.y
 		end
-		local diffX, diffY = that.x - x, that.y - y
+		local diffX, diffY = (that.x - x) * 0.3, (that.y - y) * 0.3
 		x, y = that.x, that.y
 		for _, particle in ipairs(emitter.particles) do
 			particle.pos.x, particle.pos.y =
 				particle.pos.x + diffX, particle.pos.y + diffY
+		end
+	end
+end
+
+local function stopEmitter(emitter, interval)
+	local ticks = 0
+
+	return function (self, that, delta)
+		if ticks == nil then
+			return
+		end
+		ticks = ticks + delta
+		if ticks >= interval then
+			emitter:stop_emit()
+			ticks = nil
 		end
 	end
 end
@@ -81,6 +96,7 @@ Weapons = {
 					Color.new(194, 195, 199, 255)
 				}
 			)
+			emitter.refresh = stopEmitter(emitter, 0.5)
 
 			return emitter, 0.8
 		end,
@@ -120,6 +136,7 @@ Weapons = {
 					Color.new(194, 195, 199, 255)
 				}
 			)
+			emitter.refresh = stopEmitter(emitter, 0.5)
 
 			return emitter, 0.8
 		end,
@@ -160,7 +177,10 @@ Weapons = {
 					Color.new(95,  87,  79,  128)
 				}
 			)
-			emitter.refresh = refreshParticles(emitter)
+			emitter.refresh = chain(
+				refreshParticles(emitter),
+				stopEmitter(emitter, 0.5)
+			)
 
 			return emitter, 1
 		end,
@@ -287,7 +307,10 @@ Weapons = {
 					Color.new(95,  87,  79,  128)
 				}
 			)
-			emitter.refresh = refreshParticles(emitter)
+			emitter.refresh = chain(
+				refreshParticles(emitter),
+				stopEmitter(emitter, 0.4)
+			)
 
 			return emitter, 0.6
 		end,
@@ -341,10 +364,10 @@ Weapons = {
 		['dual'] = false,
 		['effect'] = function (this, x, y, dir, angle)
 			local angle_ = -math.deg(angle)
-			local emitter = beParticles.emitter.create(x, y, 84, 60)
-			beParticles.ps_set_size(emitter, 1, 0, 1, 0)
-			beParticles.ps_set_speed(emitter, 50, 100, 20)
-			beParticles.ps_set_angle(emitter, angle_ - 1, 2)
+			local emitter = beParticles.emitter.create(x, y, 8, 20)
+			beParticles.ps_set_size(emitter, 0, 2, 0, 2)
+			beParticles.ps_set_speed(emitter, 45, 100, 20)
+			beParticles.ps_set_angle(emitter, angle_ - 7, 14)
 			beParticles.ps_set_life(emitter, 0.5, 0.3)
 			beParticles.ps_set_colours(
 				emitter,
@@ -355,6 +378,7 @@ Weapons = {
 					Color.new(104, 185, 219, 128)
 				}
 			)
+			emitter.refresh = stopEmitter(emitter, 0.4)
 
 			return emitter, 0.6
 		end,

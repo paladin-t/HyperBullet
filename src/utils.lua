@@ -93,6 +93,31 @@ function characters(str)
 	return next_, tbl, 0
 end
 
+--[[ Functional. ]]
+
+function chain(...)
+	local funcs = table.pack(...)
+
+	return function (...)
+		for _, func in ipairs(funcs) do
+			func(...)
+		end
+	end
+end
+
+function pipe(...)
+	local funcs = table.pack(...)
+
+	return function (...)
+		local args = table.pack(...)
+		for _, func in ipairs(funcs) do
+			args = table.pack(func(table.unpack(args)))
+		end
+
+		return table.unpack(args)
+	end
+end
+
 --[[ List. ]]
 
 function car(lst)

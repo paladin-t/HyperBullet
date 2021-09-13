@@ -39,6 +39,7 @@ Game = class({
 	_controlling = nil,
 	_mousePosition = nil,
 	_axisValue = nil, _axisAngle = nil,
+	_playingMusic = nil,
 	_bank = nil,
 	_blankImage = nil, _cursor = nil,
 	_hudColor = nil,
@@ -305,8 +306,8 @@ Game = class({
 		else
 			index = keyOrIndex
 		end
-		local resource = Resources.load(self.bgms[index]['asset'], Music)
-		play(resource, true, 2)
+		self._playingMusic = Resources.load(self.bgms[index]['asset'], Music)
+		play(self._playingMusic, true, 2)
 
 		return self
 	end,
@@ -376,12 +377,12 @@ Game = class({
 		return self
 	end,
 	-- Builds a scene.
-	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, clearColors, effects)
+	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, clearColors, clips, effects)
 		return {
 			colors = clearColors,
 			background = background, building = building, foreground = foreground,
 			wave = function ()
-				-- Prepare.
+				-- Put initial weapons.
 				local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
 				local WEAPON_VECTOR = Vec2.new(100, 0)
 				local weapons = { }
@@ -427,13 +428,18 @@ Game = class({
 					table.insert(self.foregroundEffects, fx)
 				end)
 
-				painter = Painter.new(
-					clearColors,
-					{
-						interval = 10
-					}
-				)
+				-- Put clips.
+				forEach(clips, function (c, _)
+					local fx = self.pool:clip(c.type, self.sceneWidth * c.x, self.sceneHeight * c.y, self, c.options)
+						:setContent(c.content)
+					if c.layer == 'background' then
+						table.insert(self.backgroundEffects, fx)
+					elseif c.layer == 'foreground' then
+						table.insert(self.foregroundEffects, fx)
+					end
+				end)
 
+				-- Put effects.
 				forEach(effects, function (e, _)
 					local fx = self.pool:effect(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self)
 						:setContent(e.content)

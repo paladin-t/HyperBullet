@@ -56,6 +56,7 @@ Tutorials = {
 			--[[ Clear colors.          ]] {
 				Color.new(196, 197, 180)
 			},
+			--[[ Clips.                 ]] nil,
 			--[[ Effects.               ]] {
 				{
 					type = 'tips',
@@ -134,6 +135,7 @@ Tutorials = {
 			--[[ Clear colors.          ]] {
 				Color.new(196, 197, 180)
 			},
+			--[[ Clips.                 ]] nil,
 			--[[ Effects.               ]] {
 				{
 					type = 'tips',
@@ -206,6 +208,7 @@ Tutorials = {
 			--[[ Clear colors.          ]] {
 				Color.new(196, 197, 180)
 			},
+			--[[ Clips.                 ]] nil,
 			--[[ Effects.               ]] {
 				{
 					type = 'tips',
