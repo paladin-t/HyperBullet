@@ -231,9 +231,9 @@ Scenes = {
 				end
 			},
 			--[[ Clear colors.          ]] {
-				Color.new(235, 117, 206),
-				Color.new(10, 191, 150),
-				Color.new(203, 94, 41)
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{
@@ -459,9 +459,9 @@ Scenes = {
 				end
 			},
 			--[[ Clear colors.          ]] {
-				Color.new(235, 117, 206),
-				Color.new(10, 191, 150),
-				Color.new(203, 94, 41)
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{
@@ -687,9 +687,9 @@ Scenes = {
 				end
 			},
 			--[[ Clear colors.          ]] {
-				Color.new(235, 117, 206),
-				Color.new(10, 191, 150),
-				Color.new(203, 94, 41)
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{

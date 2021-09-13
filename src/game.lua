@@ -381,7 +381,30 @@ Game = class({
 		return {
 			colors = clearColors,
 			background = background, building = building, foreground = foreground,
-			wave = function ()
+			setup = function ()
+				-- Put clips.
+				forEach(clips, function (c, _)
+					local fx = self.pool:clip(c.type, self.sceneWidth * c.x, self.sceneHeight * c.y, self, c.options)
+						:setContent(c.content)
+					if c.layer == 'background' then
+						table.insert(self.backgroundEffects, fx)
+					elseif c.layer == 'foreground' then
+						table.insert(self.foregroundEffects, fx)
+					end
+				end)
+
+				-- Put effects.
+				forEach(effects, function (e, _)
+					local fx = self.pool:effect(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self)
+						:setContent(e.content)
+					if e.layer == 'background' then
+						table.insert(self.backgroundEffects, fx)
+					elseif e.layer == 'foreground' then
+						table.insert(self.foregroundEffects, fx)
+					end
+				end)
+			end,
+			update = function ()
 				-- Put initial weapons.
 				local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
 				local WEAPON_VECTOR = Vec2.new(100, 0)
@@ -426,28 +449,6 @@ Game = class({
 
 					local fx = self.pool:effect('appearance', pos.x, pos.y, self)
 					table.insert(self.foregroundEffects, fx)
-				end)
-
-				-- Put clips.
-				forEach(clips, function (c, _)
-					local fx = self.pool:clip(c.type, self.sceneWidth * c.x, self.sceneHeight * c.y, self, c.options)
-						:setContent(c.content)
-					if c.layer == 'background' then
-						table.insert(self.backgroundEffects, fx)
-					elseif c.layer == 'foreground' then
-						table.insert(self.foregroundEffects, fx)
-					end
-				end)
-
-				-- Put effects.
-				forEach(effects, function (e, _)
-					local fx = self.pool:effect(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self)
-						:setContent(e.content)
-					if e.layer == 'background' then
-						table.insert(self.backgroundEffects, fx)
-					elseif e.layer == 'foreground' then
-						table.insert(self.foregroundEffects, fx)
-					end
 				end)
 
 				-- Delay.
@@ -687,11 +688,12 @@ Game = class({
 		self._axisValue, self._axisAngle = Vec2.new(0, 0), 0
 
 		-- Start a wave.
+		self.room.setup()
 		if toGame then
-			local wave = coroutine.create(self.room.wave)
+			local update = coroutine.create(self.room.update)
 			self.co
 				:clear()
-				:start(wave)
+				:start(update)
 		end
 
 		-- Finish.
@@ -781,10 +783,11 @@ Game = class({
 		self._axisValue, self._axisAngle = Vec2.new(0, 0), 0
 
 		-- Start a wave.
-		local wave = coroutine.create(self.room.wave)
+		self.room.setup()
+		local update = coroutine.create(self.room.update)
 		self.co
 			:clear()
-			:start(wave)
+			:start(update)
 
 		-- Finish.
 		collectgarbage()
