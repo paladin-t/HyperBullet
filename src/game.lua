@@ -17,7 +17,7 @@ Game = class({
 	background = nil, building = nil, foreground = nil,
 	backgroundOffsetX = 0, backgroundOffsetY = 0,
 	sceneWidth = 0, sceneHeight = 0,
-	isHeroBlocked = nil, isEnemyBlocked = nil, isWeaponBlocked = nil, isBulletBlocked = nil,
+	isHeroBlocked = nil, isEnemyBlocked = nil, isEnvironmentBlocked = nil, isWeaponBlocked = nil, isBulletBlocked = nil,
 	raycaster = nil,
 	pathfinder = nil,
 	camera = nil,
@@ -54,7 +54,7 @@ Game = class({
 		self.bgms = Audio['bgms']
 		local WALKABLE_CEL = 768
 		local BORDER_CEL = -1
-		self.isHeroBlocked, self.isEnemyBlocked, self.isWeaponBlocked, self.isBulletBlocked =
+		self.isHeroBlocked, self.isEnemyBlocked, self.isEnvironmentBlocked, self.isWeaponBlocked, self.isBulletBlocked =
 			function (pos) -- Is hero blocked?
 				local cel = mget(self.building, pos.x, pos.y)
 				if cel ~= WALKABLE_CEL then
@@ -77,6 +77,20 @@ Game = class({
 				if self.foreground ~= nil then
 					cel = mget(self.foreground, pos.x, pos.y)
 					if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
+						return true
+					end
+				end
+
+				return false
+			end,
+			function (pos) -- Is environment blocked?
+				local cel = mget(self.building, pos.x, pos.y)
+				if cel ~= WALKABLE_CEL then
+					return true
+				end
+				if self.foreground ~= nil then
+					cel = mget(self.foreground, pos.x, pos.y)
+					if cel ~= WALKABLE_CEL then
 						return true
 					end
 				end
@@ -377,19 +391,19 @@ Game = class({
 		return self
 	end,
 	-- Builds a scene.
-	build = function (self, background, building, foreground, lingeringPoints, passingByPoints, initialWeapons, enemySequence, options, clearColors, clips, effects)
+	build = function (self, clearColors, background, building, foreground, lingeringPoints, passingByPoints, clips, effects, environments, initialWeapons, enemySequence, options)
 		return {
 			colors = clearColors,
 			background = background, building = building, foreground = foreground,
 			setup = function ()
 				-- Put clips.
 				forEach(clips, function (c, _)
-					local fx = self.pool:clip(c.type, self.sceneWidth * c.x, self.sceneHeight * c.y, self, c.options)
+					local clip = self.pool:clip(c.type, self.sceneWidth * c.x, self.sceneHeight * c.y, self, c.options)
 						:setContent(c.content)
 					if c.layer == 'background' then
-						table.insert(self.backgroundEffects, fx)
+						table.insert(self.backgroundEffects, clip)
 					elseif c.layer == 'foreground' then
-						table.insert(self.foregroundEffects, fx)
+						table.insert(self.foregroundEffects, clip)
 					end
 				end)
 
@@ -402,6 +416,12 @@ Game = class({
 					elseif e.layer == 'foreground' then
 						table.insert(self.foregroundEffects, fx)
 					end
+				end)
+
+				-- Put environment objects.
+				forEach(environments, function (e, _)
+					local env = self.pool:environment(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self, self.isEnvironmentBlocked, e.options)
+					table.insert(self.objects, 1, env)
 				end)
 			end,
 			update = function ()

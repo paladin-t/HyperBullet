@@ -12,11 +12,36 @@ Tutorials = {
 		print('Build tutorial1 for tutorial ' .. tostring(index) .. '.')
 
 		return game:build(
+			--[[ Clear colors.          ]] {
+				Color.new(196, 197, 180)
+			},
 			--[[ Background asset.      ]] Resources.load('assets/maps/tutorial1_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/tutorial1_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/tutorial1_foreground.map'),
 			--[[ Lingering way points.  ]] nil,
 			--[[ Passing-by way points. ]] nil,
+			--[[ Clips.                 ]] nil,
+			--[[ Effects.               ]] {
+				{
+					type = 'tips',
+					x = 0.5, y = 0.3,
+					layer = 'background',
+					content = 'W/A/S/D to move'
+				},
+				{
+					type = 'tips',
+					x = 0.5, y = 0.35,
+					layer = 'background',
+					content = 'Move mouse to look around'
+				},
+				{
+					type = 'tips',
+					x = 0.5, y = 0.4,
+					layer = 'background',
+					content = 'Press R to pick an item'
+				}
+			},
+			--[[ Environments.          ]] nil,
 			--[[ Initial weapons.       ]] {
 				{
 					class = 'Gun',
@@ -52,30 +77,6 @@ Tutorials = {
 
 					return false
 				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(196, 197, 180)
-			},
-			--[[ Clips.                 ]] nil,
-			--[[ Effects.               ]] {
-				{
-					type = 'tips',
-					x = 0.5, y = 0.3,
-					layer = 'background',
-					content = 'W/A/S/D to move'
-				},
-				{
-					type = 'tips',
-					x = 0.5, y = 0.35,
-					layer = 'background',
-					content = 'Move mouse to look around'
-				},
-				{
-					type = 'tips',
-					x = 0.5, y = 0.4,
-					layer = 'background',
-					content = 'Press R to pick an item'
-				}
 			}
 		)
 	end,
@@ -83,6 +84,9 @@ Tutorials = {
 		print('Build tutorial2 for tutorial ' .. tostring(index) .. '.')
 
 		return game:build(
+			--[[ Clear colors.          ]] {
+				Color.new(196, 197, 180)
+			},
 			--[[ Background asset.      ]] Resources.load('assets/maps/tutorial2_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/tutorial2_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/tutorial2_foreground.map'),
@@ -95,6 +99,22 @@ Tutorials = {
 					Vec2.new(528, 160)
 				}
 			},
+			--[[ Clips.                 ]] nil,
+			--[[ Effects.               ]] {
+				{
+					type = 'tips',
+					x = 0.5, y = 0.3,
+					layer = 'background',
+					content = 'Equip a weapon'
+				},
+				{
+					type = 'tips',
+					x = 0.5, y = 0.35,
+					layer = 'background',
+					content = 'Aim and LMB to shoot'
+				}
+			},
+			--[[ Environments.          ]] nil,
 			--[[ Initial weapons.       ]] {
 				{
 					class = 'Gun',
@@ -131,9 +151,27 @@ Tutorials = {
 
 					return false
 				end
-			},
+			}
+		)
+	end,
+	['tutorial3'] = function (game, index)
+		print('Build tutorial3 for tutorial ' .. tostring(index) .. '.')
+
+		return game:build(
 			--[[ Clear colors.          ]] {
 				Color.new(196, 197, 180)
+			},
+			--[[ Background asset.      ]] Resources.load('assets/maps/tutorial3_background.map'),
+			--[[ Building asset.        ]] Resources.load('assets/maps/tutorial3_building.map'),
+			--[[ Foreground asset.      ]] Resources.load('assets/maps/tutorial3_foreground.map'),
+			--[[ Lingering way points.  ]] nil,
+			--[[ Passing-by way points. ]] {
+				{
+					Vec2.new(-32, 160),
+					Vec2.new(32, 160), Vec2.new(32, 48), Vec2.new(96, 48),
+					Vec2.new(368, 48), Vec2.new(480, 48), Vec2.new(480, 160),
+					Vec2.new(528, 160)
+				}
 			},
 			--[[ Clips.                 ]] nil,
 			--[[ Effects.               ]] {
@@ -147,27 +185,16 @@ Tutorials = {
 					type = 'tips',
 					x = 0.5, y = 0.35,
 					layer = 'background',
-					content = 'Aim and LMB to shoot'
-				}
-			}
-		)
-	end,
-	['tutorial3'] = function (game, index)
-		print('Build tutorial3 for tutorial ' .. tostring(index) .. '.')
-
-		return game:build(
-			--[[ Background asset.      ]] Resources.load('assets/maps/tutorial3_background.map'),
-			--[[ Building asset.        ]] Resources.load('assets/maps/tutorial3_building.map'),
-			--[[ Foreground asset.      ]] Resources.load('assets/maps/tutorial3_foreground.map'),
-			--[[ Lingering way points.  ]] nil,
-			--[[ Passing-by way points. ]] {
+					content = 'LMB to slash with a melee weapon'
+				},
 				{
-					Vec2.new(-32, 160),
-					Vec2.new(32, 160), Vec2.new(32, 48), Vec2.new(96, 48),
-					Vec2.new(368, 48), Vec2.new(480, 48), Vec2.new(480, 160),
-					Vec2.new(528, 160)
+					type = 'tips',
+					x = 0.5, y = 0.4,
+					layer = 'background',
+					content = 'RMB or F to throw any weapon to attack'
 				}
 			},
+			--[[ Environments.          ]] nil,
 			--[[ Initial weapons.       ]] {
 				{
 					class = 'Melee',
@@ -204,30 +231,6 @@ Tutorials = {
 
 					return false
 				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(196, 197, 180)
-			},
-			--[[ Clips.                 ]] nil,
-			--[[ Effects.               ]] {
-				{
-					type = 'tips',
-					x = 0.5, y = 0.3,
-					layer = 'background',
-					content = 'Equip a weapon'
-				},
-				{
-					type = 'tips',
-					x = 0.5, y = 0.35,
-					layer = 'background',
-					content = 'LMB to slash with a melee weapon'
-				},
-				{
-					type = 'tips',
-					x = 0.5, y = 0.4,
-					layer = 'background',
-					content = 'RMB or F to throw any weapon to attack'
-				}
 			}
 		)
 	end

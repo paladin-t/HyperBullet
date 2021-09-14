@@ -164,7 +164,13 @@ Object = class({
 		return self._spriteAngle
 	end,
 	setAngle = function (self, angle)
-		self._spriteAngle = angle
+		if angle < 0 then
+			self._spriteAngle = math.pi * 2 - math.fmod(-angle, math.pi * 2)
+		elseif angle >= math.pi * 2 then
+			self._spriteAngle = math.fmod(angle, math.pi * 2)
+		else
+			self._spriteAngle = angle
+		end
 
 		return self
 	end,
@@ -257,6 +263,12 @@ Object = class({
 		return self
 	end,
 
+	intersects = function (self, other)
+		return Math.intersects(self._collider, other._collider)
+	end,
+	intersectsWithShape = function (self, shape)
+		return Math.intersects(self._collider, shape)
+	end,
 	behave = function (self, delta, hero)
 		error('Implement me.')
 	end,
@@ -481,6 +493,18 @@ Object = class({
 		return newDir
 	end,
 
+	_repulse = function (self, other)
+		local EPSILON = 16
+		local diff = Vec2.new(self.x, self.y) - Vec2.new(other.x, other.y)
+		local l = diff:normalize()
+		if l > EPSILON then
+			return Vec2.new(0, 0)
+		end
+		local FORCE = 10
+
+		return diff * (1 - l / EPSILON) * FORCE
+	end,
+
 	_tween = function (self, delta)
 		if self._tweens ~= nil then
 			local dead = nil
@@ -518,5 +542,5 @@ Object = class({
 		)
 
 		return self
-	end,
+	end
 }, Event)

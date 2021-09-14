@@ -97,13 +97,6 @@ Character = class({
 		end
 	end,
 
-	intersects = function (self, other)
-		return Math.intersects(self._collider, other._collider)
-	end,
-	intersectsWithShape = function (self, shape)
-		return Math.intersects(self._collider, shape)
-	end,
-
 	weapon = function (self)
 		return self._weapon
 	end,
@@ -259,7 +252,7 @@ Character = class({
 			if movementLength > speed then
 				self._moving = self._moving * (speed / movementLength)
 			end
-			local m = self:_move(self._moving) -- By behaviour.
+			local m = self:_move(self._moving) -- By behaviour or repulse.
 			self.x = self.x + m.x
 			self.y = self.y + m.y
 			self._moving = Vec2.new(0, 0)
@@ -340,17 +333,5 @@ Character = class({
 		if secondary ~= nil and after then
 			secondary:update(delta)
 		end
-	end,
-
-	_repulse = function (self, other)
-		local EPSILON = 16
-		local diff = Vec2.new(self.x, self.y) - Vec2.new(other.x, other.y)
-		local l = diff:normalize()
-		if l > EPSILON then
-			return Vec2.new(0, 0)
-		end
-		local FORCE = 10
-
-		return diff * (1 - l / EPSILON) * FORCE
 	end
 }, Object)

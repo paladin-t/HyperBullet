@@ -20,7 +20,7 @@ Pool = class({
 	end,
 
 	-- Generates a bullet.
-	bullet = function (self, type, x, y, direction, group, game, isBulletBlocked)
+	bullet = function (self, type, x, y, direction, group, game, isBlocked)
 		-- Prepare.
 		if type == nil then
 			return nil
@@ -42,7 +42,7 @@ Pool = class({
 		if not cached then
 			obj = Bullet.new(
 				cfg['resource'],
-				isBulletBlocked,
+				isBlocked,
 				{
 					game = game,
 					atk = cfg['atk'],
@@ -123,6 +123,40 @@ Pool = class({
 		obj.x, obj.y = x, y
 		obj
 			:bounce(0.75, 10)
+
+		-- Finish.
+		return obj
+	end,
+	-- Generates an environment object, note environment is not cached.
+	environment = function (self, type, x, y, game, isBlocked, options)
+		-- Prepare.
+		if type == nil then
+			return nil
+		end
+		local obj = nil
+
+		-- Generate.
+		local cfg = Environments[type]
+		obj = Environment.new(
+			transform(cfg['assets'], function (asset, i)
+				return Resources.load(asset)
+			end),
+			cfg['box'],
+			isBlocked,
+			merge(
+				options,
+				{
+					game = game,
+					moveSpeed = cfg['move_speed']
+				}
+			)
+		)
+
+		-- Cache.
+		obj.x, obj.y = x, y
+		obj
+			:setAngle(options.angle)
+			:play('idle', false)
 
 		-- Finish.
 		return obj

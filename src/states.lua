@@ -93,13 +93,13 @@ States = {
 			:addChild(
 				beGUI.Label.new('v' .. version, nil, false, 'font_white')
 					:anchor(1, 1)
-					:put(P(98), P(98))
+					:put(P(98), P(96))
 					:resize(-1, 12)
 			)
 			:addChild(
 				beGUI.Label.new('Powered by ', nil, false, 'font_white')
 					:anchor(0, 1)
-					:put(P(2), P(98))
+					:put(P(2), P(96))
 					:resize(-1, 12)
 					:addChild(
 						beGUI.Custom.new()
@@ -116,7 +116,7 @@ States = {
 				beGUI.Url.new('Bitty Engine')
 					:setId('url_bitty_engine')
 					:anchor(0, 1)
-					:put(110, P(98))
+					:put(110, P(96))
 					:resize(-1, 12)
 					:on('clicked', function (sender)
 						Platform.surf('https://paladin-t.github.io/bitty?f=hdc')
@@ -567,9 +567,32 @@ States = {
 	end,
 
 	['tutorial_playing'] = function (game)
+		local P = beGUI.percent
+		local theme = beTheme.default()
+		local widgets = beGUI.Widget.new()
+			:anchor(0.5, 0.5)
+			:put(P(50), P(50))
+			:resize(P(100), P(100))
+			:addChild(
+				beGUI.Button.new('EXIT')
+					:anchor(0, 1)
+					:put(10, P(98))
+					:resize(48, 16)
+					:on('clicked', function (sender)
+						game:save()
+						game.state = States['title'](game)
+
+						game:playSfx('gui/ok')
+					end)
+			)
+
 		return {
 			playing = true,
 			update = function (self, delta)
+				font(theme['font'].resource)
+				widgets:update(theme, delta)
+				font(nil)
+
 				return self
 			end
 		}

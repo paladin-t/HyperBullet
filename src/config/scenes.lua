@@ -154,6 +154,11 @@ Scenes = {
 		end
 
 		return game:build(
+			--[[ Clear colors.          ]] {
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
+			},
 			--[[ Background asset.      ]] Resources.load('assets/maps/map1_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/map1_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/map1_foreground.map'),
@@ -200,40 +205,6 @@ Scenes = {
 					Vec2.new(96, 48), Vec2.new(32, 48), Vec2.new(32, 160),
 					Vec2.new(-32, 160)
 				}
-			},
-			--[[ Initial weapons.       ]] weaponCandidates,
-			--[[ Enemy sequence.        ]] coroutine.create(
-				function ()
-					while true do
-						local data, _ = enemyCandidates:next()
-						coroutine.yield(data.type)
-					end
-				end
-			),
-			--[[ Other options.         ]] {
-				initialWeaponsAngle = nil,
-				maxEnemyCount = 3,
-				finishingCondition = function (game)
-					if game.killingCount >= 10 then
-						game.state = States['wait'](
-							game,
-							1,
-							nil,
-							function ()
-								game:play(true, false)
-							end
-						)
-
-						return true
-					end
-
-					return false
-				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(35,  17,  54),
-				Color.new(11,  111, 191),
-				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{
@@ -285,7 +256,38 @@ Scenes = {
 					}
 				}
 			},
-			--[[ Effects.               ]] nil
+			--[[ Effects.               ]] nil,
+			--[[ Environments.          ]] {
+			},
+			--[[ Initial weapons.       ]] weaponCandidates,
+			--[[ Enemy sequence.        ]] coroutine.create(
+				function ()
+					while true do
+						local data, _ = enemyCandidates:next()
+						coroutine.yield(data.type)
+					end
+				end
+			),
+			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
+				maxEnemyCount = 3,
+				finishingCondition = function (game)
+					if game.killingCount >= 10 then
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
+
+						return true
+					end
+
+					return false
+				end
+			}
 		)
 	end,
 	['room2'] = function (game, index)
@@ -406,6 +408,11 @@ Scenes = {
 		end
 
 		return game:build(
+			--[[ Clear colors.          ]] {
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
+			},
 			--[[ Background asset.      ]] Resources.load('assets/maps/map2_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/map2_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/map2_foreground.map'),
@@ -452,40 +459,6 @@ Scenes = {
 					Vec2.new(96, 48), Vec2.new(32, 48), Vec2.new(32, 160),
 					Vec2.new(-32, 160)
 				}
-			},
-			--[[ Initial weapons.       ]] weaponCandidates,
-			--[[ Enemy sequence.        ]] coroutine.create(
-				function ()
-					while true do
-						local data, _ = enemyCandidates:next()
-						coroutine.yield(data.type)
-					end
-				end
-			),
-			--[[ Other options.         ]] {
-				initialWeaponsAngle = nil,
-				maxEnemyCount = 3,
-				finishingCondition = function (game)
-					if game.killingCount >= 10 then
-						game.state = States['wait'](
-							game,
-							1,
-							nil,
-							function ()
-								game:play(true, false)
-							end
-						)
-
-						return true
-					end
-
-					return false
-				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(35,  17,  54),
-				Color.new(11,  111, 191),
-				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{
@@ -537,7 +510,66 @@ Scenes = {
 					}
 				}
 			},
-			--[[ Effects.               ]] nil
+			--[[ Effects.               ]] nil,
+			--[[ Environments.          ]] {
+				{
+					type = 'chair1',
+					x = 0.4, y = 0.35,
+					options = {
+						angle = -math.pi * 0.5
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.46666, y = 0.35,
+					options = {
+						angle = -math.pi * 0.5
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.53332, y = 0.35,
+					options = {
+						angle = -math.pi * 0.5
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.6, y = 0.35,
+					options = {
+						angle = -math.pi * 0.5
+					}
+				}
+			},
+			--[[ Initial weapons.       ]] weaponCandidates,
+			--[[ Enemy sequence.        ]] coroutine.create(
+				function ()
+					while true do
+						local data, _ = enemyCandidates:next()
+						coroutine.yield(data.type)
+					end
+				end
+			),
+			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
+				maxEnemyCount = 3,
+				finishingCondition = function (game)
+					if game.killingCount >= 10 then
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
+
+						return true
+					end
+
+					return false
+				end
+			}
 		)
 	end,
 	['room3'] = function (game, index)
@@ -658,6 +690,11 @@ Scenes = {
 		end
 
 		return game:build(
+			--[[ Clear colors.          ]] {
+				Color.new(35,  17,  54),
+				Color.new(11,  111, 191),
+				Color.new(147, 28,  132)
+			},
 			--[[ Background asset.      ]] Resources.load('assets/maps/map3_background.map'),
 			--[[ Building asset.        ]] Resources.load('assets/maps/map3_building.map'),
 			--[[ Foreground asset.      ]] Resources.load('assets/maps/map3_foreground.map'),
@@ -704,40 +741,6 @@ Scenes = {
 					Vec2.new(96, 48), Vec2.new(32, 48), Vec2.new(32, 160),
 					Vec2.new(-32, 160)
 				}
-			},
-			--[[ Initial weapons.       ]] weaponCandidates,
-			--[[ Enemy sequence.        ]] coroutine.create(
-				function ()
-					while true do
-						local data, _ = enemyCandidates:next()
-						coroutine.yield(data.type)
-					end
-				end
-			),
-			--[[ Other options.         ]] {
-				initialWeaponsAngle = nil,
-				maxEnemyCount = 3,
-				finishingCondition = function (game)
-					if game.killingCount >= 10 then
-						game.state = States['wait'](
-							game,
-							1,
-							nil,
-							function ()
-								game:play(true, false)
-							end
-						)
-
-						return true
-					end
-
-					return false
-				end
-			},
-			--[[ Clear colors.          ]] {
-				Color.new(35,  17,  54),
-				Color.new(11,  111, 191),
-				Color.new(147, 28,  132)
 			},
 			--[[ Clips.                 ]] {
 				{
@@ -789,7 +792,38 @@ Scenes = {
 					}
 				}
 			},
-			--[[ Effects.               ]] nil
+			--[[ Effects.               ]] nil,
+			--[[ Environments.          ]] {
+			},
+			--[[ Initial weapons.       ]] weaponCandidates,
+			--[[ Enemy sequence.        ]] coroutine.create(
+				function ()
+					while true do
+						local data, _ = enemyCandidates:next()
+						coroutine.yield(data.type)
+					end
+				end
+			),
+			--[[ Other options.         ]] {
+				initialWeaponsAngle = nil,
+				maxEnemyCount = 3,
+				finishingCondition = function (game)
+					if game.killingCount >= 10 then
+						game.state = States['wait'](
+							game,
+							1,
+							nil,
+							function ()
+								game:play(true, false)
+							end
+						)
+
+						return true
+					end
+
+					return false
+				end
+			}
 		)
 	end
 }
