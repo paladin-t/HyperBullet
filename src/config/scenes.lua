@@ -254,6 +254,18 @@ Scenes = {
 						interval = 8.0,
 						modulators = modulate(2)
 					}
+				},
+				{
+					type = 'clip',
+					x = 0.5, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/carpet2.png'),
+					options = {
+						anchor = Vec2.new(0.5, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
 				}
 			},
 			--[[ Effects.               ]] nil,
@@ -508,33 +520,45 @@ Scenes = {
 						interval = 8.0,
 						modulators = modulate(2)
 					}
+				},
+				{
+					type = 'clip',
+					x = 0.5, y = 0.5,
+					layer = 'background',
+					content = Resources.load('assets/imgs/clips/carpet3.png'),
+					options = {
+						anchor = Vec2.new(0.5, 0.5),
+						scale = nil,
+						interval = nil,
+						modulators = { }
+					}
 				}
 			},
 			--[[ Effects.               ]] nil,
 			--[[ Environments.          ]] {
 				{
-					type = 'chair1',
+					type = 'chair2',
 					x = 0.4, y = 0.35,
 					options = {
 						angle = -math.pi * 0.5
 					}
 				},
 				{
-					type = 'chair1',
+					type = 'chair2',
 					x = 0.46666, y = 0.35,
 					options = {
 						angle = -math.pi * 0.5
 					}
 				},
 				{
-					type = 'chair1',
+					type = 'chair2',
 					x = 0.53332, y = 0.35,
 					options = {
 						angle = -math.pi * 0.5
 					}
 				},
 				{
-					type = 'chair1',
+					type = 'chair2',
 					x = 0.6, y = 0.35,
 					options = {
 						angle = -math.pi * 0.5
@@ -794,6 +818,90 @@ Scenes = {
 			},
 			--[[ Effects.               ]] nil,
 			--[[ Environments.          ]] {
+				{
+					type = 'chair1',
+					x = 0.25, y = 0.28,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.376, y = 0.28,
+					options = {
+						angle = math.pi
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.438, y = 0.28,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.563, y = 0.28,
+					options = {
+						angle = math.pi
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.625, y = 0.28,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.75, y = 0.28,
+					options = {
+						angle = math.pi
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.25, y = 0.73,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.376, y = 0.73,
+					options = {
+						angle = math.pi
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.438, y = 0.73,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.563, y = 0.73,
+					options = {
+						angle = math.pi
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.625, y = 0.73,
+					options = {
+						angle = 0
+					}
+				},
+				{
+					type = 'chair1',
+					x = 0.75, y = 0.73,
+					options = {
+						angle = math.pi
+					}
+				}
 			},
 			--[[ Initial weapons.       ]] weaponCandidates,
 			--[[ Enemy sequence.        ]] coroutine.create(

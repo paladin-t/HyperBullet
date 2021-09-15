@@ -43,6 +43,7 @@ Game = class({
 	_bank = nil,
 	_blankImage = nil, _cursor = nil,
 	_hudColor = nil,
+	_backgroundEffectInsertIndex = 1,
 
 	_info = nil,
 	_data = nil,
@@ -53,6 +54,7 @@ Game = class({
 		self.sfxs = Audio['sfxs']
 		self.bgms = Audio['bgms']
 		local WALKABLE_CEL = 768
+		local WALL_CEL = 1000
 		local BORDER_CEL = -1
 		self.isHeroBlocked, self.isEnemyBlocked, self.isEnvironmentBlocked, self.isWeaponBlocked, self.isBulletBlocked =
 			function (pos) -- Is hero blocked?
@@ -102,6 +104,12 @@ Game = class({
 				if cel ~= WALKABLE_CEL then
 					return true
 				end
+				if self.foreground ~= nil then
+					cel = mget(self.foreground, pos.x, pos.y)
+					if cel >= WALL_CEL then
+						return true
+					end
+				end
 
 				return false
 			end,
@@ -109,6 +117,12 @@ Game = class({
 				local cel = mget(self.building, pos.x, pos.y)
 				if cel ~= WALKABLE_CEL and cel ~= BORDER_CEL then
 					return true
+				end
+				if self.foreground ~= nil then
+					cel = mget(self.foreground, pos.x, pos.y)
+					if cel >= WALL_CEL then
+						return true
+					end
 				end
 
 				return false
@@ -423,11 +437,14 @@ Game = class({
 					local env = self.pool:environment(e.type, self.sceneWidth * e.x, self.sceneHeight * e.y, self, self.isEnvironmentBlocked, e.options)
 					table.insert(self.objects, 1, env)
 				end)
+
+				-- Finish.
+				self._backgroundEffectInsertIndex = #self.backgroundEffects + 1
 			end,
 			update = function ()
 				-- Put initial weapons.
 				local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
-				local WEAPON_VECTOR = Vec2.new(100, 0)
+				local WEAPON_VECTOR = Vec2.new(60, 0)
 				local weapons = { }
 				local initialWeaponsAngle = options.initialWeaponsAngle or (math.pi * 0.07)
 				forEach(initialWeapons, function (w, i)
@@ -1194,7 +1211,7 @@ Game = class({
 			end
 			for i = 1, 3 do
 				local fx = self.pool:effect('blood', sender.x + math.random() * 32 - 16, sender.y + math.random() * 32 - 16, self)
-				table.insert(self.backgroundEffects, 1, fx)
+				table.insert(self.backgroundEffects, self._backgroundEffectInsertIndex, fx)
 			end
 		else
 			local fx = self.pool:effect('disappearance', sender.x, sender.y, self)

@@ -13,7 +13,7 @@ Blood = class({
 	_game = nil,
 
 	_r = 0,
-	_lifetime = 10, _ticks = 0,
+	_lifetime = 20, _ticks = 0,
 
 	--[[ Constructor. ]]
 
@@ -43,7 +43,7 @@ Blood = class({
 		return self
 	end,
 	update = function (self, delta)
-		local fadeTime = self._lifetime * 0.8
+		local fadeTime = self._lifetime * 0.7
 		if self._ticks < fadeTime then
 			circ(self.x, self.y, self._r, true, self._color)
 		else

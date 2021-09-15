@@ -10,7 +10,14 @@ Engine page: https://paladin-t.github.io/bitty/
 Environments = {
 	['chair1'] = {
 		['assets'] = {
-			'assets/sprites/environments/chair.spr'
+			'assets/sprites/environments/chair1.spr'
+		},
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['move_speed'] = 200
+	},
+	['chair2'] = {
+		['assets'] = {
+			'assets/sprites/environments/chair2.spr'
 		},
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['move_speed'] = 200
