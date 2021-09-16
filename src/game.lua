@@ -31,6 +31,7 @@ Game = class({
 
 	room = nil,
 	levelIndex = nil, tutorialIndex = nil,
+	initializeWeapons = nil,
 	killingCount = 0,
 	score = 0,
 	highscore = 0, newHighscore = false,
@@ -255,7 +256,7 @@ Game = class({
 		end
 		self.killingCount = self.killingCount + num
 
-		self.room.finished(self)
+		self.room.check(self, 'kill', nil)
 
 		return self
 	end,
@@ -267,7 +268,7 @@ Game = class({
 			self.newHighscore = true
 		end
 
-		self.room.finished(self)
+		self.room.check(self, 'score', nil)
 
 		return self
 	end,
@@ -444,49 +445,55 @@ Game = class({
 			update = function ()
 				-- Put initial weapons.
 				local WEAPON_ORIGIN = Vec2.new(building.width * 16 * 0.5, building.height * 16 * 0.5)
-				local WEAPON_VECTOR = Vec2.new(60, 0)
+				local WEAPON_VECTOR = options.isTutorial and Vec2.new(40, 0) or Vec2.new(60, 0)
 				local weapons = { }
 				local initialWeaponsAngle = options.initialWeaponsAngle or (math.pi * 0.07)
-				forEach(initialWeapons, function (w, i)
-					local weapon = (w.class == 'Gun' and Gun or Melee).new(
-						self.isWeaponBlocked,
-						{
-							type = w.type,
-							game = self,
-						}
-					)
-						:float(2)
-						:on('picked', function (sender, owner)
-							sender:off('picked')
-							remove(weapons, sender)
-							if owner == self.hero then
-								forEach(weapons, function (w, _)
-									w:kill('disappeared', nil)
-
-									local fx = self.pool:effect('disappearance', w.x, w.y, self)
-									table.insert(self.foregroundEffects, fx)
-								end)
-							end
-						end)
-					if self.levelIndex == 1 then
-						weapon:setDisappearable(false)
-					end
-					if w.capacity ~= nil then
-						weapon:setCapacity(w.capacity)
-					end
-					table.insert(weapons, weapon)
-					local pos = w.position
-					if pos == nil then
-						pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(
-							math.pi * 2 * ((i - 1) / #initialWeapons) + initialWeaponsAngle
+				self.initializeWeapons = function ()
+					forEach(initialWeapons, function (w, i)
+						local weapon = (w.class == 'Gun' and Gun or Melee).new(
+							self.isWeaponBlocked,
+							{
+								type = w.type,
+								game = self,
+							}
 						)
-					end
-					weapon.x, weapon.y = pos.x, pos.y
-					table.insert(self.objects, weapon)
+							:float(2)
+							:on('picked', function (sender, owner)
+								sender:off('picked')
+								remove(weapons, sender)
+								if owner == self.hero then
+									forEach(weapons, function (w, _)
+										w:kill('disappeared', nil)
 
-					local fx = self.pool:effect('appearance', pos.x, pos.y, self)
-					table.insert(self.foregroundEffects, fx)
-				end)
+										local fx = self.pool:effect('disappearance', w.x, w.y, self)
+										table.insert(self.foregroundEffects, fx)
+									end)
+								end
+							end)
+						if self.levelIndex == 1 then
+							weapon:setDisappearable(false)
+						end
+						if w.isBlocked ~= nil then
+							weapon:setBlockedHandler(w.isBlocked)
+						end
+						if w.capacity ~= nil then
+							weapon:setCapacity(w.capacity)
+						end
+						table.insert(weapons, weapon)
+						local pos = w.position
+						if pos == nil then
+							pos = WEAPON_ORIGIN + WEAPON_VECTOR:rotated(
+								math.pi * 2 * ((i - 1) / #initialWeapons) + initialWeaponsAngle
+							)
+						end
+						weapon.x, weapon.y = pos.x, pos.y
+						table.insert(self.objects, weapon)
+
+						local fx = self.pool:effect('appearance', pos.x, pos.y, self)
+						table.insert(self.foregroundEffects, fx)
+					end)
+				end
+				self.initializeWeapons()
 
 				-- Delay.
 				Coroutine.waitFor(3.5)
@@ -616,8 +623,8 @@ Game = class({
 					end
 				end
 			end,
-			finished = function ()
-				return options.finishingCondition(self)
+			check = function (sender, action, data)
+				return options.finishingCondition(self, action, data)
 			end
 		}
 	end,
@@ -1166,7 +1173,7 @@ Game = class({
 		font(nil)
 
 		-- Finish.
-		clip(0, HUD_HEIGHT, canvasWidth, canvasHeight - HUD_HEIGHT)
+		clip()
 
 		return self
 	end,
@@ -1177,8 +1184,8 @@ Game = class({
 			if byWhom ~= nil and byWhom.isBlade ~= nil and byWhom:isBlade() then
 				local sprite1, sprite2 = sender:corpse(true)
 				sprite1, sprite2 = Resources.load(sprite1), Resources.load(sprite2)
-				sprite1:play('idle', false)
-				sprite2:play('idle', false)
+				sprite1:play('idle', false, true, true)
+				sprite2:play('idle', false, true, true)
 				local angle = sender:angle() - math.pi * 0.5
 				local corpse1 = Corpse.new(
 					sprite1,
@@ -1199,7 +1206,7 @@ Game = class({
 			else
 				local sprite = sender:corpse(false)
 				sprite = Resources.load(sprite)
-				sprite:play('idle', false)
+				sprite:play('idle', false, true, true)
 				local angle = sender:angle() - math.pi * 0.5
 				local corpse = Corpse.new(
 					sprite,

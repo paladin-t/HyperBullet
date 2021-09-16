@@ -156,7 +156,9 @@ Pool = class({
 		obj.x, obj.y = x, y
 		obj
 			:setAngle(options.angle)
-			:play('idle', false)
+			:play(
+				'idle', false
+			)
 
 		-- Finish.
 		return obj

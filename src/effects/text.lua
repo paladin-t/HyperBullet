@@ -144,12 +144,9 @@ Text = class({
 			for _, ch in ipairs(self._characters) do
 				local z = -ch.z:get(k) * self._depth * ((k - 1) / (STACK_SIZE - 1))
 				local col = ch.colorStack:get(k)
-				local f = k / STACK_SIZE
-				local r = col.r * f
-				local g = col.g * f
-				local b = col.b * f
-				local a = col.a
-				text(ch.character, x + ch.x, y + ch.y + z, Color.new(r, g, b, a))
+				local f = k / STACK_SIZE * 255
+				col = col * Color.new(f, f, f, 255)
+				text(ch.character, x + ch.x, y + ch.y + z, col)
 			end
 		end
 		font(nil)

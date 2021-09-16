@@ -78,7 +78,7 @@ States = {
 							end)
 					)
 					:addChild(
-						beGUI.Button.new('EXIT')
+						beGUI.Button.new('QUIT')
 							:anchor(0, 0)
 							:put(0, 51)
 							:resize(P(100), 16)
@@ -509,7 +509,7 @@ States = {
 		local ticks = 0
 		local text_ = Text.new(
 			0.5, 0.3,
-			'GAME OVER',
+			'WASTED',
 			{
 				worldSpace = false,
 				font = FONT_TITLE_TEXT,
@@ -579,8 +579,7 @@ States = {
 					:put(10, P(98))
 					:resize(48, 16)
 					:on('clicked', function (sender)
-						game:save()
-						game.state = States['title'](game)
+						game.state = States['tutorial_exit'](game)
 
 						game:playSfx('gui/ok')
 					end)
@@ -702,6 +701,68 @@ States = {
 					font(theme['font'].resource)
 					widgets:update(theme, delta)
 					font(nil)
+				end
+
+				return self
+			end
+		}
+	end,
+	['tutorial_exit'] = function (game)
+		local P = beGUI.percent
+		local theme = beTheme.default()
+		local widgets = beGUI.Widget.new()
+			:anchor(0.5, 0.5)
+			:put(P(50), P(50))
+			:resize(P(100), P(100))
+		local once = false
+
+		return {
+			playing = false,
+			update = function (self, delta)
+				if navPrev() then
+					widgets:navigate('prev')
+				elseif navNext() then
+					widgets:navigate('next')
+				elseif navConfirm() then
+					widgets:navigate('press')
+				elseif navCancel() then
+					if widgets.context and widgets.context.focus == nil then
+						game.state = States['tutorial_playing'](game)
+
+						game:playSfx('gui/ok')
+					else
+						widgets:navigate('cancel')
+					end
+				end
+				font(theme['font'].resource)
+				widgets:update(theme, delta)
+				font(nil)
+
+				if not once then
+					once = true
+					widgets:openPopup(
+						beGUI.QuestionBox.new(
+							true,
+							'TUTORIAL', 'Exit to title screen?',
+							'Yes', 'No'
+						)
+							:on('canceled', function (sender)
+								widgets:closePopup()
+
+								game.state = States['tutorial_playing'](game)
+							end)
+							:on('confirmed', function (sender)
+								widgets:closePopup()
+	
+								game:save()
+								game.state = States['title'](game)
+							end)
+							:on('denied', function (sender)
+								widgets:closePopup()
+
+								game.state = States['tutorial_playing'](game)
+							end)
+					)
 				end
 
 				return self

@@ -46,61 +46,71 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'dual_pistols',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'shotgun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'submachine_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'machine_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'rifle',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'laser',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'disc_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'mines',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		else
@@ -109,25 +119,27 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		end
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 then
+		if index == 1 or index == 2 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
 				:add({ type = 'enemy1_chase_pistol' }, 50)
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
-		elseif index == 2 then
+		elseif index == 3 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
@@ -281,9 +293,10 @@ Scenes = {
 				end
 			),
 			--[[ Other options.         ]] {
+				isTutorial = false,
 				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
-				finishingCondition = function (game)
+				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
 						game.state = States['wait'](
 							game,
@@ -312,61 +325,71 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'dual_pistols',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'shotgun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'submachine_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'machine_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'rifle',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'laser',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'disc_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'mines',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		else
@@ -375,25 +398,27 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		end
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 then
+		if index == 1 or index == 2 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
 				:add({ type = 'enemy1_chase_pistol' }, 50)
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
-		elseif index == 2 then
+		elseif index == 3 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
@@ -575,9 +600,10 @@ Scenes = {
 				end
 			),
 			--[[ Other options.         ]] {
+				isTutorial = false,
 				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
-				finishingCondition = function (game)
+				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
 						game.state = States['wait'](
 							game,
@@ -606,13 +632,15 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'dual_pistols',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
@@ -630,37 +658,43 @@ Scenes = {
 					class = 'Gun',
 					type = 'machine_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'rifle',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'laser',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'disc_gun',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Gun',
 					type = 'mines',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		else
@@ -669,25 +703,27 @@ Scenes = {
 					class = 'Gun',
 					type = 'pistol',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				},
 				{
 					class = 'Melee',
 					type = 'knife',
 					capacity = nil,
-					position = nil
+					position = nil,
+					isBlocked = nil
 				}
 			}
 		end
 		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 then
+		if index == 1 or index == 2 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
 				:add({ type = 'enemy1_chase_pistol' }, 50)
 				:add({ type = 'enemy1_chase_dual_pistols' }, 50)
 				:add({ type = 'enemy1_chase_shotgun' }, 20)
-		elseif index == 2 then
+		elseif index == 3 then
 			enemyCandidates
 				:add({ type = 'enemy1_chase_knife' }, 50)
 				:add({ type = 'enemy1_besiege_knife' }, 50)
@@ -913,9 +949,10 @@ Scenes = {
 				end
 			),
 			--[[ Other options.         ]] {
+				isTutorial = false,
 				initialWeaponsAngle = nil,
 				maxEnemyCount = 3,
-				finishingCondition = function (game)
+				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
 						game.state = States['wait'](
 							game,

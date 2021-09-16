@@ -55,7 +55,7 @@ Hero = class({
 				elseif self._picking then
 					if self:intersects(v) then -- Hero intersects with weapon for picking.
 						if self._game:pickWeapon(self, v) then
-							self._game.room.finished(self)
+							self._game.room.check(self, 'pick', v)
 						end
 					end
 				end
@@ -63,7 +63,7 @@ Hero = class({
 				if self._picking then
 					if self:intersects(v) then -- Hero intersects with armour for picking.
 						if self._game:pickArmour(self, v) then
-							self._game.room.finished(self)
+							self._game.room.check(self, 'pick', v)
 						end
 					end
 				end
@@ -95,6 +95,8 @@ Hero = class({
 				weapon:revive()
 				weapon:throw(self._facing)
 				table.insert(self._game.pending, weapon)
+
+				self._game.room.check(self, 'throw', weapon)
 			end
 
 			self._throwing = false

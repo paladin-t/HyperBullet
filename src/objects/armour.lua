@@ -29,7 +29,7 @@ Armour = class({
 		local box = cfg['box']
 		self.type = options.type
 		self.icon = Resources.load(cfg['entry'])
-		self.icon:play('idle')
+		self.icon:play('idle', true, true, true)
 
 		Object.ctor(self, resource, box, nil)
 

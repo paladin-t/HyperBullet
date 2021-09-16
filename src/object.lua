@@ -23,6 +23,7 @@ Object = class({
 	_disappearable = true, _disappearing = nil, _disappearingTicks = 0,
 	_collider = nil,
 
+	_spriteAsyncPlay = false,
 	_sprite = nil,
 	_spriteWidth = 0, _spriteHeight = 0,
 	_spriteAngle = 0,
@@ -49,18 +50,18 @@ Object = class({
 		if resource ~= nil then
 			if resource.__name == 'Sprite' then
 				self._sprite = resource
-				self._sprite:play('idle', false)
+				self._sprite:play('idle', false, true, self._spriteAsyncPlay)
 				self._spriteWidth, self._spriteHeight =
 					self._sprite.width, self._sprite.height
 			elseif resource['type'] == 'sprite' then
 				self._sprite = resource['resource']
-				self._sprite:play('idle', false)
+				self._sprite:play('idle', false, true, self._spriteAsyncPlay)
 				self._spriteWidth, self._spriteHeight =
 					self._sprite.width, self._sprite.height
 			elseif resource['type'] == 'sprites' then
 				self._shapeSprites = resource
 				local sprite = self._shapeSprites['resource']
-				sprite:play('idle', false)
+				sprite:play('idle', false, true, self._spriteAsyncPlay)
 				self._spriteWidth, self._spriteHeight =
 					sprite.width, sprite.height
 			elseif resource['type'] == 'line' then
@@ -143,7 +144,7 @@ Object = class({
 		if reset == nil then reset = true end
 		if loop == nil then loop = true end
 
-		local success, duration = self._sprite:play(motion, reset, loop)
+		local success, duration = self._sprite:play(motion, reset, loop, self._spriteAsyncPlay)
 		if success and played then
 			local ticks = 0
 			self._spriteUpdater = function (delta)
@@ -250,6 +251,22 @@ Object = class({
 		return self
 	end,
 
+	setBlockedHandler = function (self, isBlocked)
+		if isBlocked == nil then
+			self._walker = nil
+			self._isBlocked = nil
+		else
+			if self._walker == nil then
+				self._walker = Walker.new()
+			end
+			self._walker.objectSize = Vec2.new(self.box:width(), self.box:height())
+			self._walker.tileSize = Vec2.new(16, 16)
+			self._walker.offset = Vec2.new(self.box:width() * 0.5, self.box:height() * 0.5)
+			self._isBlocked = isBlocked
+		end
+
+		return self
+	end,
 	raycast = function (self, pos, dir, isBlocked)
 		return self._raycaster:solve(pos, dir, isBlocked or self._isBlocked)
 	end,

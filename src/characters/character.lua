@@ -42,7 +42,7 @@ Character = class({
 
 		self._spriteAngle = math.pi * 0.5
 		self._spriteLegs = resources[2]
-		self._spriteLegs:play('walk', false)
+		self._spriteLegs:play('walk', false, true, self._spriteAsyncPlay)
 		self._spriteLegsWidth, self._spriteLegsHeight =
 			self._spriteLegs.width, self._spriteLegs.height
 		self._spriteDead = resources[3]
