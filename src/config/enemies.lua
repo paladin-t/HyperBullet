@@ -62,13 +62,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_pistol'] = {
+	['enemy2_chase_pistol'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy2.spr',
+			'assets/sprites/characters/enemy2_legs.spr',
+			'assets/sprites/characters/enemy2_dead.spr',
+			'assets/sprites/characters/enemy2_split1.spr',
+			'assets/sprites/characters/enemy2_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -80,13 +80,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_dual_pistols'] = {
+	['enemy2_chase_dual_pistols'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy2.spr',
+			'assets/sprites/characters/enemy2_legs.spr',
+			'assets/sprites/characters/enemy2_dead.spr',
+			'assets/sprites/characters/enemy2_split1.spr',
+			'assets/sprites/characters/enemy2_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -98,13 +98,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_shotgun'] = {
+	['enemy3_chase_shotgun'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy3.spr',
+			'assets/sprites/characters/enemy3_legs.spr',
+			'assets/sprites/characters/enemy3_dead.spr',
+			'assets/sprites/characters/enemy3_split1.spr',
+			'assets/sprites/characters/enemy3_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -116,13 +116,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_submachine_gun'] = {
+	['enemy4_chase_submachine_gun'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy4.spr',
+			'assets/sprites/characters/enemy4_legs.spr',
+			'assets/sprites/characters/enemy4_dead.spr',
+			'assets/sprites/characters/enemy4_split1.spr',
+			'assets/sprites/characters/enemy4_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -134,13 +134,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy2_chase_submachine_gun_body_armour'] = {
+	['enemy4_chase_submachine_gun_body_armour'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy2.spr',
-			'assets/sprites/characters/enemy2_legs.spr',
-			'assets/sprites/characters/enemy2_dead.spr',
-			'assets/sprites/characters/enemy2_split1.spr',
-			'assets/sprites/characters/enemy2_split2.spr'
+			'assets/sprites/characters/enemy4.spr',
+			'assets/sprites/characters/enemy4_legs.spr',
+			'assets/sprites/characters/enemy4_dead.spr',
+			'assets/sprites/characters/enemy4_split1.spr',
+			'assets/sprites/characters/enemy4_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -155,13 +155,13 @@ Enemies = {
 		['armour'] = 'body_armour',
 		['score'] = 20
 	},
-	['enemy1_chase_machine_gun'] = {
+	['enemy4_chase_machine_gun'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy4.spr',
+			'assets/sprites/characters/enemy4_legs.spr',
+			'assets/sprites/characters/enemy4_dead.spr',
+			'assets/sprites/characters/enemy4_split1.spr',
+			'assets/sprites/characters/enemy4_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -176,13 +176,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy2_chase_machine_gun_body_armour'] = {
+	['enemy4_chase_machine_gun_body_armour'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy2.spr',
-			'assets/sprites/characters/enemy2_legs.spr',
-			'assets/sprites/characters/enemy2_dead.spr',
-			'assets/sprites/characters/enemy2_split1.spr',
-			'assets/sprites/characters/enemy2_split2.spr'
+			'assets/sprites/characters/enemy4.spr',
+			'assets/sprites/characters/enemy4_legs.spr',
+			'assets/sprites/characters/enemy4_dead.spr',
+			'assets/sprites/characters/enemy4_split1.spr',
+			'assets/sprites/characters/enemy4_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -197,13 +197,13 @@ Enemies = {
 		['armour'] = 'body_armour',
 		['score'] = 20
 	},
-	['enemy1_pass_by_rifle'] = {
+	['enemy5_pass_by_rifle'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy5.spr',
+			'assets/sprites/characters/enemy5_legs.spr',
+			'assets/sprites/characters/enemy5_dead.spr',
+			'assets/sprites/characters/enemy5_split1.spr',
+			'assets/sprites/characters/enemy5_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -215,13 +215,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_pass_by_laser'] = {
+	['enemy5_pass_by_laser'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy5.spr',
+			'assets/sprites/characters/enemy5_legs.spr',
+			'assets/sprites/characters/enemy5_dead.spr',
+			'assets/sprites/characters/enemy5_split1.spr',
+			'assets/sprites/characters/enemy5_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -233,13 +233,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_disc_gun'] = {
+	['enemy5_chase_disc_gun'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy5.spr',
+			'assets/sprites/characters/enemy5_legs.spr',
+			'assets/sprites/characters/enemy5_dead.spr',
+			'assets/sprites/characters/enemy5_split1.spr',
+			'assets/sprites/characters/enemy5_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
@@ -251,13 +251,13 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
-	['enemy1_chase_mines'] = {
+	['enemy5_chase_mines'] = {
 		['assets'] = {
-			'assets/sprites/characters/enemy1.spr',
-			'assets/sprites/characters/enemy1_legs.spr',
-			'assets/sprites/characters/enemy1_dead.spr',
-			'assets/sprites/characters/enemy1_split1.spr',
-			'assets/sprites/characters/enemy1_split2.spr'
+			'assets/sprites/characters/enemy5.spr',
+			'assets/sprites/characters/enemy5_legs.spr',
+			'assets/sprites/characters/enemy5_dead.spr',
+			'assets/sprites/characters/enemy5_split1.spr',
+			'assets/sprites/characters/enemy5_split2.spr'
 		},
 		['hp'] = 1,
 		['box'] = Recti.byXYWH(0, 0, 16, 16),

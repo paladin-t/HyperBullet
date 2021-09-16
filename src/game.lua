@@ -51,6 +51,8 @@ Game = class({
 	_options = nil,
 
 	ctor = function (self, co)
+		self:_checkProject()
+
 		self.co = co
 		self.sfxs = Audio['sfxs']
 		self.bgms = Audio['bgms']
@@ -1162,8 +1164,8 @@ Game = class({
 		text('HIGHSCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 7, COLOR_CLEAR_TEXT)
 		text(self.highscore, canvasWidth - maxScoreWidth - 10, 7, self.newHighscore and Color.new(255, 100, 100) or COLOR_CLEAR_TEXT)
 		textWidth, _ = measure('SCORE', FONT_NORMAL_TEXT)
-		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 22, COLOR_CLEAR_TEXT)
-		text(self.score, canvasWidth - maxScoreWidth - 10, 22, COLOR_CLEAR_TEXT)
+		text('SCORE', canvasWidth - textWidth - maxScoreWidth - 10 - 8, 26, COLOR_CLEAR_TEXT)
+		text(self.score, canvasWidth - maxScoreWidth - 10, 26, COLOR_CLEAR_TEXT)
 
 		if DEBUG_SHOW_WIREFRAME then
 			local txt = 'POS: ' .. tostring(math.floor(self.hero.x + 0.5)) .. ', ' .. tostring(math.floor(self.hero.y + 0.5))
@@ -1174,6 +1176,24 @@ Game = class({
 
 		-- Finish.
 		clip()
+
+		return self
+	end,
+
+	-- Ensures the project is not broken at debug time,
+	-- just for making sure I'm not doing anything stupid.
+	_checkProject = function (self)
+		if not DEBUG then
+			return self
+		end
+
+		for _, enemy in pairs(Enemies) do
+			for _, asset in ipairs(enemy['assets']) do
+				if not Project.main:exists(asset) then
+					error('Missing asset: ' .. asset .. '.')
+				end
+			end
+		end
 
 		return self
 	end,

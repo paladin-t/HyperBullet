@@ -7,7 +7,11 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local function restart(self)
+local function pressExit(self)
+	return keyp(beInput.KeyCode.Esc) or
+		btnp(beInput.Controller.Start, beInput.Controller.first)
+end
+local function pressRestart(self)
 	return keyp(beInput.KeyCode.R) or
 		btnp(beInput.Controller.Start, beInput.Controller.first)
 end
@@ -535,7 +539,7 @@ States = {
 						ticks = nil
 					end
 				else
-					if restart() then
+					if pressRestart() then
 						game:save()
 						game:play(true, true)
 
@@ -588,6 +592,11 @@ States = {
 		return {
 			playing = true,
 			update = function (self, delta)
+				if pressExit() then
+					game.state = States['tutorial_exit'](game)
+
+					game:playSfx('gui/ok')
+				end
 				font(theme['font'].resource)
 				widgets:update(theme, delta)
 				font(nil)
@@ -677,7 +686,7 @@ States = {
 						ticks = nil
 					end
 				else
-					if restart() then
+					if pressRestart() then
 						game:save()
 						game.state = States['title'](game)
 
