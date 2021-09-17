@@ -282,6 +282,34 @@ Scenes = {
 			},
 			--[[ Effects.               ]] nil,
 			--[[ Environments.          ]] {
+				{
+					type = 'painting1',
+					x = 0.22, y = 0.16,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'painting2',
+					x = 0.88, y = 0.21,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'painting3',
+					x = 0.12, y = 0.81,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'painting4',
+					x = 0.68, y = 0.80,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				}
 			},
 			--[[ Initial weapons.       ]] weaponCandidates,
 			--[[ Enemy sequence.        ]] coroutine.create(
@@ -561,6 +589,76 @@ Scenes = {
 			},
 			--[[ Effects.               ]] nil,
 			--[[ Environments.          ]] {
+				{
+					type = 'newspaper1',
+					x = 0.22, y = 0.16,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'pizza2',
+					x = 0.88, y = 0.21,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'pizza2',
+					x = 0.83, y = 0.23,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'pizza1',
+					x = 0.24, y = 0.81,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'pizza2',
+					x = 0.28, y = 0.76,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'newspaper1',
+					x = 0.68, y = 0.80,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle1',
+					x = 0.58, y = 0.21,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle2',
+					x = 0.56, y = 0.19,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle1',
+					x = 0.54, y = 0.51,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle2',
+					x = 0.6, y = 0.53,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
 				{
 					type = 'chair2',
 					x = 0.4, y = 0.35,
@@ -854,6 +952,69 @@ Scenes = {
 			},
 			--[[ Effects.               ]] nil,
 			--[[ Environments.          ]] {
+				{
+					type = 'fruit1',
+					x = 0.22, y = 0.16,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'fruit1',
+					x = 0.26, y = 0.18,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'fruit1',
+					x = 0.32, y = 0.13,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle2',
+					x = 0.88, y = 0.21,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle3',
+					x = 0.78, y = 0.18,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle3',
+					x = 0.83, y = 0.19,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle3',
+					x = 0.12, y = 0.81,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'bottle2',
+					x = 0.21, y = 0.76,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
+				{
+					type = 'newspaper1',
+					x = 0.68, y = 0.80,
+					options = {
+						angle = math.pi * 2 * math.random()
+					}
+				},
 				{
 					type = 'chair1',
 					x = 0.25, y = 0.28,

@@ -1181,7 +1181,7 @@ Game = class({
 	end,
 
 	-- Ensures the project is not broken at debug time,
-	-- just for making sure I'm not doing anything stupid.
+	-- just make sure I'm not doing anything stupid to the assets, etc.
 	_checkProject = function (self)
 		if not DEBUG then
 			return self
