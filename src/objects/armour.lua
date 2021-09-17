@@ -1,5 +1,5 @@
 --[[
-A top-down shoot'em up game made with Bitty Engine
+A top-down action game made with Bitty Engine
 
 Copyright (C) 2021 Tony Wang, all rights reserved
 

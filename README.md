@@ -1,6 +1,6 @@
 # Hyper Bullet (WIP)
 
-Hyper Bullet is a top-down shoot'em up game.
+Hyper Bullet is a top-down action game made with [Bitty Engine](https://paladin-t.github.io/bitty/).
 
 **Prototype**
 
@@ -12,12 +12,11 @@ Hyper Bullet is a top-down shoot'em up game.
 
 ## Description
 
-This project is still under early development.
+**This project is still under early development.**
 
-* Pick weapon
-* Attack enemies
-* Death
-* Another more expedition
+Hyper Bullet is a top-down action game replenished with agreeable vaporwave aesthetics, pure joy of combat and gunplay rhythm.
+
+Pick up a weapon, defeat oncoming enemies, survive in infinite crises, and write down your own legend...
 
 ## Operations
 
