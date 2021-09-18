@@ -74,7 +74,10 @@ Enemies = {
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['behaviours'] = { 'pass_by', 'look_at', 'attack' },
 		['look_at_target'] = 'vertical',
-		['attack_tempo'] = nil,
+		['attack_tempo'] = {
+			['active'] = 0.5,
+			['rest'] = 1.2
+		},
 		['move_speed'] = 130,
 		['weapon'] = 'pistol',
 		['armour'] = nil,

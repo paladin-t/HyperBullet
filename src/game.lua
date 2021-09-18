@@ -1194,7 +1194,12 @@ Game = class({
 		local _, min, hr = DateTime.now()
 		local _, sec = math.modf(DateTime.toSeconds(DateTime.ticks()))
 		local sep = sec < 0.5 and ':' or ' '
-		local txt = tostring(hr) .. sep .. tostring(min)
+		hr = tostring(hr)
+		min = tostring(min)
+		if #min == 1 then
+			min = '0' .. min
+		end
+		local txt = hr .. sep .. min
 		font(FONT_SMALL_TEXT)
 		text(txt, 20, 18, COLOR_INVERT_TEXT, 0)
 		font(nil)
