@@ -723,6 +723,7 @@ Game = class({
 		self.killingCount = 0
 		if restart then
 			self.score = 0
+			self.newHighscore = false
 		end
 		if toGame then
 			self.state = States['next'](self)
@@ -820,6 +821,7 @@ Game = class({
 		self.killingCount = 0
 		if self.tutorialIndex == 1 then
 			self.score = 0
+			self.newHighscore = false
 		end
 		self.state = States['tutorial_next'](self)
 		self.camera:reset()
@@ -1120,20 +1122,20 @@ Game = class({
 		font(FONT_NORMAL_TEXT)
 
 		if self.levelIndex ~= nil then
-			text('LEVEL', 10, 7, COLOR_CLEAR_TEXT)
-			text(self.levelIndex, 70, 7, COLOR_CLEAR_TEXT)
+			text('LEVEL', 60, 7, COLOR_CLEAR_TEXT)
+			text(self.levelIndex, 120, 7, COLOR_CLEAR_TEXT)
 		elseif self.tutorialIndex ~= nil then
-			text('TUTORIAL', 10, 7, COLOR_CLEAR_TEXT)
-			text(self.tutorialIndex, 94, 7, COLOR_CLEAR_TEXT)
+			text('TUTORIAL', 60, 7, COLOR_CLEAR_TEXT)
+			text(self.tutorialIndex, 144, 7, COLOR_CLEAR_TEXT)
 		else
-			text('LEVEL', 10, 7, COLOR_CLEAR_TEXT)
-			text(0, 70, 7, COLOR_CLEAR_TEXT)
+			text('LEVEL', 60, 7, COLOR_CLEAR_TEXT)
+			text(0, 120, 7, COLOR_CLEAR_TEXT)
 		end
-		text('EQUIP.', 10, 26, COLOR_CLEAR_TEXT)
+		text('EQUIP.', 60, 26, COLOR_CLEAR_TEXT)
 		if weapon == nil and armour == nil then
-			text('NONE', 70, 26, COLOR_CLEAR_TEXT)
+			text('NONE', 120, 26, COLOR_CLEAR_TEXT)
 		else
-			local x = 70
+			local x = 120
 			if weapon ~= nil then
 				circ(x + 8, 30, 9, true, Color.new(13, 108, 174))
 				spr(weapon.icon, x, 22)
@@ -1174,8 +1176,28 @@ Game = class({
 
 		font(nil)
 
+		self:_watch(delta)
+
 		-- Finish.
 		clip()
+
+		return self
+	end,
+	-- Draws the watch.
+	_watch = function (self, delta)
+		local canvasWidth, _ = Canvas.main:size()
+		tex(
+			self._bank,
+			10, 0, 40, 40,
+			96, 448, 40, 40
+		)
+		local _, min, hr = DateTime.now()
+		local _, sec = math.modf(DateTime.toSeconds(DateTime.ticks()))
+		local sep = sec < 0.5 and ':' or ' '
+		local txt = tostring(hr) .. sep .. tostring(min)
+		font(FONT_SMALL_TEXT)
+		text(txt, 20, 18, COLOR_INVERT_TEXT, 0)
+		font(nil)
 
 		return self
 	end,

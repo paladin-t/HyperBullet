@@ -62,6 +62,24 @@ Enemies = {
 		['armour'] = nil,
 		['score'] = 10
 	},
+	['enemy2_pass_by_pistol'] = {
+		['assets'] = {
+			'assets/sprites/characters/enemy2.spr',
+			'assets/sprites/characters/enemy2_legs.spr',
+			'assets/sprites/characters/enemy2_dead.spr',
+			'assets/sprites/characters/enemy2_split1.spr',
+			'assets/sprites/characters/enemy2_split2.spr'
+		},
+		['hp'] = 1,
+		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['behaviours'] = { 'pass_by', 'look_at', 'attack' },
+		['look_at_target'] = 'vertical',
+		['attack_tempo'] = nil,
+		['move_speed'] = 130,
+		['weapon'] = 'pistol',
+		['armour'] = nil,
+		['score'] = 10
+	},
 	['enemy2_chase_pistol'] = {
 		['assets'] = {
 			'assets/sprites/characters/enemy2.spr',

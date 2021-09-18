@@ -432,12 +432,24 @@ States = {
 				end
 
 				if ticks ~= nil then
+					local comboInterval = 1.5
+					if self.combo == 1 then
+						comboInterval = 1.8
+					elseif self.combo == 2 then
+						comboInterval = 1.7
+					elseif self.combo == 3 then
+						comboInterval = 1.6
+					end
 					ticks = ticks + delta
-					if ticks >= 1 then
+					if ticks >= comboInterval then
 						self.combo = nil
 						ticks = nil
 						text_ = nil
 					end
+				end
+
+				if DEBUG then
+					self.playing = not key(beInput.KeyCode.Space)
 				end
 
 				return self

@@ -54,42 +54,42 @@ Environments = {
 		['assets'] = {
 			'assets/sprites/environments/newspaper1.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['painting1'] = {
 		['assets'] = {
 			'assets/sprites/environments/painting1.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['painting2'] = {
 		['assets'] = {
 			'assets/sprites/environments/painting2.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['painting3'] = {
 		['assets'] = {
 			'assets/sprites/environments/painting3.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['painting4'] = {
 		['assets'] = {
 			'assets/sprites/environments/painting4.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['pizza1'] = {
 		['assets'] = {
 			'assets/sprites/environments/pizza1.spr'
 		},
-		['box'] = Recti.byXYWH(0, 0, 16, 16),
+		['box'] = Recti.byXYWH(0, 0, 32, 32),
 		['move_speed'] = 200
 	},
 	['pizza2'] = {

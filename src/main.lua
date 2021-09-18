@@ -69,11 +69,13 @@ DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawni
 
 FONT_TITLE_TEXT = Font.new('assets/fonts/college.ttf', 48)
 FONT_SUBTITLE_TEXT = Font.new('assets/fonts/college.ttf', 24)
+FONT_SMALL_TEXT = Font.new('assets/fonts/ascii 4x6.png', Vec2.new(4, 6))
 FONT_NORMAL_TEXT = Font.new('assets/fonts/ascii 8x8.png', Vec2.new(8, 8))
 
 COLOR_NEON_TEXT = { Color.new(10, 191, 150), Color.new(235, 117, 206) }
 COLOR_BLEEDING_TEXT = { Color.new(226, 114, 196), Color.new(203, 94, 41) }
 COLOR_CLEAR_TEXT = Color.new(200, 220, 210)
+COLOR_INVERT_TEXT = Color.new(30, 30, 30)
 COLOR_SHADOW = Color.new(0, 0, 0, 100)
 
 Canvas.main:resize(DEBUG and 640 or 0, 360)

@@ -131,7 +131,7 @@ Tutorials = {
 					while true do
 						coroutine.yield('enemy1_pass_by_none')
 
-						Coroutine.waitFor(2.5)
+						Coroutine.waitFor(1.5)
 					end
 				end
 			),
@@ -207,7 +207,7 @@ Tutorials = {
 					while true do
 						coroutine.yield('enemy1_pass_by_none')
 
-						Coroutine.waitFor(2.5)
+						Coroutine.waitFor(1.5)
 					end
 				end
 			),
@@ -294,7 +294,7 @@ Tutorials = {
 					while true do
 						coroutine.yield('enemy1_pass_by_none')
 
-						Coroutine.waitFor(2.5)
+						Coroutine.waitFor(1.5)
 					end
 				end
 			),

@@ -7,7 +7,135 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local function modulate(index)
+local function pickWeapons(index)
+	local WEAPON_GROUP1 = {
+		{
+			class = 'Melee',
+			type = 'knife'
+		}
+	}
+	local WEAPON_GROUP2 = {
+		{
+			class = 'Gun',
+			type = 'pistol'
+		},
+		{
+			class = 'Gun',
+			type = 'dual_pistols'
+		}
+	}
+	local WEAPON_GROUP3 = {
+		{
+			class = 'Gun',
+			type = 'shotgun'
+		},
+		{
+			class = 'Gun',
+			type = 'submachine_gun'
+		},
+		{
+			class = 'Gun',
+			type = 'machine_gun'
+		}
+	}
+	local WEAPON_GROUP4 = {
+		{
+			class = 'Gun',
+			type = 'rifle'
+		},
+		{
+			class = 'Gun',
+			type = 'laser'
+		},
+		{
+			class = 'Gun',
+			type = 'disc_gun'
+		},
+		{
+			class = 'Gun',
+			type = 'mines'
+		}
+	}
+
+	local weaponCandidates = { }
+	if index == 1 then
+		local group2 = clone(WEAPON_GROUP2)
+		forEach(group2, function (candidate, _)
+			table.insert(weaponCandidates, candidate)
+		end)
+		-- local group3 = clone(WEAPON_GROUP3)
+		-- forEach(group3, function (candidate, _)
+		-- 	table.insert(weaponCandidates, candidate)
+		-- end)
+		local group4 = clone(WEAPON_GROUP4)
+		forEach(group4, function (candidate, _)
+			table.insert(weaponCandidates, candidate)
+		end)
+		local group1 = clone(WEAPON_GROUP1)
+		forEach(group1, function (candidate, _)
+			table.insert(weaponCandidates, candidate)
+		end)
+	else
+		local group1 = clone(WEAPON_GROUP1)
+		table.insert(weaponCandidates, anyOnce(group1))
+		local group2 = clone(WEAPON_GROUP2)
+		table.insert(weaponCandidates, anyOnce(group2))
+	end
+	weaponCandidates = transform(weaponCandidates, function (candidate, _)
+		return {
+			class = candidate.class,
+			type = candidate.type,
+			capacity = nil,
+			position = nil,
+			isBlocked = nil
+		}
+	end)
+
+	return weaponCandidates, math.pi * 0.15
+end
+
+local function pickEnemies(index)
+	local enemyCandidates = Probabilistic.new() -- Enemy candidates.
+	if index == 1 or index == 2 then
+		enemyCandidates
+			:add({ type = 'enemy1_chase_knife' }, 30)
+			:add({ type = 'enemy1_besiege_knife' }, 30)
+			:add({ type = 'enemy2_pass_by_pistol' }, 30)
+			:add({ type = 'enemy2_chase_pistol' }, 30)
+			:add({ type = 'enemy2_chase_dual_pistols' }, 30)
+			:add({ type = 'enemy3_chase_shotgun' }, 20)
+	elseif index == 3 then
+		enemyCandidates
+			:add({ type = 'enemy1_chase_knife' }, 30)
+			:add({ type = 'enemy1_besiege_knife' }, 30)
+			:add({ type = 'enemy2_pass_by_pistol' }, 30)
+			:add({ type = 'enemy2_chase_pistol' }, 30)
+			:add({ type = 'enemy2_chase_dual_pistols' }, 30)
+			:add({ type = 'enemy3_chase_shotgun' }, 20)
+			:add({ type = 'enemy4_chase_submachine_gun' }, 20)
+			:add({ type = 'enemy4_chase_machine_gun' }, 10)
+	else
+		enemyCandidates
+			:add({ type = 'enemy1_chase_knife' }, 30)
+			:add({ type = 'enemy1_besiege_knife' }, 30)
+			:add({ type = 'enemy2_pass_by_pistol' }, 30)
+			:add({ type = 'enemy2_chase_pistol' }, 30)
+			:add({ type = 'enemy2_chase_dual_pistols' }, 30)
+			:add({ type = 'enemy3_chase_shotgun' }, 20)
+			:add({ type = 'enemy4_chase_submachine_gun' }, 20)
+			:add({ type = 'enemy4_chase_submachine_gun_body_armour' }, 5)
+			:add({ type = 'enemy4_chase_machine_gun' }, 10)
+			:add({ type = 'enemy4_chase_machine_gun_body_armour' }, 5)
+			:add({ type = 'enemy5_pass_by_rifle' }, 20)
+			:add({ type = 'enemy5_pass_by_laser' }, 10)
+			:add({ type = 'enemy5_chase_disc_gun' }, 20)
+			:add({ type = 'enemy5_chase_mines' }, 20)
+	end
+
+	return enemyCandidates
+end
+
+local function modulateClips(index)
 	return {
 		translate = function (delta, factor)
 			local pingpong = math.sin((factor * 1) * math.pi * 2 + math.pi * (index - 1))
@@ -39,131 +167,8 @@ Scenes = {
 	['room1'] = function (game, index)
 		print('Build room1 for level ' .. tostring(index) .. '.')
 
-		local weaponCandidates = nil
-		if index == 1 then
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'dual_pistols',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'shotgun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'submachine_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'machine_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'rifle',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'laser',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'disc_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'mines',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		else
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		end
-		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 or index == 2 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-		elseif index == 3 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-		else
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun_body_armour' }, 5)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-				:add({ type = 'enemy4_chase_machine_gun_body_armour' }, 5)
-				:add({ type = 'enemy5_pass_by_rifle' }, 20)
-				:add({ type = 'enemy5_pass_by_laser' }, 10)
-				:add({ type = 'enemy5_chase_disc_gun' }, 20)
-				:add({ type = 'enemy5_chase_mines' }, 20)
-		end
+		local weaponCandidates, weaponAngle = pickWeapons(index)
+		local enemyCandidates = pickEnemies(index)
 
 		return game:build(
 			--[[ Clear colors.          ]] {
@@ -252,7 +257,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(1)
+						modulators = modulateClips(1)
 					}
 				},
 				{
@@ -264,7 +269,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(2)
+						modulators = modulateClips(2)
 					}
 				},
 				{
@@ -322,7 +327,7 @@ Scenes = {
 			),
 			--[[ Other options.         ]] {
 				isTutorial = false,
-				initialWeaponsAngle = nil,
+				initialWeaponsAngle = weaponAngle,
 				maxEnemyCount = 3,
 				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
@@ -346,131 +351,8 @@ Scenes = {
 	['room2'] = function (game, index)
 		print('Build room2 for level ' .. tostring(index) .. '.')
 
-		local weaponCandidates = nil
-		if index == 1 then
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'dual_pistols',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'shotgun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'submachine_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'machine_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'rifle',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'laser',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'disc_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'mines',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		else
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		end
-		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 or index == 2 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-		elseif index == 3 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-		else
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun_body_armour' }, 5)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-				:add({ type = 'enemy4_chase_machine_gun_body_armour' }, 5)
-				:add({ type = 'enemy5_pass_by_rifle' }, 20)
-				:add({ type = 'enemy5_pass_by_laser' }, 10)
-				:add({ type = 'enemy5_chase_disc_gun' }, 20)
-				:add({ type = 'enemy5_chase_mines' }, 20)
-		end
+		local weaponCandidates, weaponAngle = pickWeapons(index)
+		local enemyCandidates = pickEnemies(index)
 
 		return game:build(
 			--[[ Clear colors.          ]] {
@@ -559,7 +441,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(1)
+						modulators = modulateClips(1)
 					}
 				},
 				{
@@ -571,7 +453,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(2)
+						modulators = modulateClips(2)
 					}
 				},
 				{
@@ -699,7 +581,7 @@ Scenes = {
 			),
 			--[[ Other options.         ]] {
 				isTutorial = false,
-				initialWeaponsAngle = nil,
+				initialWeaponsAngle = weaponAngle,
 				maxEnemyCount = 3,
 				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
@@ -723,129 +605,8 @@ Scenes = {
 	['room3'] = function (game, index)
 		print('Build room3 for level ' .. tostring(index) .. '.')
 
-		local weaponCandidates = nil
-		if index == 1 then
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'dual_pistols',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'shotgun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'submachine_gun',
-					capacity = nil,
-					position = nil
-				},
-				{
-					class = 'Gun',
-					type = 'machine_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'rifle',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'laser',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'disc_gun',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Gun',
-					type = 'mines',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		else
-			weaponCandidates = {
-				{
-					class = 'Gun',
-					type = 'pistol',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				},
-				{
-					class = 'Melee',
-					type = 'knife',
-					capacity = nil,
-					position = nil,
-					isBlocked = nil
-				}
-			}
-		end
-		local enemyCandidates = Probabilistic.new() -- Enemy candidates.
-		if index == 1 or index == 2 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-		elseif index == 3 then
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-		else
-			enemyCandidates
-				:add({ type = 'enemy1_chase_knife' }, 30)
-				:add({ type = 'enemy1_besiege_knife' }, 30)
-				:add({ type = 'enemy2_chase_pistol' }, 30)
-				:add({ type = 'enemy2_chase_dual_pistols' }, 30)
-				:add({ type = 'enemy3_chase_shotgun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun' }, 20)
-				:add({ type = 'enemy4_chase_submachine_gun_body_armour' }, 5)
-				:add({ type = 'enemy4_chase_machine_gun' }, 10)
-				:add({ type = 'enemy4_chase_machine_gun_body_armour' }, 5)
-				:add({ type = 'enemy5_pass_by_rifle' }, 20)
-				:add({ type = 'enemy5_pass_by_laser' }, 10)
-				:add({ type = 'enemy5_chase_disc_gun' }, 20)
-				:add({ type = 'enemy5_chase_mines' }, 20)
-		end
+		local weaponCandidates, weaponAngle = pickWeapons(index)
+		local enemyCandidates = pickEnemies(index)
 
 		return game:build(
 			--[[ Clear colors.          ]] {
@@ -934,7 +695,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(1)
+						modulators = modulateClips(1)
 					}
 				},
 				{
@@ -946,7 +707,7 @@ Scenes = {
 						anchor = nil,
 						scale = Vec2.new(0.5, 0.5),
 						interval = 8.0,
-						modulators = modulate(2)
+						modulators = modulateClips(2)
 					}
 				}
 			},
@@ -1111,7 +872,7 @@ Scenes = {
 			),
 			--[[ Other options.         ]] {
 				isTutorial = false,
-				initialWeaponsAngle = nil,
+				initialWeaponsAngle = weaponAngle,
 				maxEnemyCount = 3,
 				finishingCondition = function (game, action, data)
 					if game.killingCount >= 10 then
