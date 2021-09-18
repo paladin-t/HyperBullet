@@ -380,7 +380,7 @@ Game = class({
 			local json = Json.new()
 			json:fromTable(self._data)
 			local str = json:toString()
-			file:writeLine(str)
+			file:writeString(str)
 			file:close()
 		end
 
@@ -389,7 +389,7 @@ Game = class({
 			local json = Json.new()
 			json:fromTable(self._options)
 			local str = json:toString()
-			file:writeLine(str)
+			file:writeString(str)
 			file:close()
 		end
 

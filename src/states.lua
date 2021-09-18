@@ -170,16 +170,31 @@ States = {
 		}
 	end,
 	['options'] = function (game)
-		local numberOptionToBoolean = function (key)
+		local volumeOptionToString = function (key)
 			local val = game:getOption(key)
 			if not val then
-				return 0
+				return '80%'
+			end
+			if val == 0 then
+				return 'OFF'
 			end
 
-			return val > 0
+			return tostring(round(val * 100)) .. '%'
 		end
-		local booleanToNumberOption = function (key, val, trueVal)
-			local val_ = val and trueVal or 0
+		local nextVolumeOption = function (key)
+			local val = game:getOption(key)
+			if not val then
+				val = 0.8
+			end
+			val = val + 0.2
+			if val > 1 then
+				val = 0
+			end
+
+			return val
+		end
+		local setVolumeOption = function (key, val)
+			local val_ = val or 0.8
 			game:setOption(key, val_)
 		end
 		local P = beGUI.percent
@@ -195,31 +210,31 @@ States = {
 					:resize(P(100), 16)
 			)
 			:addChild(
-				beGUI.Button.new('SFX: ' .. (numberOptionToBoolean('audio/sfx/volume') and 'ON ' or 'OFF'))
+				beGUI.Button.new('SFX VOLUME: ' .. volumeOptionToString('audio/sfx/volume'))
 					:anchor(0, 0)
 					:put(0, 17)
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
-						booleanToNumberOption('audio/sfx/volume', not numberOptionToBoolean('audio/sfx/volume'), 0.8)
+						setVolumeOption('audio/sfx/volume', nextVolumeOption('audio/sfx/volume'))
 						local sfxVol, bgmVol =
 							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
 						volume(sfxVol, bgmVol)
-						sender:setValue('SFX: ' .. (numberOptionToBoolean('audio/sfx/volume') and 'ON ' or 'OFF'))
+						sender:setValue('SFX VOLUME: ' .. volumeOptionToString('audio/sfx/volume'))
 
 						game:playSfx('gui/ok')
 					end)
 			)
 			:addChild(
-				beGUI.Button.new('BGM: ' .. (numberOptionToBoolean('audio/bgm/volume') and 'ON ' or 'OFF'))
+				beGUI.Button.new('BGM VOLUME: ' .. volumeOptionToString('audio/bgm/volume'))
 					:anchor(0, 0)
 					:put(0, 34)
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
-						booleanToNumberOption('audio/bgm/volume', not numberOptionToBoolean('audio/bgm/volume'), 0.8)
+						setVolumeOption('audio/bgm/volume', nextVolumeOption('audio/bgm/volume'))
 						local sfxVol, bgmVol =
 							game:getOption('audio/sfx/volume') or 0.8, game:getOption('audio/bgm/volume') or 0.8
 						volume(sfxVol, bgmVol)
-						sender:setValue('BGM: ' .. (numberOptionToBoolean('audio/bgm/volume') and 'ON ' or 'OFF'))
+						sender:setValue('BGM VOLUME: ' .. volumeOptionToString('audio/bgm/volume'))
 
 						game:playSfx('gui/ok')
 					end)
