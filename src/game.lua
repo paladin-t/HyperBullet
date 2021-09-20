@@ -951,6 +951,7 @@ Game = class({
 
 	-- Removes all dead effects from the effects collections.
 	_removeDeadEffects = function (self)
+		local corpseCount, headCorpses = 0, nil
 		local dead = nil
 		for i = 1, #self.backgroundEffects do
 			local obj = self.backgroundEffects[i]
@@ -959,6 +960,24 @@ Game = class({
 					dead = { }
 				end
 				table.insert(dead, 1, i)
+			elseif obj.group == 'corpse' then
+				if obj:dual() then
+					corpseCount = corpseCount + 1
+				else
+					corpseCount = corpseCount + 2
+				end
+				if headCorpses == nil then
+					if obj:dual() then
+						headCorpses = { obj, self.backgroundEffects[i + 1] }
+					else
+						headCorpses = { obj }
+					end
+				end
+			end
+		end
+		if corpseCount > 24 and headCorpses ~= nil then
+			for _, c in ipairs(headCorpses) do
+				c:disappear()
 			end
 		end
 		if dead ~= nil then
@@ -1236,7 +1255,10 @@ Game = class({
 				local angle = sender:angle() - math.pi * 0.5
 				local corpse1 = Corpse.new(
 					sprite1,
-					Recti.byXYWH(0, 0, 16, 32)
+					Recti.byXYWH(0, 0, 16, 32),
+					{
+						dual = true
+					}
 				)
 				local offset1 = Vec2.new(0, -10):rotated(angle)
 				corpse1.x, corpse1.y = sender.x + offset1.x, sender.y + offset1.y
@@ -1244,7 +1266,10 @@ Game = class({
 				table.insert(self.backgroundEffects, corpse1)
 				local corpse2 = Corpse.new(
 					sprite2,
-					Recti.byXYWH(0, 0, 16, 16)
+					Recti.byXYWH(0, 0, 16, 16),
+					{
+						dual = true
+					}
 				)
 				local offset2 = Vec2.new(0, 10):rotated(angle)
 				corpse2.x, corpse2.y = sender.x + offset2.x, sender.y + offset2.y
@@ -1257,7 +1282,10 @@ Game = class({
 				local angle = sender:angle() - math.pi * 0.5
 				local corpse = Corpse.new(
 					sprite,
-					Recti.byXYWH(0, 0, 16, 32)
+					Recti.byXYWH(0, 0, 16, 32),
+					{
+						dual = false
+					}
 				)
 				corpse.x, corpse.y = sender.x, sender.y
 				corpse:setAngle(angle)

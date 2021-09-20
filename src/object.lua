@@ -485,7 +485,7 @@ Object = class({
 	_move = function (self, step)
 		local newDir = Vec2.new(0, 0)
 		local stepLength = step:normalize()
-		if stepLength > 0 then
+		if stepLength > 8 then
 			local singleStepLength = 8
 			local pos = Vec2.new(self.x, self.y)
 			while stepLength > 0 do -- Split into a few steps to avoid penetration.

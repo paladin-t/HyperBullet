@@ -40,6 +40,7 @@ end
 Behaviours = {
 	['chase'] = function ()
 		return {
+			penetrative = false,
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::consume::
@@ -90,6 +91,7 @@ Behaviours = {
 	end,
 	['besiege'] = function ()
 		return {
+			penetrative = false,
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::consume::
@@ -140,6 +142,7 @@ Behaviours = {
 	end,
 	['pass_by'] = function ()
 		return {
+			penetrative = true,
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				::consume::
@@ -190,6 +193,7 @@ Behaviours = {
 
 	['look_at'] = function ()
 		return {
+			penetrative = false,
 			behave = function (self, this, delta, hero, src, dst)
 				-- Look at the target.
 				local lookAtTarget = this:lookAtTarget()
@@ -214,6 +218,7 @@ Behaviours = {
 		local count = 0
 
 		return {
+			penetrative = false,
 			behave = function (self, this, delta, hero, src, dst)
 				-- Prepare.
 				if src == nil then

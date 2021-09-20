@@ -333,5 +333,61 @@ Character = class({
 		if secondary ~= nil and after then
 			secondary:update(delta)
 		end
+	end,
+
+	_move = function (self, step)
+		local newDir = Vec2.new(0, 0)
+		local stepLength = step:normalize()
+		if stepLength > 8 then
+			local singleStepLength = 8
+			local pos = Vec2.new(self.x, self.y)
+			while stepLength > 0 do -- Split into a few steps to avoid penetration.
+				local step_ = step * math.min(stepLength, singleStepLength)
+				local m = self._walker:solve(
+					pos, step_,
+					self._isBlocked,
+					self._slidable
+				)
+				if m.length == 0 then
+					m = self._walker:solve(
+						Vec2.new(self.x, self.y), Vec2.new(step_.x, 0),
+						self._isBlocked,
+						self._slidable
+					)
+					if m.length == 0 then
+						m = self._walker:solve(
+							Vec2.new(self.x, self.y), Vec2.new(0, step_.y),
+							self._isBlocked,
+							self._slidable
+						)
+					end
+				end
+				pos = pos + m
+				newDir = newDir + m
+				stepLength = stepLength - singleStepLength
+			end
+		else
+			newDir = self._walker:solve(
+				Vec2.new(self.x, self.y), step * stepLength,
+				self._isBlocked,
+				self._slidable
+			)
+			if newDir.length == 0 then
+				newDir = self._walker:solve(
+					Vec2.new(self.x, self.y), Vec2.new(step.x * stepLength, 0),
+					self._isBlocked,
+					self._slidable
+				)
+				if newDir.length == 0 then
+					newDir = self._walker:solve(
+						Vec2.new(self.x, self.y), Vec2.new(0, step.y * stepLength),
+						self._isBlocked,
+						self._slidable
+					)
+				end
+			end
+		end
+
+		return newDir
 	end
 }, Object)

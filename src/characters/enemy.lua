@@ -64,8 +64,12 @@ Enemy = class({
 		Character.behave(self, delta, hero)
 
 		-- Behave.
+		local penetrative = false
 		local src, dst = nil, nil
 		for _, b in ipairs(self._behaviours) do
+			if not penetrative and b.penetrative then
+				penetrative = true
+			end
 			src, dst = b:behave(self, delta, hero, src, dst)
 		end
 
@@ -114,9 +118,11 @@ Enemy = class({
 				end
 			end
 		end
-		local l = repulse.length
-		if l > EPSILON then
-			self._moving = self._moving + repulse
+		if not penetrative then
+			local l = repulse.length
+			if l > EPSILON then
+				self._moving = self._moving + repulse
+			end
 		end
 
 		-- Process picking and throwing.

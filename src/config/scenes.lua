@@ -8,13 +8,13 @@ Engine page: https://paladin-t.github.io/bitty/
 ]]
 
 local function pickWeapons(index)
-	local WEAPON_GROUP1 = {
+	local group1 = {
 		{
 			class = 'Melee',
 			type = 'knife'
 		}
 	}
-	local WEAPON_GROUP2 = {
+	local group2 = {
 		{
 			class = 'Gun',
 			type = 'pistol'
@@ -24,7 +24,7 @@ local function pickWeapons(index)
 			type = 'dual_pistols'
 		}
 	}
-	local WEAPON_GROUP3 = {
+	local group3 = {
 		{
 			class = 'Gun',
 			type = 'shotgun'
@@ -38,7 +38,7 @@ local function pickWeapons(index)
 			type = 'machine_gun'
 		}
 	}
-	local WEAPON_GROUP4 = {
+	local group4 = {
 		{
 			class = 'Gun',
 			type = 'rifle'
@@ -59,27 +59,23 @@ local function pickWeapons(index)
 
 	local weaponCandidates = { }
 	if index == 1 then
-		local group2 = clone(WEAPON_GROUP2)
 		forEach(group2, function (candidate, _)
 			table.insert(weaponCandidates, candidate)
 		end)
-		-- local group3 = clone(WEAPON_GROUP3)
 		-- forEach(group3, function (candidate, _)
 		-- 	table.insert(weaponCandidates, candidate)
 		-- end)
-		local group4 = clone(WEAPON_GROUP4)
 		forEach(group4, function (candidate, _)
 			table.insert(weaponCandidates, candidate)
 		end)
-		local group1 = clone(WEAPON_GROUP1)
 		forEach(group1, function (candidate, _)
 			table.insert(weaponCandidates, candidate)
 		end)
 	else
-		local group1 = clone(WEAPON_GROUP1)
-		table.insert(weaponCandidates, anyOnce(group1))
-		local group2 = clone(WEAPON_GROUP2)
-		table.insert(weaponCandidates, anyOnce(group2))
+		local one, _ = anyOnce(group1)
+		table.insert(weaponCandidates, one)
+		one, _ = anyOnce(group2)
+		table.insert(weaponCandidates, one)
 	end
 	weaponCandidates = transform(weaponCandidates, function (candidate, _)
 		return {

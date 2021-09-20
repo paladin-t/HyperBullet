@@ -8,10 +8,18 @@ Engine page: https://paladin-t.github.io/bitty/
 ]]
 
 Corpse = class({
+	--[[ Variables. ]]
+
+	group = 'corpse',
+
+	_dual = false,
+
 	--[[ Constructor. ]]
 
-	ctor = function (self, resource, box)
+	ctor = function (self, resource, box, options)
 		Object.ctor(self, resource, box, nil)
+
+		self._dual = options.dual
 	end,
 
 	--[[ Meta methods. ]]
@@ -21,6 +29,10 @@ Corpse = class({
 	end,
 
 	--[[ Methods. ]]
+
+	dual = function (self)
+		return self._dual
+	end,
 
 	behave = function (self, delta, _1)
 		return self
