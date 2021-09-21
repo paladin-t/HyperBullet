@@ -7,31 +7,31 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local function pressExit(self)
-	return keyp(beInput.KeyCode.Esc) or
-		btnp(beInput.Controller.Start, beInput.Controller.first)
-end
-local function pressRestart(self)
-	return keyp(beInput.KeyCode.R) or
-		btnp(beInput.Controller.Start, beInput.Controller.first)
-end
-local function navPrev(self)
+local function navPrev()
 	return keyp(beInput.KeyCode.Up) or
 		btnp(beInput.Controller.DpadUp, beInput.Controller.first) or
 		axisp(beInput.Controller.AxisLeftY, -1)
 end
-local function navNext(self)
+local function navNext()
 	return keyp(beInput.KeyCode.Down) or
 		btnp(beInput.Controller.DpadDown, beInput.Controller.first) or
 		axisp(beInput.Controller.AxisLeftY, 1)
 end
-local function navConfirm(self)
+local function navConfirm()
 	return keyp(beInput.KeyCode.Return) or
 		btnp(beInput.Controller.A, beInput.Controller.first)
 end
-local function navCancel(self)
+local function navCancel()
 	return keyp(beInput.KeyCode.Esc) or
 		btnp(beInput.Controller.B, beInput.Controller.first)
+end
+local function pressExit()
+	return keyp(beInput.KeyCode.Esc) or
+		btnp(beInput.Controller.Start, beInput.Controller.first)
+end
+local function pressRestart()
+	return keyp(beInput.KeyCode.R) or
+		btnp(beInput.Controller.Start, beInput.Controller.first)
 end
 
 States = {

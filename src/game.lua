@@ -7,8 +7,9 @@ Engine page: https://paladin-t.github.io/bitty/
   Game page: https://paladin-t.github.io/games/hb/
 ]]
 
-local DATE_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet_data.txt')
-local CONFIG_FILE = Path.combine(Path.writableDirectory, 'hyper_bullet_config.txt')
+local CONFIG_PATH = Path.combine(Path.writableDirectory, 'hyper_bullet_config.txt')
+local DATE_PATH = Path.combine(Path.writableDirectory, 'hyper_bullet_data.txt')
+
 local HUD_HEIGHT = 40
 
 Game = class({
@@ -47,8 +48,8 @@ Game = class({
 	_backgroundEffectInsertIndex = 1,
 
 	_info = nil,
-	_data = nil,
 	_options = nil,
+	_data = nil,
 
 	ctor = function (self, co)
 		self:_checkProject()
@@ -143,14 +144,14 @@ Game = class({
 		local json = Json.new()
 		json:fromString(bytes:readString())
 		self._info = json:toTable()
-		self._data = {
-			['highscore'] = 0
-		}
 		self._options = {
 			['audio/sfx/volume'] = 0.8,
 			['audio/bgm/volume'] = 0.8,
 			['video/canvas/scale'] = 2,
 			['gameplay/blood/show'] = true
+		}
+		self._data = {
+			['highscore'] = 0
 		}
 
 		self.state = States['title'](self)
@@ -160,16 +161,6 @@ Game = class({
 	getInfo = function (self, key)
 		return self._info[key]
 	end,
-	-- Gets data of the specific key.
-	getData = function (self, key)
-		return self._data[key]
-	end,
-	-- Sets data of the specific key.
-	setData = function (self, key, val)
-		self._data[key] = val
-
-		return self
-	end,
 	-- Gets option value of the specific key.
 	getOption = function (self, key)
 		return self._options[key]
@@ -177,6 +168,16 @@ Game = class({
 	-- Sets option value of the specific key.
 	setOption = function (self, key, val)
 		self._options[key] = val
+
+		return self
+	end,
+	-- Gets data of the specific key.
+	getData = function (self, key)
+		return self._data[key]
+	end,
+	-- Sets data of the specific key.
+	setData = function (self, key, val)
+		self._data[key] = val
 
 		return self
 	end,
@@ -346,7 +347,7 @@ Game = class({
 	-- Loads game data.
 	load = function (self)
 		local file = File.new()
-		if file:open(DATE_FILE, Stream.Read) then
+		if file:open(DATE_PATH, Stream.Read) then
 			local str = file:readString()
 			file:close()
 			local json = Json.new()
@@ -359,7 +360,7 @@ Game = class({
 		end
 
 		file = File.new()
-		if file:open(CONFIG_FILE, Stream.Read) then
+		if file:open(CONFIG_PATH, Stream.Read) then
 			local str = file:readString()
 			file:close()
 			local json = Json.new()
@@ -375,7 +376,7 @@ Game = class({
 	-- Saves game data.
 	save = function (self)
 		local file = File.new()
-		if file:open(DATE_FILE, Stream.Write) then
+		if file:open(DATE_PATH, Stream.Write) then
 			self._data['highscore'] = self.highscore
 			local json = Json.new()
 			json:fromTable(self._data)
@@ -385,7 +386,7 @@ Game = class({
 		end
 
 		file = File.new()
-		if file:open(CONFIG_FILE, Stream.Write) then
+		if file:open(CONFIG_PATH, Stream.Write) then
 			local json = Json.new()
 			json:fromTable(self._options)
 			local str = json:toString()
