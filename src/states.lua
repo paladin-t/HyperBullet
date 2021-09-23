@@ -95,6 +95,32 @@ States = {
 			)
 		widgets
 			:addChild(
+				beGUI.Label.new('Get ', nil, false, 'font_white')
+					:anchor(0, 1)
+					:put(P(2), P(93))
+					:resize(-1, 12)
+					:addChild(
+						beGUI.Custom.new()
+							:anchor(0, 0)
+							:put(0, P(100))
+							:resize(P(100), P(100))
+							:on('updated', function (sender, x, y, w, h)
+								local lblBittyEngine = widgets:find('url_steam')
+								lblBittyEngine.x = sender.x + w + 12
+							end)
+					)
+			)
+			:addChild(
+				beGUI.Url.new('full version')
+					:setId('url_steam')
+					:anchor(0, 1)
+					:put(110, P(93))
+					:resize(-1, 12)
+					:on('clicked', function (sender)
+						Platform.surf('https://store.steampowered.com/app/1729660/')
+					end)
+			)
+			:addChild(
 				beGUI.Label.new('v' .. version, nil, false, 'font_white')
 					:anchor(1, 1)
 					:put(P(98), P(96))
