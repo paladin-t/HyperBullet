@@ -38,10 +38,12 @@ local function redirect(this, delta, hero, src, dst)
 end
 
 Behaviours = {
+	--[[ Moving. ]]
+
 	['chase'] = function ()
 		return {
 			penetrative = false,
-			behave = function (self, this, delta, hero, src, dst)
+			behave = function (self, this, delta, hero, src, dst, penetrative)
 				-- Prepare.
 				::consume::
 				local empty = this._goals == nil or #this._goals == 0
@@ -92,7 +94,7 @@ Behaviours = {
 	['besiege'] = function ()
 		return {
 			penetrative = false,
-			behave = function (self, this, delta, hero, src, dst)
+			behave = function (self, this, delta, hero, src, dst, penetrative)
 				-- Prepare.
 				::consume::
 				local empty = this._goals == nil or #this._goals == 0
@@ -143,7 +145,7 @@ Behaviours = {
 	['pass_by'] = function ()
 		return {
 			penetrative = true,
-			behave = function (self, this, delta, hero, src, dst)
+			behave = function (self, this, delta, hero, src, dst, penetrative)
 				-- Prepare.
 				::consume::
 				local empty = this._goals == nil or #this._goals == 0
@@ -191,10 +193,12 @@ Behaviours = {
 		}
 	end,
 
+	--[[ Sight. ]]
+
 	['look_at'] = function ()
 		return {
 			penetrative = false,
-			behave = function (self, this, delta, hero, src, dst)
+			behave = function (self, this, delta, hero, src, dst, penetrative)
 				-- Look at the target.
 				local lookAtTarget = this:lookAtTarget()
 				if lookAtTarget == 'hero' then
@@ -213,13 +217,15 @@ Behaviours = {
 		}
 	end,
 
+	--[[ Offense. ]]
+
 	['attack'] = function ()
 		local ticks = 0
 		local count = 0
 
 		return {
 			penetrative = false,
-			behave = function (self, this, delta, hero, src, dst)
+			behave = function (self, this, delta, hero, src, dst, penetrative)
 				-- Prepare.
 				if src == nil then
 					return src, dst
@@ -247,8 +253,8 @@ Behaviours = {
 				end
 
 				-- Attack.
-				local pos, idx = this:raycast(src, Vec2.new(hero.x, hero.y) - src, this._game.isBulletBlocked) -- Sight intersects with tile.
-				if pos == nil and not hero:dead() then
+				local pos, _ = this:raycast(src, Vec2.new(hero.x, hero.y) - src, this._game.isBulletBlocked) -- Sight intersects with tile.
+				if (pos == nil or penetrative) and not hero:dead() then
 					if limit == nil or count < limit then
 						local accuracy = nil
 						local weapon = this:weapon()
@@ -269,10 +275,10 @@ Behaviours = {
 				end
 
 				if DEBUG_SHOW_WIREFRAME then
-					if pos then
-						line(src.x, src.y, pos.x, pos.y, Color.new(255, 255, 255, 128))
-					else
+					if pos == nil then
 						line(src.x, src.y, hero.x, hero.y, Color.new(255, 0, 0, 128))
+					else
+						line(src.x, src.y, pos.x, pos.y, Color.new(255, 255, 255, 128))
 					end
 				end
 

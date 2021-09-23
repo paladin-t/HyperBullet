@@ -67,10 +67,10 @@ Enemy = class({
 		local penetrative = false
 		local src, dst = nil, nil
 		for _, b in ipairs(self._behaviours) do
+			src, dst = b:behave(self, delta, hero, src, dst, penetrative)
 			if not penetrative and b.penetrative then
 				penetrative = true
 			end
-			src, dst = b:behave(self, delta, hero, src, dst)
 		end
 
 		-- Interact with objects.
