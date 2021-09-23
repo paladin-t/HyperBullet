@@ -62,7 +62,7 @@ require 'game'
 Constant.
 ]]
 
-DEBUG                = true and Debug.available  -- Enable for debug.
+DEBUG                = false and Debug.available -- Enable for debug.
 DEBUG_SHOW_WIREFRAME = DEBUG and false           -- Enable to show wireframes.
 DEBUG_IMMORTAL       = DEBUG and false           -- Enable to make the hero unkillable.
 DEBUG_PAUSE_SPAWNING = DEBUG and false           -- Enable to pause enemy spawning.
