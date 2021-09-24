@@ -38,7 +38,10 @@ Enemies = {
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['behaviours'] = { 'chase', 'look_at', 'attack' },
 		['look_at_target'] = 'hero',
-		['attack_tempo'] = nil,
+		['attack_tempo'] = {
+			['active'] = 0.5,
+			['rest'] = 0.4
+		},
 		['move_speed'] = 130,
 		['weapon'] = 'knife',
 		['armour'] = nil,
@@ -56,7 +59,10 @@ Enemies = {
 		['box'] = Recti.byXYWH(0, 0, 16, 16),
 		['behaviours'] = { 'besiege', 'look_at', 'attack' },
 		['look_at_target'] = 'hero',
-		['attack_tempo'] = nil,
+		['attack_tempo'] = {
+			['active'] = 0.5,
+			['rest'] = 0.4
+		},
 		['move_speed'] = 130,
 		['weapon'] = 'knife',
 		['armour'] = nil,

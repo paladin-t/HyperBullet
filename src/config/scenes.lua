@@ -36,20 +36,6 @@ local function pickWeapons(index)
 		{
 			class = 'Gun',
 			type = 'machine_gun'
-		}
-	}
-	local group4 = {
-		{
-			class = 'Gun',
-			type = 'rifle'
-		},
-		{
-			class = 'Gun',
-			type = 'laser'
-		},
-		{
-			class = 'Gun',
-			type = 'disc_gun'
 		},
 		{
 			class = 'Gun',
@@ -62,10 +48,7 @@ local function pickWeapons(index)
 		forEach(group2, function (candidate, _)
 			table.insert(weaponCandidates, candidate)
 		end)
-		-- forEach(group3, function (candidate, _)
-		-- 	table.insert(weaponCandidates, candidate)
-		-- end)
-		forEach(group4, function (candidate, _)
+		forEach(group3, function (candidate, _)
 			table.insert(weaponCandidates, candidate)
 		end)
 		forEach(group1, function (candidate, _)
@@ -122,9 +105,6 @@ local function pickEnemies(index)
 			:add({ type = 'enemy4_chase_submachine_gun_body_armour' }, 5)
 			:add({ type = 'enemy4_chase_machine_gun' }, 10)
 			:add({ type = 'enemy4_chase_machine_gun_body_armour' }, 5)
-			:add({ type = 'enemy5_pass_by_rifle' }, 20)
-			:add({ type = 'enemy5_pass_by_laser' }, 10)
-			:add({ type = 'enemy5_chase_disc_gun' }, 20)
 			:add({ type = 'enemy5_chase_mines' }, 20)
 	end
 
