@@ -1,18 +1,16 @@
-# Hyper Bullet (WIP)
+# Hyper Bullet
 
-Hyper Bullet is a top-down action game made with [Bitty Engine](https://paladin-t.github.io/bitty/).
+Hyper Bullet is a top-down action game made with [Bitty Engine](https://paladin-t.github.io/bitty/) in pure Lua.
 
-**Prototype**
+Get it on [Itch](https://tonywang.itch.io/hyper-bullet), [Steam](https://store.steampowered.com/app/1729660/), or try it [in browser](https://tonywang.itch.io/hyper-bullet).
 
-![Prototype](https://user-images.githubusercontent.com/2062224/133042066-7a72d107-2643-4e4c-8b88-664c660ce0b8.png)
+![Release](https://user-images.githubusercontent.com/2062224/134613604-18725ae2-3cc0-4014-874e-3c06e3080657.png)
 
-![Prototype](https://user-images.githubusercontent.com/2062224/133042086-8c967a4d-859b-4b4f-be89-7c13aae4b71c.gif)
+![Release](https://user-images.githubusercontent.com/2062224/134613616-fe4f95be-ef95-44d8-8675-f0aaed42734d.gif)
 
 # About this game
 
 ## Description
-
-**This project is still under early development.**
 
 Hyper Bullet is a top-down action game replenished with agreeable vaporwave aesthetics, pure joy of combat and gunplay rhythm.
 
@@ -32,11 +30,11 @@ Pick up a weapon, defeat oncoming enemies, survive in infinite crises, and write
 
 ## Standalone binary
 
-TODO
+[Itch](https://tonywang.itch.io/hyper-bullet), [Steam](https://store.steampowered.com/app/1729660/)
 
 ## In browser
 
-TODO
+[Itch](https://tonywang.itch.io/hyper-bullet)
 
 ## Source code
 
@@ -44,6 +42,4 @@ Open the project at the "src" directory with [Bitty Engine](https://paladin-t.gi
 
 # License
 
-Copyright 2021 Tony Wang.
-
-TODO
+The source code and assets of this game itself is distributed under the MIT license, see the license files under "src/libs" for other libs respectively, see CREDITS.txt for 3rd-party assets.

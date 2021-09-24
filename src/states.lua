@@ -149,7 +149,7 @@ States = {
 					:put(110, P(96))
 					:resize(-1, 12)
 					:on('clicked', function (sender)
-						Platform.surf('https://paladin-t.github.io/bitty?f=hdc')
+						Platform.surf('https://paladin-t.github.io/bitty?f=hb')
 					end)
 			)
 		local text_ = Text.new(
