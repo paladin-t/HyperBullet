@@ -86,6 +86,7 @@ States = {
 							:anchor(0, 0)
 							:put(0, 51)
 							:resize(P(100), 16)
+							:setVisible(not startsWith(Platform.os, 'HTML'))
 							:on('clicked', function (sender)
 								game:playSfx('gui/ok')
 
