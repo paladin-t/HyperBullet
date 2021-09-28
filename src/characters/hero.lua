@@ -26,6 +26,26 @@ Hero = class({
 
 	--[[ Methods. ]]
 
+	hurt = function (self, other)
+		local invincible, _ = self:invincible()
+		if invincible then
+			return false
+		end
+		self:setInvincible(1.5)
+
+		local armour = self:armour()
+		if armour ~= nil then
+			armour.hp = math.max(armour.hp - other.atk, 0)
+			if armour.hp == 0 then
+				self:setArmour(nil)
+			end
+
+			return false
+		end
+
+		return Object.hurt(self, other)
+	end,
+
 	behave = function (self, delta, _1)
 		-- Prepare.
 		Character.behave(self, delta, _1)
