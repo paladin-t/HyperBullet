@@ -36,6 +36,7 @@ end
 
 States = {
 	['title'] = function (game)
+		local html = startsWith(Platform.os, 'HTML')
 		local version = game:getInfo('version')
 		local P = beGUI.percent
 		local theme = beTheme.default()
@@ -86,7 +87,7 @@ States = {
 							:anchor(0, 0)
 							:put(0, 51)
 							:resize(P(100), 16)
-							:setVisible(not startsWith(Platform.os, 'HTML'))
+							:setVisible(not html)
 							:on('clicked', function (sender)
 								game:playSfx('gui/ok')
 
@@ -197,6 +198,7 @@ States = {
 		}
 	end,
 	['options'] = function (game)
+		local html = startsWith(Platform.os, 'HTML')
 		local volumeOptionToString = function (key)
 			local val = game:getOption(key)
 			if not val then
@@ -214,7 +216,7 @@ States = {
 				val = 0.8
 			end
 			val = val + 0.2
-			if val > 1 then
+			if math.floor(val * 10) > 10 then
 				val = 0
 			end
 
@@ -233,13 +235,13 @@ States = {
 			:addChild(
 				beGUI.Label.new('AUDIO', 'left', false, 'label', 'label_shadow')
 					:anchor(0, 0)
-					:put(0, 0)
+					:put(0, 0 + (html and 17 * 3 or 0))
 					:resize(P(100), 16)
 			)
 			:addChild(
 				beGUI.Button.new('SFX VOLUME: ' .. volumeOptionToString('audio/sfx/volume'))
 					:anchor(0, 0)
-					:put(0, 17)
+					:put(0, 17 + (html and 17 * 3 or 0))
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
 						setVolumeOption('audio/sfx/volume', nextVolumeOption('audio/sfx/volume'))
@@ -254,7 +256,7 @@ States = {
 			:addChild(
 				beGUI.Button.new('BGM VOLUME: ' .. volumeOptionToString('audio/bgm/volume'))
 					:anchor(0, 0)
-					:put(0, 34)
+					:put(0, 34 + (html and 17 * 3 or 0))
 					:resize(P(100), 16)
 					:on('clicked', function (sender)
 						setVolumeOption('audio/bgm/volume', nextVolumeOption('audio/bgm/volume'))
@@ -271,12 +273,14 @@ States = {
 					:anchor(0, 0)
 					:put(0, 51)
 					:resize(P(100), 16)
+					:setVisible(not html)
 			)
 			:addChild(
 				beGUI.Button.new('x1')
 					:anchor(0, 0)
 					:put(0, 68)
 					:resize(P(32), 16)
+					:setVisible(not html)
 					:on('clicked', function (sender)
 						local w, h = 640, 360
 						Application.resize(w, h)
@@ -290,6 +294,7 @@ States = {
 					:anchor(0.5, 0)
 					:put(P(50), 68)
 					:resize(P(32), 16)
+					:setVisible(not html)
 					:on('clicked', function (sender)
 						local w, h = 640, 360
 						Application.resize(w * 2, h * 2)
@@ -303,6 +308,7 @@ States = {
 					:anchor(1, 0)
 					:put(P(100), 68)
 					:resize(P(32), 16)
+					:setVisible(not html)
 					:on('clicked', function (sender)
 						local w, h = 640, 360
 						Application.resize(w * 3, h * 3)
@@ -316,6 +322,7 @@ States = {
 					:anchor(0, 0)
 					:put(0, 85)
 					:resize(P(100), 16)
+					:setVisible(not html)
 					:on('clicked', function (sender)
 						Application.resize('fullscreen')
 						game:setOption('video/canvas/scale', 'full')
